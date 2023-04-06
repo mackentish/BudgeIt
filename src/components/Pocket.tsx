@@ -1,15 +1,19 @@
 import {Text, StyleSheet, View} from 'react-native';
 import React from 'react';
 import {currencyFormatter} from '../utils';
+import AnimatedPressable from './AnimatedPressable';
 
 export default function Pocket({name, amount}: {name: string; amount: number}) {
+  // TODO: set width to widthAnim??
   return (
-    <View style={styles.pocket}>
-      <Text style={[styles.text, styles.name]}>{name}</Text>
-      <Text style={[styles.text, styles.amount]}>
-        {currencyFormatter.format(amount)}
-      </Text>
-    </View>
+    <AnimatedPressable>
+      <View style={styles.pocket}>
+        <Text style={[styles.text, styles.name]}>{name}</Text>
+        <Text style={[styles.text, styles.amount]}>
+          {currencyFormatter.format(amount)}
+        </Text>
+      </View>
+    </AnimatedPressable>
   );
 }
 
@@ -17,7 +21,6 @@ const styles = StyleSheet.create({
   pocket: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    width: '100%',
     borderRadius: 15,
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 10},

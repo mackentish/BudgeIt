@@ -1,22 +1,33 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  PressableProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import colors from '../constants/colors';
+import AnimatedPressable from './AnimatedPressable';
 
 export default function Button({
   title,
   onPress,
+  ...props
 }: {
   title: string;
   onPress: () => void;
-}) {
+  style?: StyleProp<ViewStyle>;
+} & PressableProps) {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.button}>
-      <Text style={styles.buttonText}>{title}</Text>
-    </TouchableOpacity>
+    <AnimatedPressable
+      onPress={onPress}
+      style={[defaultStyles.button, props.style]}>
+      <Text style={defaultStyles.buttonText}>{title}</Text>
+    </AnimatedPressable>
   );
 }
 
-const styles = StyleSheet.create({
+const defaultStyles = StyleSheet.create({
   button: {
     backgroundColor: colors.purple,
     padding: 20,

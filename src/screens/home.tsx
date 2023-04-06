@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
     flexDirection: 'column',
+    flex: 1,
     gap: 20,
   },
   buttonContainer: {
     padding: 10,
-    flex: 1,
     justifyContent: 'flex-end',
   },
 });

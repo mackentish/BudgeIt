@@ -11,6 +11,7 @@
 - Nav menu with transaction options
 - Custom "fund distribution" settings a user can use to add predetermined amounts or percentages to specific pockets from a given amount. Ex: Payday hits ($6,000) and they select this option to put $1k in _Entertainment_, $2k in _Food_, and $3k in _Bills_
 - Touch animations on `<Pocket />` and `<Button />` components
+- Haptic responses on `<Button />`
 - Make Pockets reorderable
 - Allow user to change Pocket color
 - Add menu to Pocket that shows up when clicked
