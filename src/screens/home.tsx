@@ -15,8 +15,13 @@ export default function Home() {
       <Header />
       <Banner total={total} />
       <View style={styles.content}>
-        {data.pockets.map(d => (
-          <Pocket key={d.id} name={d.name} amount={d.amount} />
+        {data.pockets.map((d, i) => (
+          <Pocket
+            key={d.id}
+            name={d.name}
+            amount={d.amount}
+            color={colors.pocketColors[i]}
+          />
         ))}
       </View>
       <View style={styles.buttonContainer}>
@@ -29,7 +34,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: colors.gray,
+    backgroundColor: colors.background,
   },
   content: {
     padding: 20,

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 60,
-    backgroundColor: colors.darkPurple,
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 10},
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   headerText: {
     textAlign: 'center',
     fontFamily: font.bold,
-    color: colors.turquoise,
+    color: colors.white,
     fontSize: 30,
     fontWeight: 'bold',
   },

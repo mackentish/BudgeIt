@@ -4,11 +4,19 @@ import {currencyFormatter} from '../utils';
 import AnimatedPressable from './AnimatedPressable';
 import {colors, font} from '../constants/globalStyle';
 
-export default function Pocket({name, amount}: {name: string; amount: number}) {
+export default function Pocket({
+  name,
+  amount,
+  color,
+}: {
+  name: string;
+  amount: number;
+  color: string;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <AnimatedPressable onPress={() => setIsOpen(!isOpen)}>
-      <View style={styles.pocket}>
+      <View style={[styles.pocket, {backgroundColor: color}]}>
         <View style={styles.pocketRow}>
           <Text style={[styles.text, styles.name]}>{name}</Text>
           <Text style={[styles.text, styles.amount]}>
@@ -61,17 +69,20 @@ const styles = StyleSheet.create({
     fontFamily: font.bold,
   },
   button: {
-    backgroundColor: colors.gray,
+    backgroundColor: colors.paleGray,
     padding: 10,
     borderRadius: 10,
   },
   addBtn: {
+    fontFamily: font.regular,
     color: 'green',
   },
   removeBtn: {
+    fontFamily: font.regular,
     color: 'red',
   },
   moreBtn: {
+    fontFamily: font.regular,
     color: 'blue',
   },
 });

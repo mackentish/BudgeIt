@@ -29,9 +29,9 @@ export default function Button({
 
 const defaultStyles = StyleSheet.create({
   button: {
-    backgroundColor: colors.purple,
-    padding: 20,
-    borderRadius: 15,
+    backgroundColor: colors.tertiary,
+    padding: 8,
+    borderRadius: 20,
     shadowColor: 'black',
     shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.26,
@@ -40,7 +40,7 @@ const defaultStyles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 32,
     fontFamily: font.bold,
     textAlign: 'center',
   },

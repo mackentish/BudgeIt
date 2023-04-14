@@ -1,9 +1,22 @@
 const colors = {
-  darkPurple: '#521262',
-  purple: '#6639A6',
-  aqua: '#3490DE',
-  turquoise: '#6FE7DD',
-  gray: '#B9B9B9',
+  background: '#373737',
+  paleGray: '#F5F5F5',
+  white: '#F3EEFF',
+  primary: '#6D569E',
+  secondary: '#73BA9B',
+  tertiary: '#7785AC',
+  pocketColors: [
+    '#F5C1B2',
+    '#F4B744',
+    '#CDD5AE',
+    '#D0E4E5',
+    '#E7E6F4',
+    '#BDCD74',
+    '#CBBECF',
+    '#FEFEFE',
+    '#FDCA92',
+    '#FFE8DA',
+  ],
 };
 
 const font = {

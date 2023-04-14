@@ -16,7 +16,7 @@ export default function Banner({total}: {total: number}) {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: colors.purple,
+    backgroundColor: colors.secondary,
     width: '100%',
     marginBottom: 20,
   },
@@ -24,12 +24,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
   },
   bannerText: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 20,
-    fontFamily: font.extraBold,
+    fontSize: 28,
+    fontFamily: font.bold,
   },
 });
