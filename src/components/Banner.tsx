@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import colors from '../constants/colors';
+import {colors, font} from '../constants/globalStyle';
 import {currencyFormatter} from '../utils';
 
 export default function Banner({total}: {total: number}) {
@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: font.extraBold,
   },
 });

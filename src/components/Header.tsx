@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import colors from '../constants/colors';
+import {colors, font} from '../constants/globalStyle';
 
 export default function Header() {
   return (
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: 'center',
+    fontFamily: font.bold,
     color: colors.turquoise,
     fontSize: 30,
     fontWeight: 'bold',

@@ -6,7 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import colors from '../constants/colors';
+import {colors, font} from '../constants/globalStyle';
 import AnimatedPressable from './AnimatedPressable';
 
 export default function Button({
@@ -41,7 +41,7 @@ const defaultStyles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: font.bold,
     textAlign: 'center',
   },
 });

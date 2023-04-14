@@ -2,7 +2,7 @@
 import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import Header from '../components/Header';
-import colors from '../constants/colors';
+import {colors} from '../constants/globalStyle';
 import Banner from '../components/Banner';
 import data from '../constants/data';
 import Pocket from '../components/Pocket';

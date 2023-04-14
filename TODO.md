@@ -10,7 +10,6 @@
 
 - Nav menu with transaction options
 - Custom "fund distribution" settings a user can use to add predetermined amounts or percentages to specific pockets from a given amount. Ex: Payday hits ($6,000) and they select this option to put $1k in _Entertainment_, $2k in _Food_, and $3k in _Bills_
-- Touch animations on `<Pocket />` and `<Button />` components
 - Haptic responses on `<Button />`
 - Make Pockets reorderable
 - Allow user to change Pocket color
@@ -21,3 +20,18 @@
 
 - Add a `UserContext` that will contain the user data like their Pockets and any necessary user info
 - Allow `<Button />` component to use a style prop or any normal button props
+
+## New Concepts
+
+- API calls (Node.js - separate repo)
+  - balance these with state
+  - learn about caching (useQuery?)
+- Global state (UserContext)
+  - experiment with redux
+  - persistant storage (AsyncStorage vs ExpoSecureStore)
+- biometrics/authentication
+  - third party vs custom solution
+- Handle different states
+  - app in background
+  - lose internet connection
+- Handle SafeAreaView (on App.tsx)
