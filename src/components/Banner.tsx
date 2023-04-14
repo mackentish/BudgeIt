@@ -1,9 +1,12 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {colors, font} from '../constants/globalStyle';
 import {currencyFormatter} from '../utils';
+import {UserContext} from '../state/context/UserProvider';
 
-export default function Banner({total}: {total: number}) {
+export default function Banner() {
+  const {pockets} = useContext(UserContext);
+  const total = pockets.reduce((acc, pocket) => acc + pocket.amount, 0);
   return (
     <View style={styles.banner}>
       <View style={styles.textContainer}>
@@ -18,7 +21,6 @@ const styles = StyleSheet.create({
   banner: {
     backgroundColor: colors.secondary,
     width: '100%',
-    marginBottom: 20,
   },
   textContainer: {
     flexDirection: 'row',
