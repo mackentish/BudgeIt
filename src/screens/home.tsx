@@ -18,7 +18,7 @@ export default function Home() {
         <View style={styles.content}>
           {pockets.map((d, i) => (
             <Pocket
-              key={d.id}
+              key={d._id}
               name={d.name}
               amount={d.amount}
               color={colors.pocketColors[i]}

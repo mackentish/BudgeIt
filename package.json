@@ -7,11 +7,14 @@
     "ios": "react-native run-ios --simulator='iPhone 14'",
     "lint": "eslint .",
     "start": "react-native start --reset-cache",
-    "test": "jest"
+    "test": "jest",
+    "refresh": "rm rf node_modules && npm ci && rm rf ios/Pods && bundle exec pod install"
   },
   "dependencies": {
     "react": "18.2.0",
-    "react-native": "0.71.4"
+    "react-native": "0.71.4",
+    "react-native-dotenv": "^3.4.8",
+    "react-query": "^3.39.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -20,6 +23,7 @@
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^29.2.1",
+    "@types/node": "^18.16.0",
     "@types/react": "^18.0.24",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
