@@ -19,6 +19,7 @@ export default function Home() {
           {pockets.map((d, i) => (
             <Pocket
               key={d._id}
+              _id={d._id}
               name={d.name}
               amount={d.amount}
               color={colors.pocketColors[i]}

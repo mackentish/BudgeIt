@@ -1,7 +1,15 @@
-import {useQuery} from 'react-query';
-import {fetchPockets} from '../../api';
+import {useMutation, useQuery} from 'react-query';
+import {fetchPockets, updatePocket as updateFn} from '../../api';
 
 export default function usePockets() {
-  const query = useQuery('allPockets', fetchPockets);
-  return query;
+  // GET /pockets
+  const allPockets = useQuery('allPockets', fetchPockets);
+  // PUT /pockets/:id
+  const updatePocket = useMutation(updateFn, {
+    onSuccess: () => {
+      allPockets.refetch();
+    },
+  });
+
+  return {allPockets, updatePocket};
 }

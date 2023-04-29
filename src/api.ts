@@ -12,4 +12,20 @@ const fetchPockets = async () => {
   return data as Pocket[];
 };
 
-export {fetchPockets};
+const updatePocket = async (pocket: Pocket) => {
+  const response = await fetch(`${API_URL}/pockets/${pocket._id}`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: pocket.name,
+      amount: pocket.amount,
+    }),
+  });
+  const data = await response.json();
+  return data as Pocket;
+};
+
+export {fetchPockets, updatePocket};

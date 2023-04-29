@@ -17,13 +17,13 @@ export const UserContext = createContext<ContextType>({} as ContextType);
 
 export function UserProvider({children}: {children: React.ReactNode}) {
   const [pockets, setPockets] = useState<Pocket[]>([]);
-  const pocketQuery = usePockets();
+  const {allPockets} = usePockets();
 
   useEffect(() => {
-    if (pocketQuery.data) {
-      setPockets(pocketQuery.data);
+    if (allPockets.data) {
+      setPockets(allPockets.data);
     }
-  }, [pocketQuery.data]);
+  }, [allPockets.data]);
 
   return (
     <UserContext.Provider

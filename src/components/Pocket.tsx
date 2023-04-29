@@ -1,21 +1,55 @@
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, TextInput} from 'react-native';
 import React, {useState} from 'react';
 import {currencyFormatter} from '../utils';
 import AnimatedPressable from './AnimatedPressable';
 import {colors, font} from '../constants/globalStyle';
+import {usePockets} from '../state/queries';
 
 export default function Pocket({
+  _id,
   name,
   amount,
   color,
 }: {
+  _id: string;
   name: string;
   amount: number;
   color: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [changeAmount, setChangeAmount] = useState(amount);
+  const {updatePocket} = usePockets();
+
+  const onInputChange = (text: string) => {
+    setChangeAmount(Number(text));
+  };
+
+  const changePocketAmount = () => {
+    // update pocket data using updatePocket query
+    updatePocket.mutate(
+      {
+        _id,
+        name,
+        amount: changeAmount,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+      },
+    );
+  };
+
+  const openClosePocket = () => {
+    // if closing pocket, reset changeAmount to amount
+    if (isOpen) {
+      setChangeAmount(amount);
+    }
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <AnimatedPressable onPress={() => setIsOpen(!isOpen)}>
+    <AnimatedPressable onPress={() => setIsOpen(true)}>
       <View style={[styles.pocket, {backgroundColor: color}]}>
         <View style={styles.pocketRow}>
           <Text style={[styles.text, styles.name]}>{name}</Text>
@@ -24,16 +58,32 @@ export default function Pocket({
           </Text>
         </View>
         {isOpen && (
-          <View style={styles.pocketRow}>
-            <AnimatedPressable style={styles.button}>
-              <Text style={styles.addBtn}>Add</Text>
-            </AnimatedPressable>
-            <AnimatedPressable style={styles.button}>
-              <Text style={styles.removeBtn}>Remove</Text>
-            </AnimatedPressable>
-            <AnimatedPressable style={styles.button}>
-              <Text style={styles.moreBtn}>More</Text>
-            </AnimatedPressable>
+          <View style={styles.updateForm}>
+            <View style={styles.pocketRow}>
+              <Text style={styles.title}>Change Pocket Amount:</Text>
+              <TextInput
+                style={styles.amountInput}
+                keyboardType="numeric"
+                value={changeAmount.toString()}
+                onChangeText={onInputChange}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <AnimatedPressable
+                onPress={openClosePocket}
+                style={styles.button}>
+                <Text style={[styles.buttonText, styles.cancelButtonText]}>
+                  Cancel
+                </Text>
+              </AnimatedPressable>
+              <AnimatedPressable
+                onPress={changePocketAmount}
+                style={styles.button}>
+                <Text style={[styles.buttonText, styles.submitButtonText]}>
+                  Done
+                </Text>
+              </AnimatedPressable>
+            </View>
           </View>
         )}
       </View>
@@ -57,6 +107,7 @@ const styles = StyleSheet.create({
   pocketRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   text: {
     color: 'black',
@@ -68,21 +119,38 @@ const styles = StyleSheet.create({
   amount: {
     fontFamily: font.bold,
   },
-  button: {
+  updateForm: {
+    flexDirection: 'column',
+    gap: 8,
+    marginTop: 10,
+  },
+  amountInput: {
     backgroundColor: colors.paleGray,
     padding: 10,
     borderRadius: 10,
   },
-  addBtn: {
-    fontFamily: font.regular,
+  title: {
+    fontFamily: font.bold,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  button: {
+    backgroundColor: colors.paleGray,
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+  },
+  buttonText: {
+    fontFamily: font.bold,
+  },
+  submitButtonText: {
     color: 'green',
   },
-  removeBtn: {
-    fontFamily: font.regular,
+  cancelButtonText: {
     color: 'red',
-  },
-  moreBtn: {
-    fontFamily: font.regular,
-    color: 'blue',
   },
 });
