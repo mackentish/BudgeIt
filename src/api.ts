@@ -1,10 +1,11 @@
 import {Pocket} from './types';
-import {API_URL} from '@env';
+import {API_URL, API_KEY} from '@env';
 
 const fetchPockets = async () => {
   const response = await fetch(`${API_URL}/pockets`, {
     method: 'GET',
     headers: {
+      'X-API-KEY': API_KEY,
       Accept: 'application/json',
     },
   });
