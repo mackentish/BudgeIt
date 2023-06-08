@@ -1,4 +1,4 @@
-import {Pocket} from './types';
+import {Pocket} from '../types';
 import {API_URL, API_KEY} from '@env';
 
 const fetchPockets = async () => {

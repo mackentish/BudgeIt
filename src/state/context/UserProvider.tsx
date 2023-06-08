@@ -1,35 +1,23 @@
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
-import {Pocket} from '../../types';
-import {usePockets} from '../queries';
+import React, {createContext, Dispatch, SetStateAction, useState} from 'react';
+import {Pocket, User} from '../../types';
 
 type ContextType = {
+  user?: User;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
   pockets: Pocket[];
-  setPockets: Dispatch<SetStateAction<Pocket[]>>;
 };
 
 export const UserContext = createContext<ContextType>({} as ContextType);
 
 export function UserProvider({children}: {children: React.ReactNode}) {
-  const [pockets, setPockets] = useState<Pocket[]>([]);
-  const {allPockets} = usePockets();
-
-  useEffect(() => {
-    if (allPockets.data) {
-      setPockets(allPockets.data);
-    }
-  }, [allPockets.data]);
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   return (
     <UserContext.Provider
       value={{
-        pockets,
-        setPockets,
+        user,
+        setUser,
+        pockets: user?.pockets || [],
       }}>
       {children}
     </UserContext.Provider>

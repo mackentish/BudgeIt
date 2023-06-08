@@ -1,5 +1,5 @@
 import {useMutation, useQuery} from 'react-query';
-import {fetchPockets, updatePocket as updateFn} from '../../api';
+import {fetchPockets, updatePocket as updateFn} from '../../api/pockets';
 
 export default function usePockets() {
   // GET /pockets
