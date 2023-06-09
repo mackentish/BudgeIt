@@ -7,6 +7,11 @@ export interface User {
   pockets: Pocket[];
 }
 
+export interface UserLogin {
+  email: string;
+  password: string;
+}
+
 export interface Pocket {
   _id: string;
   name: string;

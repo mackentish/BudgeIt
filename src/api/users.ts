@@ -1,11 +1,7 @@
 import {API_URL, API_KEY} from '@env';
-import {Ok, Err, Result} from 'ts-results';
-import {User} from '../types';
+import {User, UserLogin} from '../types';
 
-const loginUser = async (
-  email: string,
-  password: string,
-): Promise<Result<User, string>> => {
+const loginUser = async (loginData: UserLogin) => {
   try {
     const response = await fetch(`${API_URL}/users/login`, {
       method: 'POST',
@@ -14,20 +10,12 @@ const loginUser = async (
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+      body: JSON.stringify(loginData),
     });
-    if (response.status !== 200) {
-      return Err('No user found.');
-    }
-    return Ok(await response.json());
+    const data = await response.json();
+    return data as User;
   } catch (error) {
-    if (error instanceof Error) {
-      return Err(error.message);
-    }
-    return Err('Unknown error.');
+    throw new Error('Error logging in');
   }
 };
 
