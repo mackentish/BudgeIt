@@ -20,7 +20,7 @@ export default function Pocket({
   const [isOpen, setIsOpen] = useState(false);
   const [changeAmount, setChangeAmount] = useState(amount);
   const {user} = useContext(UserContext);
-  const {updatePocket} = usePockets(user?._id);
+  const {updatePocket} = usePockets(user._id);
 
   const onInputChange = (text: string) => {
     setChangeAmount(Number(text));
