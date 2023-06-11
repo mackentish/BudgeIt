@@ -1,9 +1,10 @@
 import {Text, StyleSheet, View, TextInput} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {currencyFormatter} from '../utils';
 import AnimatedPressable from './AnimatedPressable';
 import {colors, font} from '../constants/globalStyle';
 import {usePockets} from '../state/queries';
+import {UserContext} from '../state/context/UserProvider';
 
 export default function Pocket({
   _id,
@@ -18,7 +19,8 @@ export default function Pocket({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [changeAmount, setChangeAmount] = useState(amount);
-  const {updatePocket} = usePockets();
+  const {user} = useContext(UserContext);
+  const {updatePocket} = usePockets(user?._id);
 
   const onInputChange = (text: string) => {
     setChangeAmount(Number(text));
