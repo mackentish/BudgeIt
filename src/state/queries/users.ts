@@ -1,4 +1,4 @@
-import {useMutation} from 'react-query';
+import {useMutation} from '@tanstack/react-query';
 import {loginUser as loginFn, createUser as createFn} from '../../api/users';
 import {Alert} from 'react-native';
 import {useContext} from 'react';

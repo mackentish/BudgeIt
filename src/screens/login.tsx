@@ -135,8 +135,10 @@ const SignUpScreen = ({setLogIn}: {setLogIn: () => void}) => {
 export default function Login({children}: {children: JSX.Element}) {
   const {user} = useContext(UserContext);
   const [isLogIn, setIsLogIn] = useState(true);
+  const {loginUser, createUser} = useUser();
+  const isLoading = loginUser.isLoading || createUser.isLoading;
 
-  if (!user) {
+  if (!user || isLoading) {
     return isLogIn ? (
       <LoginScreen setSignUp={() => setIsLogIn(false)} />
     ) : (
