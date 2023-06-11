@@ -1,11 +1,12 @@
 import {useMutation} from '@tanstack/react-query';
 import {loginUser as loginFn, createUser as createFn} from '../../api/users';
 import {Alert} from 'react-native';
-import {useContext} from 'react';
-import {UserContext} from '../context/UserProvider';
+import {Dispatch, SetStateAction} from 'react';
+import {User} from '../../types';
 
-export default function useUser() {
-  const {setUser} = useContext(UserContext);
+export default function useUser(
+  setUser: Dispatch<SetStateAction<User | undefined>>,
+) {
   const loginUser = useMutation(loginFn, {
     onSuccess: data => {
       setUser(data);

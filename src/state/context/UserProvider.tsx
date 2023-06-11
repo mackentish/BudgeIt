@@ -1,16 +1,10 @@
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useState,
-  useEffect,
-} from 'react';
+import React, {createContext, useState, useEffect} from 'react';
 import {Pocket, User} from '../../types';
 import {usePockets} from '../queries';
+import {Login} from '../../screens';
 
 type ContextType = {
-  user?: User;
-  setUser: Dispatch<SetStateAction<User | undefined>>;
+  user: User;
   pockets: Pocket[];
 };
 
@@ -27,11 +21,14 @@ export function UserProvider({children}: {children: React.ReactNode}) {
     }
   }, [user, fetchPockets.data]);
 
+  if (!user) {
+    return <Login setUser={setUser} />;
+  }
+
   return (
     <UserContext.Provider
       value={{
-        user,
-        setUser,
+        user: user!,
         pockets,
       }}>
       {children}

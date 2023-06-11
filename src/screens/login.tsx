@@ -1,5 +1,4 @@
-import React, {useContext, useState} from 'react';
-import {UserContext} from '../state/context/UserProvider';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {
   TextInput,
   KeyboardAvoidingView,
@@ -12,15 +11,22 @@ import {
 import {useUser} from '../state/queries';
 import {Button, Header, LoadingSpinner} from '../components';
 import {colors, font} from '../constants/globalStyle';
+import {User} from '../types';
 
 /**
  * Login screen for existing users
  * @param signUp - function to set the screen to sign up
  */
-const LoginScreen = ({setSignUp}: {setSignUp: () => void}) => {
+const LoginScreen = ({
+  setUser,
+  setSignUp,
+}: {
+  setUser: Dispatch<SetStateAction<User | undefined>>;
+  setSignUp: () => void;
+}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {loginUser} = useUser();
+  const {loginUser} = useUser(setUser);
 
   return (
     <View style={styles.container}>
@@ -61,13 +67,19 @@ const LoginScreen = ({setSignUp}: {setSignUp: () => void}) => {
  * Sign up screen for new users
  * @param login - function to set the screen to login
  */
-const SignUpScreen = ({setLogIn}: {setLogIn: () => void}) => {
+const SignUpScreen = ({
+  setUser,
+  setLogIn,
+}: {
+  setUser: Dispatch<SetStateAction<User | undefined>>;
+  setLogIn: () => void;
+}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const {createUser} = useUser();
+  const {createUser} = useUser(setUser);
 
   return (
     <View style={styles.container}>
@@ -132,21 +144,18 @@ const SignUpScreen = ({setLogIn}: {setLogIn: () => void}) => {
  * Login component that shows children if logged in, otherwise shows login screen
  * @param children - children to show if logged in
  */
-export default function Login({children}: {children: JSX.Element}) {
-  const {user} = useContext(UserContext);
+export default function Login({
+  setUser,
+}: {
+  setUser: Dispatch<SetStateAction<User | undefined>>;
+}) {
   const [isLogIn, setIsLogIn] = useState(true);
-  const {loginUser, createUser} = useUser();
-  const isLoading = loginUser.isLoading || createUser.isLoading;
 
-  if (!user || isLoading) {
-    return isLogIn ? (
-      <LoginScreen setSignUp={() => setIsLogIn(false)} />
-    ) : (
-      <SignUpScreen setLogIn={() => setIsLogIn(true)} />
-    );
-  }
-
-  return <>{children}</>;
+  return isLogIn ? (
+    <LoginScreen setSignUp={() => setIsLogIn(false)} setUser={setUser} />
+  ) : (
+    <SignUpScreen setLogIn={() => setIsLogIn(true)} setUser={setUser} />
+  );
 }
 
 const styles = StyleSheet.create({
