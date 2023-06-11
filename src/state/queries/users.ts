@@ -1,5 +1,5 @@
 import {useMutation} from 'react-query';
-import {loginUser as loginFn} from '../../api/users';
+import {loginUser as loginFn, createUser as createFn} from '../../api/users';
 import {Alert} from 'react-native';
 import {useContext} from 'react';
 import {UserContext} from '../context/UserProvider';
@@ -15,5 +15,14 @@ export default function useUser() {
     },
   });
 
-  return {loginUser};
+  const createUser = useMutation(createFn, {
+    onSuccess: data => {
+      setUser(data);
+    },
+    onError: () => {
+      Alert.alert('Error', 'Unable to create account');
+    },
+  });
+
+  return {loginUser, createUser};
 }

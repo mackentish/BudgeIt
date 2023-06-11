@@ -15,11 +15,18 @@
 - Allow user to change Pocket color
 - Add menu to Pocket that shows up when clicked
   - Options are "Add Funds", "Remove Funds", and "More..." where the "More ..." option allows them to customize the Pocket (for now that could just mean changing color but could add more options later)
+- Improve form validation and errors
 
-## Code Improvement
+### Screens
 
-- Add a `UserContext` that will contain the user data like their Pockets and any necessary user info
-- Allow `<Button />` component to use a style prop or any normal button props
+- Reporting (money in, money out, etc.)
+- Projections (based on current spending, how much will you have in 1 month, 3 months, 6 months, etc.)
+- Settings
+- Set up recurring distributions
+  - User can either distribute percentages (if paycheck isn't consistent) or
+    they can distribute a set amount (if paycheck is consistent). This will be
+    used to automatically distribute funds to pockets when a paycheck hits & will
+    help with projections.
 
 ## New Concepts
 
