@@ -5,7 +5,6 @@ import Header from '../components/Header';
 import {colors} from '../constants/globalStyle';
 import Banner from '../components/Banner';
 import Pocket from '../components/Pocket';
-import Button from '../components/Button';
 import {UserContext} from '../state/context/UserProvider';
 
 export default function Home() {
@@ -27,9 +26,6 @@ export default function Home() {
           ))}
         </View>
       </ScrollView>
-      <View style={styles.buttonContainer}>
-        <Button title="Transfer Funds" onPress={() => console.log('Press')} />
-      </View>
     </View>
   );
 }
@@ -44,9 +40,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     gap: 20,
-  },
-  buttonContainer: {
-    padding: 10,
-    justifyContent: 'flex-end',
   },
 });
