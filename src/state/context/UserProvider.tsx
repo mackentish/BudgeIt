@@ -6,6 +6,7 @@ import {Login} from '../../screens';
 type ContextType = {
   user: User;
   pockets: Pocket[];
+  signOut: () => void;
 };
 
 export const UserContext = createContext<ContextType>({} as ContextType);
@@ -30,6 +31,7 @@ export function UserProvider({children}: {children: React.ReactNode}) {
       value={{
         user: user!,
         pockets,
+        signOut: () => setUser(undefined),
       }}>
       {children}
     </UserContext.Provider>

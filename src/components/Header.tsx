@@ -1,26 +1,30 @@
 /* eslint-disable react-native/no-inline-styles */
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {colors, font} from '../constants/globalStyle';
 import {UserContext} from '../state/context/UserProvider';
 
+const MenuItem = ({text, onPress}: {text: string; onPress: () => void}) => {
+  return (
+    <Pressable onPress={onPress}>
+      <Text style={styles.menuItem}>{text}</Text>
+    </Pressable>
+  );
+};
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const {user} = useContext(UserContext);
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const headerRef = useRef<View | null>(null);
-
-  useEffect(() => {
-    if (headerRef.current) {
-      headerRef.current.measure((x, y, width, height) => {
-        setHeaderHeight(height);
-      });
-    }
-  }, []);
+  const {user, signOut} = useContext(UserContext);
+  const [menuHeight, setMenuHeight] = useState(0);
 
   return (
     <View style={{zIndex: 1}}>
-      <View ref={headerRef} style={styles.header}>
+      <View
+        style={styles.header}
+        onLayout={event => {
+          const {height} = event.nativeEvent.layout;
+          setMenuHeight(height);
+        }}>
         {!!user && (
           <Pressable
             style={styles.menuButton}
@@ -34,10 +38,17 @@ export default function Header() {
       </View>
       <View
         style={[
-          {top: headerHeight},
+          {top: menuHeight},
           menuOpen ? styles.menuOpen : styles.menuClosed,
         ]}>
-        <Text style={styles.menuItem}>Menu</Text>
+        <MenuItem text="Add Funds" onPress={() => setMenuOpen(false)} />
+        <Pressable
+          onPress={() => {
+            setMenuOpen(false);
+            signOut();
+          }}>
+          <Text style={[styles.menuItem, styles.signOut]}>Sign Out</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -78,20 +89,23 @@ const styles = StyleSheet.create({
   menuOpen: {
     display: 'flex',
     flexDirection: 'column',
+    gap: 8,
     position: 'absolute',
     left: 0,
     borderBottomRightRadius: 10,
     backgroundColor: colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
+    padding: 24,
     zIndex: 20,
   },
   menuClosed: {
     display: 'none',
   },
   menuItem: {
-    padding: 10,
+    width: '100%',
     color: colors.white,
     fontFamily: font.semiBold,
+  },
+  signOut: {
+    color: colors.red,
   },
 });
