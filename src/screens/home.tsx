@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
     flexDirection: 'column',
     flex: 1,
     gap: 20,
