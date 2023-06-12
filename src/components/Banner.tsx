@@ -41,8 +41,9 @@ const styles = StyleSheet.create({
   banner: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 10,
+    gap: 15,
     width: '100%',
+    marginVertical: 15,
   },
   bannerRow: {
     display: 'flex',
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
   },
   allocationBlock: {
     display: 'flex',
