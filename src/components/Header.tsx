@@ -4,20 +4,16 @@ import {colors, font} from '../constants/globalStyle';
 
 export default function Header() {
   return (
-    <View style={styles.headerContainer}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>budge-it</Text>
-      </View>
+    <View style={styles.header}>
+      <Text style={styles.headerText}>budge-it</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    height: 90,
-  },
   header: {
-    height: 60,
+    paddingBottom: 10,
+    marginBottom: 10,
     backgroundColor: colors.primary,
     justifyContent: 'center',
     shadowColor: 'black',
