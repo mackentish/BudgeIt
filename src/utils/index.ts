@@ -1,3 +1,3 @@
-import {currencyFormatter} from './formatter';
+import { currencyFormatter } from './formatter';
 
-export {currencyFormatter};
+export { currencyFormatter };

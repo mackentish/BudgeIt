@@ -42,4 +42,4 @@ const font = {
   thinItalic: 'Poppins-ThinItalic',
 };
 
-export {colors, font};
+export { colors, font };

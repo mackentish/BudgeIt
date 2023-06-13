@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  PressableProps,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import {colors, font} from '../constants/globalStyle';
+import { Text, StyleSheet, PressableProps, StyleProp, ViewStyle } from 'react-native';
+import { colors, font } from '../constants/globalStyle';
 import AnimatedPressable from './AnimatedPressable';
 
 export default function Button({
@@ -19,9 +13,7 @@ export default function Button({
   style?: StyleProp<ViewStyle>;
 } & PressableProps) {
   return (
-    <AnimatedPressable
-      onPress={onPress}
-      style={[defaultStyles.button, props.style]}>
+    <AnimatedPressable onPress={onPress} style={[defaultStyles.button, props.style]}>
       <Text style={defaultStyles.buttonText}>{title}</Text>
     </AnimatedPressable>
   );
@@ -33,7 +25,7 @@ const defaultStyles = StyleSheet.create({
     padding: 8,
     borderRadius: 20,
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 10},
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.26,
     shadowRadius: 10,
     elevation: 3,

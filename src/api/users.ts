@@ -1,5 +1,5 @@
-import {API_URL, API_KEY} from '@env';
-import {User, UserLogin, UserRegister} from '../types';
+import { API_URL, API_KEY } from '@env';
+import { User, UserLogin, UserRegister } from '../types';
 
 const loginUser = async (loginData: UserLogin) => {
   try {
@@ -37,4 +37,4 @@ const createUser = async (userData: UserRegister) => {
   }
 };
 
-export {loginUser, createUser};
+export { loginUser, createUser };

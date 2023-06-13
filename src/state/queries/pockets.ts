@@ -1,8 +1,5 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
-import {
-  fetchPockets as fetchPocketsFn,
-  updatePocket as updateFn,
-} from '../../api/pockets';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { fetchPockets as fetchPocketsFn, updatePocket as updateFn } from '../../api/pockets';
 
 export default function usePockets(userId: string | undefined) {
   // GET /pockets
@@ -20,5 +17,5 @@ export default function usePockets(userId: string | undefined) {
     },
   });
 
-  return {fetchPockets, updatePocket};
+  return { fetchPockets, updatePocket };
 }

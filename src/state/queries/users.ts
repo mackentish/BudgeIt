@@ -1,12 +1,10 @@
-import {useMutation} from '@tanstack/react-query';
-import {loginUser as loginFn, createUser as createFn} from '../../api/users';
-import {Alert} from 'react-native';
-import {Dispatch, SetStateAction} from 'react';
-import {User} from '../../types';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser as loginFn, createUser as createFn } from '../../api/users';
+import { Alert } from 'react-native';
+import { Dispatch, SetStateAction } from 'react';
+import { User } from '../../types';
 
-export default function useUser(
-  setUser: Dispatch<SetStateAction<User | undefined>>,
-) {
+export default function useUser(setUser: Dispatch<SetStateAction<User | undefined>>) {
   const loginUser = useMutation(loginFn, {
     onSuccess: data => {
       setUser(data);
@@ -25,5 +23,5 @@ export default function useUser(
     },
   });
 
-  return {loginUser, createUser};
+  return { loginUser, createUser };
 }

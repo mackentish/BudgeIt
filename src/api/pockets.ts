@@ -1,5 +1,5 @@
-import {Pocket} from '../types';
-import {API_URL, API_KEY} from '@env';
+import { Pocket } from '../types';
+import { API_URL, API_KEY } from '@env';
 
 const fetchPockets = async (userId: string) => {
   const response = await fetch(`${API_URL}/pockets/${userId}`, {
@@ -29,4 +29,4 @@ const updatePocket = async (pocket: Pocket) => {
   return data as Pocket;
 };
 
-export {fetchPockets, updatePocket};
+export { fetchPockets, updatePocket };

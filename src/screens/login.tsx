@@ -1,17 +1,9 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
-import {
-  TextInput,
-  KeyboardAvoidingView,
-  StyleSheet,
-  View,
-  Pressable,
-  Text,
-  Alert,
-} from 'react-native';
-import {useUser} from '../state/queries';
-import {Button, Header, LoadingSpinner} from '../components';
-import {colors, font} from '../constants/globalStyle';
-import {User} from '../types';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { TextInput, KeyboardAvoidingView, StyleSheet, View, Pressable, Text, Alert } from 'react-native';
+import { useUser } from '../state/queries';
+import { Button, Header, LoadingSpinner } from '../components';
+import { colors, font } from '../constants/globalStyle';
+import { User } from '../types';
 
 /**
  * Login screen for existing users
@@ -26,19 +18,14 @@ const LoginScreen = ({
 }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {loginUser} = useUser(setUser);
+  const { loginUser } = useUser(setUser);
 
   return (
     <View style={styles.container}>
       <Header />
       <KeyboardAvoidingView style={styles.form}>
         {loginUser.isLoading && <LoadingSpinner />}
-        <TextInput
-          placeholder="Username"
-          autoCapitalize="none"
-          onChangeText={setUsername}
-          style={styles.input}
-        />
+        <TextInput placeholder="Username" autoCapitalize="none" onChangeText={setUsername} style={styles.input} />
         <TextInput
           placeholder="Password"
           autoCapitalize="none"
@@ -79,29 +66,16 @@ const SignUpScreen = ({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const {createUser} = useUser(setUser);
+  const { createUser } = useUser(setUser);
 
   return (
     <View style={styles.container}>
       <Header />
       <KeyboardAvoidingView style={styles.form}>
         {createUser.isLoading && <LoadingSpinner />}
-        <TextInput
-          placeholder="First Name"
-          onChangeText={setFirstName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Last Name"
-          onChangeText={setLastName}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Username"
-          autoCapitalize="none"
-          onChangeText={setUsername}
-          style={styles.input}
-        />
+        <TextInput placeholder="First Name" onChangeText={setFirstName} style={styles.input} />
+        <TextInput placeholder="Last Name" onChangeText={setLastName} style={styles.input} />
+        <TextInput placeholder="Username" autoCapitalize="none" onChangeText={setUsername} style={styles.input} />
         <TextInput
           placeholder="Password"
           autoCapitalize="none"
@@ -144,11 +118,7 @@ const SignUpScreen = ({
  * Login component that shows children if logged in, otherwise shows login screen
  * @param children - children to show if logged in
  */
-export default function Login({
-  setUser,
-}: {
-  setUser: Dispatch<SetStateAction<User | undefined>>;
-}) {
+export default function Login({ setUser }: { setUser: Dispatch<SetStateAction<User | undefined>> }) {
   const [isLogIn, setIsLogIn] = useState(true);
 
   return isLogIn ? (

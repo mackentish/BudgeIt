@@ -5,4 +5,4 @@ import Header from './Header';
 import Pocket from './Pocket';
 import LoadingSpinner from './LoadingSpinner';
 
-export {AnimatedPressable, Banner, Button, Header, Pocket, LoadingSpinner};
+export { AnimatedPressable, Banner, Button, Header, Pocket, LoadingSpinner };

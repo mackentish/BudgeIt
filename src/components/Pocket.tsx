@@ -1,10 +1,10 @@
-import {Text, StyleSheet, View, TextInput} from 'react-native';
-import React, {useContext, useState} from 'react';
-import {currencyFormatter} from '../utils';
+import { Text, StyleSheet, View, TextInput } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { currencyFormatter } from '../utils';
 import AnimatedPressable from './AnimatedPressable';
-import {colors, font} from '../constants/globalStyle';
-import {usePockets} from '../state/queries';
-import {UserContext} from '../state/context/UserProvider';
+import { colors, font } from '../constants/globalStyle';
+import { usePockets } from '../state/queries';
+import { UserContext } from '../state/context/UserProvider';
 
 export default function Pocket({
   _id,
@@ -19,8 +19,8 @@ export default function Pocket({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [changeAmount, setChangeAmount] = useState(amount);
-  const {user} = useContext(UserContext);
-  const {updatePocket} = usePockets(user._id);
+  const { user } = useContext(UserContext);
+  const { updatePocket } = usePockets(user._id);
 
   const onInputChange = (text: string) => {
     setChangeAmount(Number(text));
@@ -52,12 +52,10 @@ export default function Pocket({
 
   return (
     <AnimatedPressable onPress={() => setIsOpen(true)}>
-      <View style={[styles.pocket, {backgroundColor: color}]}>
+      <View style={[styles.pocket, { backgroundColor: color }]}>
         <View style={styles.pocketRow}>
           <Text style={[styles.text, styles.name]}>{name}</Text>
-          <Text style={[styles.text, styles.amount]}>
-            {currencyFormatter.format(amount)}
-          </Text>
+          <Text style={[styles.text, styles.amount]}>{currencyFormatter.format(amount)}</Text>
         </View>
         {isOpen && (
           <View style={styles.updateForm}>
@@ -71,19 +69,11 @@ export default function Pocket({
               />
             </View>
             <View style={styles.buttonContainer}>
-              <AnimatedPressable
-                onPress={openClosePocket}
-                style={styles.button}>
-                <Text style={[styles.buttonText, styles.cancelButtonText]}>
-                  Cancel
-                </Text>
+              <AnimatedPressable onPress={openClosePocket} style={styles.button}>
+                <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
               </AnimatedPressable>
-              <AnimatedPressable
-                onPress={changePocketAmount}
-                style={styles.button}>
-                <Text style={[styles.buttonText, styles.submitButtonText]}>
-                  Done
-                </Text>
+              <AnimatedPressable onPress={changePocketAmount} style={styles.button}>
+                <Text style={[styles.buttonText, styles.submitButtonText]}>Done</Text>
               </AnimatedPressable>
             </View>
           </View>
@@ -100,7 +90,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 15,
     shadowColor: 'black',
-    shadowOffset: {width: 0, height: 10},
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.26,
     shadowRadius: 10,
     elevation: 3,
