@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     backgroundColor: colors.background,
+    flex: 1,
   },
   content: {
     paddingHorizontal: 20,
