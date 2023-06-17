@@ -1,7 +1,6 @@
 /* home screen with header */
 import { View, StyleSheet, ScrollView } from 'react-native';
 import React, { useContext } from 'react';
-import Header from '../components/Header';
 import { colors } from '../constants/globalStyle';
 import Banner from '../components/Banner';
 import Pocket from '../components/Pocket';
@@ -15,7 +14,6 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Header />
       <Banner />
       <ScrollView>
         <View style={styles.content}>
@@ -30,7 +28,6 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
     backgroundColor: colors.background,
     flex: 1,
   },
