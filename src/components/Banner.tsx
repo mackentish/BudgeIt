@@ -3,14 +3,15 @@ import React, { useContext } from 'react';
 import { colors, font } from '../constants/globalStyle';
 import { currencyFormatter } from '../utils';
 import { UserContext } from '../state/context/UserProvider';
+import { usePockets } from '../state/queries';
 
 export default function Banner() {
-  const {
-    pockets,
-    user: { unallocated },
-  } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { fetchPockets } = usePockets(user._id);
+
+  const pockets = fetchPockets.data || [];
   const inUseTotal = pockets.reduce((acc, pocket) => acc + pocket.amount, 0);
-  const total = inUseTotal + unallocated;
+  const total = inUseTotal + user.unallocated;
   return (
     <View style={styles.banner}>
       <View style={styles.bannerRow}>
@@ -21,7 +22,7 @@ export default function Banner() {
       <View style={styles.blocksRow}>
         <View style={styles.allocationBlock}>
           <Text style={styles.blockHeader}>Unallocated</Text>
-          <Text style={styles.blockText}>{currencyFormatter.format(unallocated)}</Text>
+          <Text style={styles.blockText}>{currencyFormatter.format(user.unallocated)}</Text>
         </View>
 
         <View style={styles.allocationBlock}>

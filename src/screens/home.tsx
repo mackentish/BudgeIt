@@ -6,9 +6,13 @@ import { colors } from '../constants/globalStyle';
 import Banner from '../components/Banner';
 import Pocket from '../components/Pocket';
 import { UserContext } from '../state/context/UserProvider';
+import { usePockets } from '../state/queries';
 
 export default function Home() {
-  const { pockets } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { fetchPockets } = usePockets(user._id);
+  const pockets = fetchPockets.data || [];
+
   return (
     <View style={styles.container}>
       <Header />
