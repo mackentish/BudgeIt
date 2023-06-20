@@ -29,4 +29,21 @@ const updatePocket = async (pocket: Pocket) => {
   return data as Pocket;
 };
 
-export { fetchPockets, updatePocket };
+const createPocket = async (pocket: Pocket, userId: string) => {
+  const response = await fetch(`${API_URL}/pockets`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: pocket.name,
+      amount: pocket.amount,
+      user: userId,
+    }),
+  });
+  const data = await response.json();
+  return data as Pocket;
+};
+
+export { fetchPockets, updatePocket, createPocket };
