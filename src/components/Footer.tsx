@@ -85,8 +85,9 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    paddingVertical: 10,
     borderRadius: 10,
+    width: '15%',
   },
   focused: {
     backgroundColor: colors.tertiary,
