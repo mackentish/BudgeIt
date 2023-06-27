@@ -25,11 +25,18 @@ const LoginScreen = ({
       <Header />
       <KeyboardAvoidingView style={styles.form}>
         {loginUser.isLoading && <LoadingSpinner />}
-        <TextInput placeholder="Username" autoCapitalize="none" onChangeText={setUsername} style={styles.input} />
+        <TextInput
+          placeholder="Username"
+          autoCapitalize="none"
+          textContentType="emailAddress"
+          onChangeText={setUsername}
+          style={styles.input}
+        />
         <TextInput
           placeholder="Password"
           autoCapitalize="none"
           secureTextEntry={true}
+          textContentType="password"
           onChangeText={setPassword}
           style={styles.input}
         />

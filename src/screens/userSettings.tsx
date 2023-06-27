@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
 import { colors, font } from '../constants/globalStyle';
 import { AnimatedPressable } from '../components';
 import { UserContext } from '../state/context/UserProvider';
@@ -26,7 +26,7 @@ function BackButton({ navigation }: { navigation: any }) {
 function UserNav({ navigation }: { navigation: any }) {
   const { signOut } = useContext(UserContext);
   return (
-    <View style={styles.container}>
+    <View style={[styles.col, styles.container]}>
       <Text style={styles.headerText}>User Settings</Text>
       <AnimatedPressable style={styles.btn} onPress={() => navigation.navigate('addFunds')}>
         <Text style={styles.btnText}>Add Funds</Text>
@@ -46,13 +46,42 @@ function UserNav({ navigation }: { navigation: any }) {
  * TODO: Add functionality to add funds
  */
 function AddFunds({ navigation }: { navigation: any }) {
+  const { user } = useContext(UserContext);
+  const [amount, setAmount] = useState(0);
+
+  const addFunds = () => {
+    Alert.alert(
+      'Add Funds',
+      `Adding ${amount} to your account will give you an unallocated total of ${amount + user.unallocated}`,
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.col, styles.container]}>
       <BackButton navigation={navigation} />
-      <Text style={styles.headerText}>Add Funds</Text>
-      <AnimatedPressable style={styles.btn} onPress={() => navigation.navigate('home')}>
-        <Text style={styles.btnText}>Home</Text>
-      </AnimatedPressable>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Add Funds</Text>
+        <Text style={styles.text}>
+          Adding funds below will add to your "unallocated" amount. Your unallocated amount is the funds you are able to
+          pull from and add to Pockets.
+        </Text>
+      </View>
+      <View style={styles.col}>
+        <TextInput
+          style={styles.input}
+          onChange={text => setAmount(Number(text))}
+          placeholder="Enter Amount"
+          keyboardType="numeric"
+        />
+        <View style={styles.row}>
+          <AnimatedPressable style={styles.btn} onPress={addFunds}>
+            <Text style={styles.btnText}>Add Amount</Text>
+          </AnimatedPressable>
+          <AnimatedPressable style={[styles.btn, styles.signOutBtn]} onPress={addFunds}>
+            <Text style={styles.btnText}>Subtract Amount</Text>
+          </AnimatedPressable>
+        </View>
+      </View>
     </View>
   );
 }
@@ -63,7 +92,7 @@ function AddFunds({ navigation }: { navigation: any }) {
  */
 function PocketDistributions({ navigation }: { navigation: any }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.col, styles.container]}>
       <BackButton navigation={navigation} />
       <Text style={styles.headerText}>Pocket Distributions</Text>
     </View>
@@ -81,19 +110,40 @@ export default function UserSettings() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  col: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: 8,
     alignItems: 'center',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  container: {
+    gap: 16,
     backgroundColor: colors.background,
     flex: 1,
     padding: 30,
+  },
+  text: {
+    fontSize: 12,
+    fontFamily: font.italic,
+    color: colors.white,
+    textAlign: 'center',
   },
   headerText: {
     fontSize: 20,
     fontFamily: font.regular,
     color: colors.white,
+  },
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    alignItems: 'center',
     marginBottom: 10,
   },
   btn: {
@@ -102,7 +152,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btnText: {
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: font.semiBold,
     color: colors.white,
   },
@@ -124,5 +174,11 @@ const styles = StyleSheet.create({
   backBtnArrow: {
     fontSize: 15,
     color: colors.secondary,
+  },
+  input: {
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 15,
   },
 });
