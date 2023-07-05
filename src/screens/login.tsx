@@ -20,6 +20,21 @@ const LoginScreen = ({
   const [password, setPassword] = useState('');
   const { loginUser } = useUser(setUser);
 
+  // NOTE: hash password with salt from .env every time we get it from input
+  // Biometrics flow
+  // FIRST TIME:
+  // request biometrics with own prompt, store result using persistent storage (https://github.com/mrousavy/react-native-mmkv/blob/master/docs/HOOKS.md)
+  // user logs in or creates account
+  // if biometrics enabled, use secure storage to store credentials
+  // log user in with stored credentials
+  // EVERY TIME AFTER:
+  // if biometrics enabled, use secure storage to retrieve credentials
+  // log user in with stored credentials
+  // otherwise, log in as normal
+
+  // use expo LocalAuthentication to get biometrics
+  // hasHardware && isEnrolled -> authenticateAsync
+
   return (
     <View style={styles.container}>
       <Header />
