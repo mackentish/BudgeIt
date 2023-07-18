@@ -14,6 +14,8 @@ PODS:
     - ExpoModulesCore
   - ExpoKeepAwake (12.0.1):
     - ExpoModulesCore
+  - ExpoLocalAuthentication (13.3.0):
+    - ExpoModulesCore
   - ExpoModulesCore (1.2.7):
     - React-Core
     - React-RCTAppDelegate
@@ -487,6 +489,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - EXSecureStore (from `../node_modules/expo-secure-store/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -587,6 +590,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  ExpoLocalAuthentication:
+    :path: "../node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   EXSecureStore:
@@ -676,6 +681,7 @@ SPEC CHECKSUMS:
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
   Expo: 8448e3a2aa1b295f029c81551e1ab6d986517fdb
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
+  ExpoLocalAuthentication: 32919307c66fb3661caefa07e7811a95a7539d7b
   ExpoModulesCore: 653958063a301098b541ae4dfed1ac0b98db607b
   EXSecureStore: e8923258361cc406d0401af380f12bd05b2b720f
   FBLazyVector: 446e84642979fff0ba57f3c804c2228a473aeac2
@@ -730,6 +736,6 @@ SPEC CHECKSUMS:
   Yoga: 79dd7410de6f8ad73a77c868d3d368843f0c93e0
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: abc57f4005881e01cca168e7097b385f48f47241
+PODFILE CHECKSUM: d1832d1c96422630f2142a3866c4c4d930502deb
 
 COCOAPODS: 1.12.0
