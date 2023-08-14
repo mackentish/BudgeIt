@@ -29,10 +29,11 @@ const BiometricsModal = ({
   const [, setHaveBiometricsPermissions] = useMMKVBoolean(haveBiometricsPermissionKey);
   const [, setPersistNextLogin] = useMMKVBoolean(persistNextLoginKey);
 
-  const handleResponse = (response: boolean) => {
+  const handleResponse = async (response: boolean) => {
     if (response) setPersistNextLogin(true);
     setHaveBiometricsPermissions(response);
     setVisible(false);
+    await LocalAuthentication.authenticateAsync();
   };
 
   return (
@@ -40,7 +41,7 @@ const BiometricsModal = ({
       <View style={modalStyles.container}>
         <Text style={[modalStyles.text, modalStyles.header]}>Enable Biometrics?</Text>
         <Text style={[modalStyles.text, modalStyles.subText]}>
-          Allow budge-it to enable biometrics for future log ins?
+          Allow budge-it to enable biometrics for future logins?
         </Text>
         <View style={modalStyles.btnContainer}>
           <Button title={'Allow'} onPress={() => handleResponse(true)} />
@@ -125,6 +126,7 @@ const LoginScreen = ({
   };
 
   useEffect(() => {
+    console.log('render');
     checkBiometrics();
   });
 
@@ -166,6 +168,7 @@ const LoginScreen = ({
         <Pressable onPress={setSignUp}>
           <Text style={styles.textBtn}>Create Account</Text>
         </Pressable>
+        {persistNextLogin && <Text style={styles.text}>Log in to activate biometrics.</Text>}
       </KeyboardAvoidingView>
       <BiometricsModal visible={openBiometrics} setVisible={setOpenBiometrics} />
     </View>
@@ -277,6 +280,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     textDecorationLine: 'underline',
+  },
+  text: {
+    color: colors.white,
+    fontFamily: font.semiBold,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
