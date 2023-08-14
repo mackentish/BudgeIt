@@ -1,13 +1,58 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TextInput, KeyboardAvoidingView, StyleSheet, View, Pressable, Text, Alert } from 'react-native';
 import { useUser } from '../state/queries';
-import { Button, Header, LoadingSpinner } from '../components';
+import { Button, Header, LoadingSpinner, Modal } from '../components';
 import { colors, font } from '../constants/globalStyle';
-import { User } from '../types';
+import {
+  deviceHasBiometricsKey,
+  haveBiometricsPermissionKey,
+  havePromptedForBiometricsKey,
+  persistNextLoginKey,
+  userCredentialsKey,
+  userEnabledBiometricsKey,
+} from '../constants/persistentStorage';
+import { User, UserLogin } from '../types';
+import { useMMKVBoolean, useMMKVString } from 'react-native-mmkv';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { EncryptValue, DecryptValue } from '../utils/encryption';
+
+/**
+ * Modal prompting user to enable biometrics
+ */
+const BiometricsModal = ({
+  visible,
+  setVisible,
+}: {
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const [, setHaveBiometricsPermissions] = useMMKVBoolean(haveBiometricsPermissionKey);
+  const [, setPersistNextLogin] = useMMKVBoolean(persistNextLoginKey);
+
+  const handleResponse = (response: boolean) => {
+    if (response) setPersistNextLogin(true);
+    setHaveBiometricsPermissions(response);
+    setVisible(false);
+  };
+
+  return (
+    <Modal visible={visible}>
+      <View style={modalStyles.container}>
+        <Text style={[modalStyles.text, modalStyles.header]}>Enable Biometrics?</Text>
+        <Text style={[modalStyles.text, modalStyles.subText]}>
+          Allow budge-it to enable biometrics for future log ins?
+        </Text>
+        <View style={modalStyles.btnContainer}>
+          <Button title={'Allow'} onPress={() => handleResponse(true)} />
+          <Button title={"Don't Allow"} onPress={() => handleResponse(false)} />
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 /**
  * Login screen for existing users
- * @param signUp - function to set the screen to sign up
  */
 const LoginScreen = ({
   setUser,
@@ -19,21 +64,69 @@ const LoginScreen = ({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { loginUser } = useUser(setUser);
+  // Biometrics
+  const [userEnabledBiometrics] = useMMKVBoolean(userEnabledBiometricsKey);
+  const [deviceHasBiometrics, setDeviceHasBiometrics] = useMMKVBoolean(deviceHasBiometricsKey);
+  const [havePromptedForBiometrics, setHavePromptedForBiometrics] = useMMKVBoolean(havePromptedForBiometricsKey);
+  const [persistNextLogin] = useMMKVBoolean(persistNextLoginKey);
+  const [userCredentials, setUserCredentials] = useMMKVString(userCredentialsKey);
+  const [openBiometrics, setOpenBiometrics] = useState(false);
 
-  // NOTE: hash password with salt from .env every time we get it from input
-  // Biometrics flow
-  // FIRST TIME:
-  // request biometrics with own prompt, store result using persistent storage (https://github.com/mrousavy/react-native-mmkv/blob/master/docs/HOOKS.md)
-  // user logs in or creates account
-  // if biometrics enabled, use secure storage to store credentials
-  // log user in with stored credentials
-  // EVERY TIME AFTER:
-  // if biometrics enabled, use secure storage to retrieve credentials
-  // log user in with stored credentials
-  // otherwise, log in as normal
+  /**
+   * First checks storage to see if we have this response already.
+   * If we do, return that value.
+   * If we don't, check if the device has biometrics and store
+   * that response in storage.
+   */
+  const checkDeviceHardware = async () => {
+    if (deviceHasBiometrics) {
+      return deviceHasBiometrics;
+    } else {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      const result = hasHardware && isEnrolled;
+      setDeviceHasBiometrics(result);
+      return result;
+    }
+  };
 
-  // use expo LocalAuthentication to get biometrics
-  // hasHardware && isEnrolled -> authenticateAsync
+  /**
+   * Checks if biometrics are enabled for the user.
+   * If they are, authenticate with biometrics.
+   * If not, check if the user has denied biometrics.
+   * If they haven't, check if the device has biometrics.
+   * If they do, prompt the user to enable biometrics.
+   * If they accept, prompt the device for biometrics.
+   * Have user log in and store credentials.
+   */
+  const checkBiometrics = async () => {
+    // if biometrics enabled and we have stored user credentials, authenticate with biometrics
+    if (userEnabledBiometrics && userCredentials) {
+      const result = await LocalAuthentication.authenticateAsync();
+      if (result.success) {
+        // decrypt credentials
+        const decryptedValue = JSON.parse(DecryptValue(userCredentials)) as UserLogin;
+        // log user in
+        loginUser.mutate({
+          email: decryptedValue.email,
+          password: decryptedValue.password,
+        });
+      }
+    }
+    // else check if the device has biometrics
+    if (await checkDeviceHardware()) {
+      // check if we have already prompted the user to enable biometrics
+      if (!havePromptedForBiometrics) {
+        // if we haven't, prompt the user to enable biometrics
+        setOpenBiometrics(true);
+        setHavePromptedForBiometrics(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    checkBiometrics();
+  });
 
   return (
     <View style={styles.container}>
@@ -58,6 +151,12 @@ const LoginScreen = ({
         <Button
           title="Log In"
           onPress={() => {
+            if (persistNextLogin) {
+              // encrypt credentials
+              const encryptedValue = EncryptValue(JSON.stringify({ email: username, password: password }));
+              // store credentials
+              setUserCredentials(encryptedValue);
+            }
             loginUser.mutate({
               email: username,
               password: password,
@@ -68,13 +167,13 @@ const LoginScreen = ({
           <Text style={styles.textBtn}>Create Account</Text>
         </Pressable>
       </KeyboardAvoidingView>
+      <BiometricsModal visible={openBiometrics} setVisible={setOpenBiometrics} />
     </View>
   );
 };
 
 /**
  * Sign up screen for new users
- * @param login - function to set the screen to login
  */
 const SignUpScreen = ({
   setUser,
@@ -138,7 +237,6 @@ const SignUpScreen = ({
 
 /**
  * Login component that shows children if logged in, otherwise shows login screen
- * @param children - children to show if logged in
  */
 export default function Login({ setUser }: { setUser: Dispatch<SetStateAction<User | undefined>> }) {
   const [isLogIn, setIsLogIn] = useState(true);
@@ -179,5 +277,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     textDecorationLine: 'underline',
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20,
+  },
+  text: {
+    color: 'black',
+  },
+  header: {
+    fontFamily: font.extraBold,
+    fontSize: 24,
+  },
+  subText: {
+    fontFamily: font.semiBold,
+    fontSize: 16,
+  },
+  btnContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20,
   },
 });

@@ -5,5 +5,6 @@ import Header from './Header';
 import Pocket from './Pocket';
 import LoadingSpinner from './LoadingSpinner';
 import Footer from './Footer';
+import Modal from './Modal';
 
-export { AnimatedPressable, Banner, Button, Header, Pocket, LoadingSpinner, Footer };
+export { AnimatedPressable, Modal, Banner, Button, Header, Pocket, LoadingSpinner, Footer };
