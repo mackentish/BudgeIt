@@ -1,19 +1,20 @@
 import { API_URL, API_KEY } from '@env';
 import { User, UserLogin, UserRegister } from '../types';
+import axios from 'axios';
 
 const loginUser = async (loginData: UserLogin) => {
   try {
-    const response = await fetch(`${API_URL}/users/login`, {
+    const response = await axios(`${API_URL}/users/login`, {
       method: 'POST',
       headers: {
         'X-API-KEY': API_KEY,
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(loginData),
+      data: loginData,
     });
-    const data = await response.json();
-    return data as User;
+    const data = await response.data;
+    return data.user as User;
   } catch (error) {
     throw new Error('Error logging in');
   }
@@ -21,17 +22,17 @@ const loginUser = async (loginData: UserLogin) => {
 
 const createUser = async (userData: UserRegister) => {
   try {
-    const response = await fetch(`${API_URL}/users`, {
+    const response = await axios(`${API_URL}/users`, {
       method: 'POST',
       headers: {
         'X-API-KEY': API_KEY,
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      data: userData,
     });
-    const data = await response.json();
-    return data as User;
+    const data = await response.data;
+    return data.user as User;
   } catch (error) {
     throw new Error('Error creating user');
   }
