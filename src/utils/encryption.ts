@@ -1,4 +1,4 @@
-import { AES } from 'react-native-crypto-js';
+import { AES, enc } from 'react-native-crypto-js';
 import { ENCRYPTION_KEY } from '@env';
 
 export function EncryptValue(value: string) {
@@ -6,5 +6,5 @@ export function EncryptValue(value: string) {
 }
 
 export function DecryptValue(encryptedValue: string): string {
-  return AES.decrypt(encryptedValue, ENCRYPTION_KEY).toString();
+  return AES.decrypt(encryptedValue, ENCRYPTION_KEY).toString(enc.Utf8);
 }

@@ -9,12 +9,11 @@ import {
   havePromptedForBiometricsKey,
   persistNextLoginKey,
   userCredentialsKey,
-  userEnabledBiometricsKey,
 } from '../constants/persistentStorage';
 import { User, UserLogin } from '../types';
 import { useMMKVBoolean, useMMKVString } from 'react-native-mmkv';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { EncryptValue, DecryptValue } from '../utils/encryption';
+import { EncryptValue, DecryptValue } from '../utils';
 
 /**
  * Modal prompting user to enable biometrics
@@ -66,7 +65,7 @@ const LoginScreen = ({
   const [password, setPassword] = useState('');
   const { loginUser } = useUser(setUser);
   // Biometrics
-  const [userEnabledBiometrics] = useMMKVBoolean(userEnabledBiometricsKey);
+  const [haveBiometricsPermission] = useMMKVBoolean(haveBiometricsPermissionKey);
   const [deviceHasBiometrics, setDeviceHasBiometrics] = useMMKVBoolean(deviceHasBiometricsKey);
   const [havePromptedForBiometrics, setHavePromptedForBiometrics] = useMMKVBoolean(havePromptedForBiometricsKey);
   const [persistNextLogin] = useMMKVBoolean(persistNextLoginKey);
@@ -102,7 +101,7 @@ const LoginScreen = ({
    */
   const checkBiometrics = async () => {
     // if biometrics enabled and we have stored user credentials, authenticate with biometrics
-    if (userEnabledBiometrics && userCredentials) {
+    if (haveBiometricsPermission && userCredentials) {
       const result = await LocalAuthentication.authenticateAsync();
       if (result.success) {
         // decrypt credentials
@@ -126,7 +125,6 @@ const LoginScreen = ({
   };
 
   useEffect(() => {
-    console.log('render');
     checkBiometrics();
   });
 

@@ -1,22 +1,22 @@
 import { Pocket } from '../types';
 import { API_URL, API_KEY } from '@env';
-import axios from 'axios';
+import BaseInstance from './base';
+// TODO: why do I have to use BaseInstance() here for the interceptors to work
+// but not in users.ts???
 
 const fetchPockets = async (userId: string) => {
-  const response = await axios(`${API_URL}/pockets/${userId}`, {
-    method: 'GET',
+  const response = await BaseInstance().get(`/pockets/${userId}`, {
     headers: {
       'X-API-KEY': API_KEY,
       Accept: 'application/json',
     },
   });
-  const data = await response.data;
+  const data = response.data;
   return data as Pocket[];
 };
 
 const updatePocket = async (pocket: Pocket) => {
-  const response = await axios(`${API_URL}/pockets/${pocket._id}`, {
-    method: 'PUT',
+  const response = await BaseInstance().put(`${API_URL}/pockets/${pocket._id}`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -31,8 +31,7 @@ const updatePocket = async (pocket: Pocket) => {
 };
 
 const createPocket = async (pocket: Pocket, userId: string) => {
-  const response = await axios(`${API_URL}/pockets`, {
-    method: 'POST',
+  const response = await BaseInstance().post(`${API_URL}/pockets`, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',

@@ -1,16 +1,21 @@
 /* home screen with header */
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import React, { useContext } from 'react';
 import { colors } from '../constants/globalStyle';
 import Banner from '../components/Banner';
 import Pocket from '../components/Pocket';
 import { UserContext } from '../state/context/UserProvider';
 import { usePockets } from '../state/queries';
+import { LoadingSpinner } from '../components';
 
 export default function Home() {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
+
+  if (fetchPockets.isError) return <Text>Error loading pockets</Text>;
+
+  if (fetchPockets.isLoading) return <LoadingSpinner />;
 
   return (
     <View style={styles.container}>
