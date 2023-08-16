@@ -1,12 +1,12 @@
-import { Text, StyleSheet, View, TextInput } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { Text, StyleSheet, View } from 'react-native';
+import React from 'react';
 import { currencyFormatter } from '../utils';
 import AnimatedPressable from './AnimatedPressable';
-import { colors, font } from '../constants/globalStyle';
-import { usePockets } from '../state/queries';
-import { UserContext } from '../state/context/UserProvider';
+import { colors, numbers, font } from '../constants/globalStyle';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
+  /*
   const [isOpen, setIsOpen] = useState(false);
   const [changeAmount, setChangeAmount] = useState(amount);
   const { user } = useContext(UserContext);
@@ -39,15 +39,19 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
     }
     setIsOpen(!isOpen);
   };
+  */
 
   return (
-    <AnimatedPressable onPress={() => setIsOpen(true)}>
+    <AnimatedPressable onPress={() => /*setIsOpen(true)*/ console.log('pressed')}>
       <View style={styles.pocket}>
         <View style={styles.pocketRow}>
-          <Text style={[styles.text, styles.name]}>{name}</Text>
-          <Text style={[styles.text, styles.amount]}>{currencyFormatter.format(amount)}</Text>
+          <View style={styles.pocketInfo}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
+          </View>
+          <Icon name="ellipsis-h" style={styles.icon} />
         </View>
-        {isOpen && (
+        {/*isOpen && (
           <View style={styles.updateForm}>
             <View style={styles.pocketRow}>
               <Text style={styles.title}>Change Pocket Amount:</Text>
@@ -67,7 +71,7 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
               </AnimatedPressable>
             </View>
           </View>
-        )}
+        )*/}
       </View>
     </AnimatedPressable>
   );
@@ -77,30 +81,49 @@ const styles = StyleSheet.create({
   pocket: {
     flexDirection: 'column',
     gap: 8,
-    backgroundColor: colors.temp.gray,
-    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    alignSelf: 'stretch',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: colors.temp.white,
+    borderRadius: numbers.borderRadius.medium,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.26,
+    shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 3,
-    padding: 20,
   },
   pocketRow: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+    alignSelf: 'stretch',
+  },
+  pocketInfo: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  text: {
-    color: colors.temp.black,
-    fontSize: 15,
+    flex: 1,
   },
   name: {
-    fontFamily: font.italic,
+    color: colors.temp.black,
+    fontFamily: font.regular,
+    fontSize: 16,
   },
   amount: {
+    color: colors.temp.black,
     fontFamily: font.bold,
+    fontSize: 20,
   },
+  negativeAmount: {
+    color: colors.temp.red,
+  },
+  icon: {
+    fontSize: 24,
+    color: colors.temp.black,
+  },
+  /*
   updateForm: {
     flexDirection: 'column',
     gap: 8,
@@ -135,4 +158,5 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: 'red',
   },
+  */
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { Home, Projections, Reports, UserSettings } from './src/screens';
+import { Home, Template, Summary, UserSettings } from './src/screens';
 import { UserProvider } from './src/state/context/UserProvider';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { colors } from './src/constants/globalStyle';
@@ -26,8 +26,8 @@ function App(): JSX.Element {
               initialRouteName="home"
               tabBar={props => Footer({ ...props })}>
               <Tab.Screen name="home" component={Home} />
-              <Tab.Screen name="reports" component={Reports} />
-              <Tab.Screen name="projections" component={Projections} />
+              <Tab.Screen name="templates" component={Template} />
+              <Tab.Screen name="summary" component={Summary} />
               <Tab.Screen name="userSettings" component={UserSettings} />
             </Tab.Navigator>
           </UserProvider>

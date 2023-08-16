@@ -32,7 +32,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.temp.white,
+    backgroundColor: colors.temp.gray,
     flex: 1,
   },
   content: {

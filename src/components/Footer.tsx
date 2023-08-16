@@ -1,18 +1,20 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { colors } from '../constants/globalStyle';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import fontelloConfig from '../config.json';
+const Icon = createIconSetFromFontello(fontelloConfig);
 
 const getIcon = (name: string) => {
   switch (name) {
     case 'home':
       return <Icon name="home" style={styles.icon} />;
+    case 'templates':
+      return <Icon name="template" style={styles.icon} />;
+    case 'summary':
+      return <Icon name="chart-bar" style={styles.icon} />;
     case 'userSettings':
       return <Icon name="user" style={styles.icon} />;
-    case 'reports':
-      return <Icon name="bar-chart" style={styles.icon} />;
-    case 'projections':
-      return <Icon name="signal" style={styles.icon} />;
     default:
       return <Icon name="home" style={styles.icon} />;
   }

@@ -257,10 +257,10 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: colors.temp.white,
+    backgroundColor: colors.temp.gray,
   },
   input: {
-    backgroundColor: colors.temp.gray,
+    backgroundColor: colors.temp.white,
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,

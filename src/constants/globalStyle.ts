@@ -1,8 +1,9 @@
-const colors = {
+export const colors = {
   temp: {
     black: '#000000',
     white: '#FFFFFF',
     gray: '#E0E0E0',
+    red: '#FF0000',
   },
   /*
   background: '#373737',
@@ -28,7 +29,15 @@ const colors = {
   */
 };
 
-const font = {
+export const numbers = {
+  borderRadius: {
+    small: 4,
+    medium: 10,
+    large: 16,
+  },
+};
+
+export const font = {
   black: 'Poppins-Black',
   blackItalic: 'Poppins-BlackItalic',
   bold: 'Poppins-Bold',
@@ -48,5 +57,3 @@ const font = {
   thin: 'Poppins-Thin',
   thinItalic: 'Poppins-ThinItalic',
 };
-
-export { colors, font };

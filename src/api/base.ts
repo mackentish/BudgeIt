@@ -48,6 +48,8 @@ axios.interceptors.response.use(
   },
   function (error) {
     const originalRequest = error.config;
+    console.log('intercepted error', originalRequest.url, error.response.status);
+    console.log('retry?', originalRequest._retry);
 
     if (error.response.status === 401 && originalRequest.url === `${API_URL}/users/refresh`) {
       ClearUserSession();
@@ -64,8 +66,13 @@ axios.interceptors.response.use(
           if (res.status === 201) {
             tokenStore.accessToken = res.data.accessToken;
             tokenStore.refreshToken = res.data.refreshToken;
+            originalRequest.headers.Authorization = 'Bearer ' + res.data.accessToken;
             return axios(originalRequest);
           }
+        })
+        .catch(err => {
+          console.log('refresh error', err);
+          ClearUserSession();
         });
     }
     return Promise.reject(error);

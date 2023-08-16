@@ -124,20 +124,20 @@ const styles = StyleSheet.create({
   },
   container: {
     gap: 16,
-    backgroundColor: colors.background,
+    backgroundColor: colors.temp.gray,
     flex: 1,
     padding: 30,
   },
   text: {
     fontSize: 12,
     fontFamily: font.italic,
-    color: colors.white,
+    color: colors.temp.black,
     textAlign: 'center',
   },
   headerText: {
     fontSize: 20,
     fontFamily: font.regular,
-    color: colors.white,
+    color: colors.temp.black,
   },
   headerContainer: {
     display: 'flex',
@@ -148,16 +148,16 @@ const styles = StyleSheet.create({
   },
   btn: {
     padding: 10,
-    backgroundColor: colors.tertiary,
+    backgroundColor: colors.temp.black,
     borderRadius: 10,
   },
   btnText: {
     fontSize: 15,
     fontFamily: font.semiBold,
-    color: colors.white,
+    color: colors.temp.white,
   },
   signOutBtn: {
-    backgroundColor: colors.red,
+    backgroundColor: colors.temp.red,
   },
   backBtn: {
     display: 'flex',
@@ -169,14 +169,14 @@ const styles = StyleSheet.create({
   backBtnText: {
     fontSize: 15,
     fontFamily: font.semiBold,
-    color: colors.secondary,
+    color: colors.temp.black,
   },
   backBtnArrow: {
     fontSize: 15,
-    color: colors.secondary,
+    color: colors.temp.black,
   },
   input: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.temp.white,
     borderRadius: 10,
     padding: 10,
     fontSize: 15,
