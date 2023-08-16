@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.temp.black,
   },
   bannerText: {
     textAlign: 'center',
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.temp.black,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 10,

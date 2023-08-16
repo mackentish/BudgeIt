@@ -257,22 +257,16 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: colors.background,
-  },
-  header: {
-    fontSize: 30,
-    fontFamily: font.extraBold,
-    color: colors.white,
-    marginBottom: 20,
+    backgroundColor: colors.temp.white,
   },
   input: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.temp.gray,
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
   },
   textBtn: {
-    color: colors.secondary,
+    color: colors.temp.black,
     fontFamily: font.semiBold,
     fontSize: 16,
     textAlign: 'center',
@@ -280,7 +274,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   text: {
-    color: colors.white,
+    color: colors.temp.black,
     fontFamily: font.semiBold,
     fontSize: 16,
     textAlign: 'center',

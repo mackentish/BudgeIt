@@ -1,4 +1,10 @@
 const colors = {
+  temp: {
+    black: '#000000',
+    white: '#FFFFFF',
+    gray: '#E0E0E0',
+  },
+  /*
   background: '#373737',
   paleGray: '#F5F5F5',
   gray: '#E0E0E0',
@@ -19,6 +25,7 @@ const colors = {
     '#FDCA92',
     '#FFE8DA',
   ],
+  */
 };
 
 const font = {

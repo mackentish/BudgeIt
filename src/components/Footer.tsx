@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.temp.black,
     paddingVertical: 10,
     paddingHorizontal: 20,
     width: '100%',
   },
   icon: {
-    color: colors.secondary,
+    color: colors.temp.white,
     fontSize: 30,
   },
   iconPressable: {
@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
     width: '15%',
   },
   focused: {
-    backgroundColor: colors.tertiary,
+    backgroundColor: colors.temp.gray,
   },
 });

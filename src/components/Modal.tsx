@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Modal as ReactModal, StyleSheet } from 'react-native';
+import { colors } from '../constants/globalStyle';
 
 export default function Modal({ visible, children }: { visible: boolean; children: React.ReactNode }) {
   return (
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: colors.temp.white,
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',

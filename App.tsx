@@ -41,7 +41,7 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   safeView: {
     flex: 0,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.temp.black,
   },
   gestureWrapper: {
     flex: 1,

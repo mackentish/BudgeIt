@@ -6,17 +6,7 @@ import { colors, font } from '../constants/globalStyle';
 import { usePockets } from '../state/queries';
 import { UserContext } from '../state/context/UserProvider';
 
-export default function Pocket({
-  _id,
-  name,
-  amount,
-  color,
-}: {
-  _id: string;
-  name: string;
-  amount: number;
-  color: string;
-}) {
+export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
   const [isOpen, setIsOpen] = useState(false);
   const [changeAmount, setChangeAmount] = useState(amount);
   const { user } = useContext(UserContext);
@@ -52,7 +42,7 @@ export default function Pocket({
 
   return (
     <AnimatedPressable onPress={() => setIsOpen(true)}>
-      <View style={[styles.pocket, { backgroundColor: color }]}>
+      <View style={styles.pocket}>
         <View style={styles.pocketRow}>
           <Text style={[styles.text, styles.name]}>{name}</Text>
           <Text style={[styles.text, styles.amount]}>{currencyFormatter.format(amount)}</Text>
@@ -87,7 +77,7 @@ const styles = StyleSheet.create({
   pocket: {
     flexDirection: 'column',
     gap: 8,
-    backgroundColor: 'white',
+    backgroundColor: colors.temp.gray,
     borderRadius: 15,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 10 },
@@ -102,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: 'black',
+    color: colors.temp.black,
     fontSize: 15,
   },
   name: {
@@ -117,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   amountInput: {
-    backgroundColor: colors.paleGray,
+    backgroundColor: colors.temp.white,
     padding: 10,
     borderRadius: 10,
   },
@@ -130,7 +120,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   button: {
-    backgroundColor: colors.paleGray,
+    backgroundColor: colors.temp.black,
     borderRadius: 10,
     alignItems: 'center',
     paddingVertical: 10,

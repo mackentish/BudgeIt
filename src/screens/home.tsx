@@ -1,4 +1,3 @@
-/* home screen with header */
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import React, { useContext } from 'react';
 import { colors } from '../constants/globalStyle';
@@ -22,8 +21,8 @@ export default function Home() {
       <Banner />
       <ScrollView>
         <View style={styles.content}>
-          {pockets.map((d, i) => (
-            <Pocket key={d._id} _id={d._id} name={d.name} amount={d.amount} color={colors.pocketColors[i]} />
+          {pockets.map(d => (
+            <Pocket key={d._id} _id={d._id} name={d.name} amount={d.amount} />
           ))}
         </View>
       </ScrollView>
@@ -33,7 +32,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.temp.white,
     flex: 1,
   },
   content: {
