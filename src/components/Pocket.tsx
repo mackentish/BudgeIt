@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     color: colors.temp.red,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 4,
     color: colors.temp.black,
   },
   /*

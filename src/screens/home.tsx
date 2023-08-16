@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   icon: {
-    fontSize: 24,
+    fontSize: 4,
   },
 });
