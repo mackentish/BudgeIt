@@ -5,7 +5,9 @@ import Pocket from '../components/Pocket';
 import { UserContext } from '../state/context/UserProvider';
 import { usePockets } from '../state/queries';
 import { Button, LoadingSpinner } from '../components';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import fontelloConfig from '../config.json';
+const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function Home() {
   const { user } = useContext(UserContext);
@@ -31,7 +33,7 @@ export default function Home() {
         <View style={styles.pocketContainer}>
           <View style={styles.pocketTitleRow}>
             <Text style={styles.pocketTitle}>Pockets</Text>
-            <Icon name="ellipsis-h" style={styles.icon} />
+            <Icon name="ellipsis" style={styles.icon} />
           </View>
           {pockets.map(p => (
             <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />

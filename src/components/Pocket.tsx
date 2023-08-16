@@ -3,7 +3,9 @@ import React from 'react';
 import { currencyFormatter } from '../utils';
 import AnimatedPressable from './AnimatedPressable';
 import { colors, numbers, font } from '../constants/globalStyle';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { createIconSetFromFontello } from 'react-native-vector-icons';
+import fontelloConfig from '../config.json';
+const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
   /*
@@ -49,7 +51,7 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
             <Text style={styles.name}>{name}</Text>
             <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
           </View>
-          <Icon name="ellipsis-h" style={styles.icon} />
+          <Icon name="ellipsis" style={styles.icon} />
         </View>
         {/*isOpen && (
           <View style={styles.updateForm}>

@@ -18,7 +18,7 @@ const getIcon = (name: string, isFocused: boolean) => {
       tabName = 'Templates';
       break;
     case 'summary':
-      iconName = 'chart-bar';
+      iconName = 'summary';
       tabName = 'Summary';
       break;
     case 'profile':
