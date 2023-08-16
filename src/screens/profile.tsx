@@ -99,7 +99,7 @@ function PocketDistributions({ navigation }: { navigation: any }) {
   );
 }
 
-export default function UserSettings() {
+export default function Profile() {
   return (
     <Stack.Navigator initialRouteName="userNav" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="userNav" component={UserNav} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { Home, Template, Summary, UserSettings } from './src/screens';
+import { Home, Template, Summary, Profile } from './src/screens';
 import { UserProvider } from './src/state/context/UserProvider';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { colors } from './src/constants/globalStyle';
@@ -28,7 +28,7 @@ function App(): JSX.Element {
               <Tab.Screen name="home" component={Home} />
               <Tab.Screen name="templates" component={Template} />
               <Tab.Screen name="summary" component={Summary} />
-              <Tab.Screen name="userSettings" component={UserSettings} />
+              <Tab.Screen name="profile" component={Profile} />
             </Tab.Navigator>
           </UserProvider>
           <SafeAreaView style={styles.safeView} />
@@ -41,7 +41,7 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   safeView: {
     flex: 0,
-    backgroundColor: colors.temp.black,
+    backgroundColor: colors.temp.white,
   },
   gestureWrapper: {
     flex: 1,

@@ -1,23 +1,37 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { colors } from '../constants/globalStyle';
+import { colors, font } from '../constants/globalStyle';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from '../config.json';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
-const getIcon = (name: string) => {
+const getIcon = (name: string, isFocused: boolean) => {
+  let iconName = 'home';
+  let tabName = 'Home';
   switch (name) {
     case 'home':
-      return <Icon name="home" style={styles.icon} />;
+      iconName = 'home';
+      tabName = 'Home';
+      break;
     case 'templates':
-      return <Icon name="template" style={styles.icon} />;
+      iconName = 'template';
+      tabName = 'Templates';
+      break;
     case 'summary':
-      return <Icon name="chart-bar" style={styles.icon} />;
-    case 'userSettings':
-      return <Icon name="user" style={styles.icon} />;
-    default:
-      return <Icon name="home" style={styles.icon} />;
+      iconName = 'chart-bar';
+      tabName = 'Summary';
+      break;
+    case 'profile':
+      iconName = 'user';
+      tabName = 'Profile';
+      break;
   }
+  return (
+    <View style={styles.iconContainer}>
+      <Icon name={iconName} style={[styles.icon, isFocused && styles.focused]} />
+      <Text style={[styles.iconText, isFocused && styles.focused]}>{tabName}</Text>
+    </View>
+  );
 };
 
 export default function Footer({ state, descriptors, navigation }: { state: any; descriptors: any; navigation: any }) {
@@ -59,9 +73,8 @@ export default function Footer({ state, descriptors, navigation }: { state: any;
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             onPress={onPress}
-            onLongPress={onLongPress}
-            style={[styles.iconPressable, isFocused && styles.focused]}>
-            {getIcon(label)}
+            onLongPress={onLongPress}>
+            {getIcon(label, isFocused)}
           </Pressable>
         );
       })}
@@ -73,25 +86,33 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: colors.temp.black,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    gap: 10,
+    flexShrink: 0,
+    backgroundColor: colors.temp.white,
   },
   icon: {
-    color: colors.temp.white,
+    color: colors.temp.gray,
     fontSize: 30,
   },
-  iconPressable: {
+  iconText: {
+    color: colors.temp.gray,
+    fontFamily: font.regular,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  iconContainer: {
     display: 'flex',
-    alignItems: 'center',
+    padding: 10,
+    flexDirection: 'column',
     justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 10,
-    width: '15%',
+    alignItems: 'center',
   },
   focused: {
-    backgroundColor: colors.temp.gray,
+    color: colors.temp.black,
   },
 });
