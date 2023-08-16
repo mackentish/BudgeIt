@@ -23,7 +23,7 @@ const defaultStyles = StyleSheet.create({
   button: {
     backgroundColor: colors.temp.black,
     padding: 8,
-    borderRadius: 20,
+    borderRadius: 10,
     shadowColor: 'black',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.26,
@@ -32,7 +32,7 @@ const defaultStyles = StyleSheet.create({
   },
   buttonText: {
     color: colors.temp.white,
-    fontSize: 32,
+    fontSize: 12,
     fontFamily: font.bold,
     textAlign: 'center',
   },

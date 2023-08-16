@@ -5,7 +5,7 @@ import { Home, Template, Summary, Profile } from './src/screens';
 import { UserProvider } from './src/state/context/UserProvider';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { colors } from './src/constants/globalStyle';
-import { Footer, Header } from './src/components';
+import { Footer } from './src/components';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -20,7 +20,6 @@ function App(): JSX.Element {
         <NavigationContainer>
           <SafeAreaView style={styles.safeView} />
           <UserProvider>
-            <Header />
             <Tab.Navigator
               screenOptions={{ headerShown: false }}
               initialRouteName="home"

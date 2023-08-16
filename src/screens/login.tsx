@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TextInput, KeyboardAvoidingView, StyleSheet, View, Pressable, Text, Alert } from 'react-native';
 import { useUser } from '../state/queries';
-import { Button, Header, LoadingSpinner, Modal } from '../components';
+import { Button, LoadingSpinner, Modal } from '../components';
 import { colors, font } from '../constants/globalStyle';
 import {
   deviceHasBiometricsKey,
@@ -130,7 +130,6 @@ const LoginScreen = ({
 
   return (
     <View style={styles.container}>
-      <Header />
       <KeyboardAvoidingView style={styles.form}>
         {loginUser.isLoading && <LoadingSpinner />}
         <TextInput
@@ -192,7 +191,6 @@ const SignUpScreen = ({
 
   return (
     <View style={styles.container}>
-      <Header />
       <KeyboardAvoidingView style={styles.form}>
         {createUser.isLoading && <LoadingSpinner />}
         <TextInput placeholder="First Name" onChangeText={setFirstName} style={styles.input} />
