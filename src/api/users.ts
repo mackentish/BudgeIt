@@ -1,10 +1,11 @@
-import { API_URL, API_KEY } from '@env';
+import { API_KEY } from '@env';
 import { User, UserLogin, UserRegister } from '../types';
-import axios from 'axios';
+import BaseInstance from './base';
 
 const loginUser = async (loginData: UserLogin) => {
   try {
-    const response = await axios(`${API_URL}/users/login`, {
+    const response = await BaseInstance().request({
+      url: '/users/login',
       method: 'POST',
       headers: {
         'X-API-KEY': API_KEY,
@@ -22,7 +23,8 @@ const loginUser = async (loginData: UserLogin) => {
 
 const createUser = async (userData: UserRegister) => {
   try {
-    const response = await axios(`${API_URL}/users`, {
+    const response = await BaseInstance().request({
+      url: '/users',
       method: 'POST',
       headers: {
         'X-API-KEY': API_KEY,

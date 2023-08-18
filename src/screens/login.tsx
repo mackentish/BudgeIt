@@ -32,7 +32,6 @@ const BiometricsModal = ({
     if (response) setPersistNextLogin(true);
     setHaveBiometricsPermissions(response);
     setVisible(false);
-    await LocalAuthentication.authenticateAsync();
   };
 
   return (
@@ -43,8 +42,8 @@ const BiometricsModal = ({
           Allow budge-it to enable biometrics for future logins?
         </Text>
         <View style={modalStyles.btnContainer}>
-          <Button title={'Allow'} onPress={() => handleResponse(true)} />
-          <Button title={"Don't Allow"} onPress={() => handleResponse(false)} />
+          <Button label={'Allow'} onPress={() => handleResponse(true)} />
+          <Button label={"Don't Allow"} onPress={() => handleResponse(false)} />
         </View>
       </View>
     </Modal>
@@ -68,65 +67,64 @@ const LoginScreen = ({
   const [haveBiometricsPermission] = useMMKVBoolean(haveBiometricsPermissionKey);
   const [deviceHasBiometrics, setDeviceHasBiometrics] = useMMKVBoolean(deviceHasBiometricsKey);
   const [havePromptedForBiometrics, setHavePromptedForBiometrics] = useMMKVBoolean(havePromptedForBiometricsKey);
-  const [persistNextLogin] = useMMKVBoolean(persistNextLoginKey);
+  const [persistNextLogin, setPersistNextLogin] = useMMKVBoolean(persistNextLoginKey);
   const [userCredentials, setUserCredentials] = useMMKVString(userCredentialsKey);
   const [openBiometrics, setOpenBiometrics] = useState(false);
 
-  /**
-   * First checks storage to see if we have this response already.
-   * If we do, return that value.
-   * If we don't, check if the device has biometrics and store
-   * that response in storage.
-   */
-  const checkDeviceHardware = async () => {
-    if (deviceHasBiometrics) {
-      return deviceHasBiometrics;
-    } else {
-      const hasHardware = await LocalAuthentication.hasHardwareAsync();
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-      const result = hasHardware && isEnrolled;
-      setDeviceHasBiometrics(result);
-      return result;
-    }
-  };
-
-  /**
-   * Checks if biometrics are enabled for the user.
-   * If they are, authenticate with biometrics.
-   * If not, check if the user has denied biometrics.
-   * If they haven't, check if the device has biometrics.
-   * If they do, prompt the user to enable biometrics.
-   * If they accept, prompt the device for biometrics.
-   * Have user log in and store credentials.
-   */
-  const checkBiometrics = async () => {
-    // if biometrics enabled and we have stored user credentials, authenticate with biometrics
-    if (haveBiometricsPermission && userCredentials) {
-      const result = await LocalAuthentication.authenticateAsync();
-      if (result.success) {
-        // decrypt credentials
-        const decryptedValue = JSON.parse(DecryptValue(userCredentials)) as UserLogin;
-        // log user in
-        loginUser.mutate({
-          email: decryptedValue.email,
-          password: decryptedValue.password,
-        });
-      }
-    }
-    // else check if the device has biometrics
-    if (await checkDeviceHardware()) {
-      // check if we have already prompted the user to enable biometrics
-      if (!havePromptedForBiometrics) {
-        // if we haven't, prompt the user to enable biometrics
-        setOpenBiometrics(true);
-        setHavePromptedForBiometrics(true);
-      }
-    }
-  };
-
   useEffect(() => {
+    /**
+     * First checks storage to see if we have this response already.
+     * If we do, return that value.
+     * If we don't, check if the device has biometrics and store
+     * that response in storage.
+     */
+    const checkDeviceHardware = async () => {
+      if (deviceHasBiometrics) {
+        return deviceHasBiometrics;
+      } else {
+        const hasHardware = await LocalAuthentication.hasHardwareAsync();
+        const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+        const result = hasHardware && isEnrolled;
+        setDeviceHasBiometrics(result);
+        return result;
+      }
+    };
+
+    /**
+     * Checks if biometrics are enabled for the user.
+     * If they are, authenticate with biometrics.
+     * If not, check if the user has denied biometrics.
+     * If they haven't, check if the device has biometrics.
+     * If they do, prompt the user to enable biometrics.
+     * If they accept, prompt the device for biometrics.
+     * Have user log in and store credentials.
+     */
+    const checkBiometrics = async () => {
+      // if biometrics enabled and we have stored user credentials, authenticate with biometrics
+      if (haveBiometricsPermission && userCredentials) {
+        const result = await LocalAuthentication.authenticateAsync();
+        if (result.success) {
+          // decrypt credentials
+          const decryptedValue = JSON.parse(DecryptValue(userCredentials)) as UserLogin;
+          // log user in
+          loginUser.mutate({
+            email: decryptedValue.email,
+            password: decryptedValue.password,
+          });
+        }
+      }
+      // else check if the device has biometrics
+      if (await checkDeviceHardware()) {
+        // check if we have already prompted the user to enable biometrics
+        if (!havePromptedForBiometrics) {
+          // if we haven't, prompt the user to enable biometrics
+          setOpenBiometrics(true);
+          setHavePromptedForBiometrics(true);
+        }
+      }
+    };
     checkBiometrics();
-  });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -148,13 +146,15 @@ const LoginScreen = ({
           style={styles.input}
         />
         <Button
-          title="Log In"
+          label="Log In"
+          size="large"
           onPress={() => {
             if (persistNextLogin) {
               // encrypt credentials
               const encryptedValue = EncryptValue(JSON.stringify({ email: username, password: password }));
               // store credentials
               setUserCredentials(encryptedValue);
+              setPersistNextLogin(false);
             }
             loginUser.mutate({
               email: username,
@@ -211,7 +211,8 @@ const SignUpScreen = ({
           style={styles.input}
         />
         <Button
-          title="Sign Up"
+          label="Sign Up"
+          size="large"
           onPress={() => {
             // TODO: Validate inputs and show error messages under inputs if invalid
             if (password !== passwordConfirm) {

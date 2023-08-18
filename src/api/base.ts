@@ -40,6 +40,7 @@ axios.interceptors.request.use(
 // response interceptor to refresh token on receiving token expired error
 axios.interceptors.response.use(
   response => {
+    console.log('tokens', response.data.tokens);
     if (response.data.tokens) {
       tokenStore.accessToken = response.data.tokens.accessToken;
       tokenStore.refreshToken = response.data.tokens.refreshToken;
