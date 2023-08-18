@@ -1,4 +1,4 @@
 import { currencyFormatter } from './formatter';
-import { EncryptValue, DecryptValue } from './encryption';
+import * as Storage from './storage';
 
-export { currencyFormatter, EncryptValue, DecryptValue };
+export { currencyFormatter, Storage };

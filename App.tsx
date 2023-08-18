@@ -18,19 +18,20 @@ function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.gestureWrapper}>
         <NavigationContainer>
-          <SafeAreaView style={styles.safeView} />
-          <UserProvider>
-            <Tab.Navigator
-              screenOptions={{ headerShown: false }}
-              initialRouteName="home"
-              tabBar={props => Footer({ ...props })}>
-              <Tab.Screen name="home" component={Home} />
-              <Tab.Screen name="templates" component={Template} />
-              <Tab.Screen name="summary" component={Summary} />
-              <Tab.Screen name="profile" component={Profile} />
-            </Tab.Navigator>
-          </UserProvider>
-          <SafeAreaView style={styles.safeView} />
+          <SafeAreaView style={styles.topSafeView} />
+          <SafeAreaView style={styles.bottomSafeView}>
+            <UserProvider>
+              <Tab.Navigator
+                screenOptions={{ headerShown: false }}
+                initialRouteName="home"
+                tabBar={props => Footer({ ...props })}>
+                <Tab.Screen name="home" component={Home} />
+                <Tab.Screen name="templates" component={Template} />
+                <Tab.Screen name="summary" component={Summary} />
+                <Tab.Screen name="profile" component={Profile} />
+              </Tab.Navigator>
+            </UserProvider>
+          </SafeAreaView>
         </NavigationContainer>
       </GestureHandlerRootView>
     </QueryClientProvider>
@@ -38,12 +39,17 @@ function App(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  safeView: {
+  topSafeView: {
     flex: 0,
-    backgroundColor: colors.temp.white,
+    backgroundColor: colors.temp.red,
+  },
+  bottomSafeView: {
+    flex: 1,
+    backgroundColor: colors.temp.red,
   },
   gestureWrapper: {
     flex: 1,
+    height: '100%',
   },
 });
 

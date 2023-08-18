@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { TextInput, KeyboardAvoidingView, StyleSheet, View, Pressable, Text, Alert } from 'react-native';
+import { TextInput, KeyboardAvoidingView, StyleSheet, View, Text, Alert } from 'react-native';
 import { useUser } from '../state/queries';
 import { Button, LoadingSpinner, Modal } from '../components';
 import { colors, font } from '../constants/globalStyle';
@@ -7,13 +7,11 @@ import {
   deviceHasBiometricsKey,
   haveBiometricsPermissionKey,
   havePromptedForBiometricsKey,
-  persistNextLoginKey,
   userCredentialsKey,
 } from '../constants/persistentStorage';
 import { User, UserLogin } from '../types';
-import { useMMKVBoolean, useMMKVString } from 'react-native-mmkv';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { EncryptValue, DecryptValue } from '../utils';
+import { Storage } from '../utils';
 
 /**
  * Modal prompting user to enable biometrics
@@ -21,16 +19,15 @@ import { EncryptValue, DecryptValue } from '../utils';
 const BiometricsModal = ({
   visible,
   setVisible,
+  setPersistNextLogin,
 }: {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
+  setPersistNextLogin: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const [, setHaveBiometricsPermissions] = useMMKVBoolean(haveBiometricsPermissionKey);
-  const [, setPersistNextLogin] = useMMKVBoolean(persistNextLoginKey);
-
   const handleResponse = async (response: boolean) => {
-    if (response) setPersistNextLogin(true);
-    setHaveBiometricsPermissions(response);
+    Storage.SetItemAsync(haveBiometricsPermissionKey, response);
+    if (response) setPersistNextLogin(true); // do this to avoid any weirdness with re-rendering when set to false
     setVisible(false);
   };
 
@@ -42,8 +39,8 @@ const BiometricsModal = ({
           Allow budge-it to enable biometrics for future logins?
         </Text>
         <View style={modalStyles.btnContainer}>
-          <Button label={'Allow'} onPress={() => handleResponse(true)} />
-          <Button label={"Don't Allow"} onPress={() => handleResponse(false)} />
+          <Button label={'Allow'} size="medium" onPress={() => handleResponse(true)} />
+          <Button label={"Don't Allow"} size="medium" type="secondary" onPress={() => handleResponse(false)} />
         </View>
       </View>
     </Modal>
@@ -63,15 +60,19 @@ const LoginScreen = ({
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { loginUser } = useUser(setUser);
-  // Biometrics
-  const [haveBiometricsPermission] = useMMKVBoolean(haveBiometricsPermissionKey);
-  const [deviceHasBiometrics, setDeviceHasBiometrics] = useMMKVBoolean(deviceHasBiometricsKey);
-  const [havePromptedForBiometrics, setHavePromptedForBiometrics] = useMMKVBoolean(havePromptedForBiometricsKey);
-  const [persistNextLogin, setPersistNextLogin] = useMMKVBoolean(persistNextLoginKey);
-  const [userCredentials, setUserCredentials] = useMMKVString(userCredentialsKey);
   const [openBiometrics, setOpenBiometrics] = useState(false);
+  const [persistNextLogin, setPersistNextLogin] = useState(false);
 
   useEffect(() => {
+    // Only used for testing login flow in dev
+    // change to true to reset storage then back to false
+    // after it renders
+    if (__DEV__ && false) {
+      Storage.SetItemAsync(haveBiometricsPermissionKey, false);
+      Storage.SetItemAsync(havePromptedForBiometricsKey, false);
+      Storage.SetItemAsync(userCredentialsKey, false);
+    }
+
     /**
      * First checks storage to see if we have this response already.
      * If we do, return that value.
@@ -79,13 +80,14 @@ const LoginScreen = ({
      * that response in storage.
      */
     const checkDeviceHardware = async () => {
+      const deviceHasBiometrics = await Storage.GetItemAsync<boolean>(deviceHasBiometricsKey);
       if (deviceHasBiometrics) {
         return deviceHasBiometrics;
       } else {
         const hasHardware = await LocalAuthentication.hasHardwareAsync();
         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
         const result = hasHardware && isEnrolled;
-        setDeviceHasBiometrics(result);
+        Storage.SetItemAsync(deviceHasBiometricsKey, result);
         return result;
       }
     };
@@ -101,73 +103,77 @@ const LoginScreen = ({
      */
     const checkBiometrics = async () => {
       // if biometrics enabled and we have stored user credentials, authenticate with biometrics
-      if (haveBiometricsPermission && userCredentials) {
+      const userCredentials = await Storage.GetItemAsync<UserLogin>(userCredentialsKey);
+      if ((await Storage.GetItemAsync<boolean>(haveBiometricsPermissionKey)) && userCredentials) {
         const result = await LocalAuthentication.authenticateAsync();
         if (result.success) {
-          // decrypt credentials
-          const decryptedValue = JSON.parse(DecryptValue(userCredentials)) as UserLogin;
           // log user in
           loginUser.mutate({
-            email: decryptedValue.email,
-            password: decryptedValue.password,
+            email: userCredentials.email,
+            password: userCredentials.password,
           });
         }
       }
       // else check if the device has biometrics
       if (await checkDeviceHardware()) {
         // check if we have already prompted the user to enable biometrics
-        if (!havePromptedForBiometrics) {
+        if (!(await Storage.GetItemAsync<boolean>(havePromptedForBiometricsKey))) {
           // if we haven't, prompt the user to enable biometrics
           setOpenBiometrics(true);
-          setHavePromptedForBiometrics(true);
+          Storage.SetItemAsync(havePromptedForBiometricsKey, true);
         }
       }
     };
     checkBiometrics();
-  }, []);
+  }, [loginUser]);
 
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView style={styles.form}>
         {loginUser.isLoading && <LoadingSpinner />}
-        <TextInput
-          placeholder="Username"
-          autoCapitalize="none"
-          textContentType="emailAddress"
-          onChangeText={setUsername}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          autoCapitalize="none"
-          secureTextEntry={true}
-          textContentType="password"
-          onChangeText={setPassword}
-          style={styles.input}
-        />
-        <Button
-          label="Log In"
-          size="large"
-          onPress={() => {
-            if (persistNextLogin) {
-              // encrypt credentials
-              const encryptedValue = EncryptValue(JSON.stringify({ email: username, password: password }));
-              // store credentials
-              setUserCredentials(encryptedValue);
-              setPersistNextLogin(false);
-            }
-            loginUser.mutate({
-              email: username,
-              password: password,
-            });
-          }}
-        />
-        <Pressable onPress={setSignUp}>
-          <Text style={styles.textBtn}>Create Account</Text>
-        </Pressable>
-        {persistNextLogin && <Text style={styles.text}>Log in to activate biometrics.</Text>}
+        <View style={styles.section}>
+          <TextInput
+            placeholder="Username"
+            autoCapitalize="none"
+            textContentType="emailAddress"
+            onChangeText={setUsername}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            autoCapitalize="none"
+            secureTextEntry={true}
+            textContentType="password"
+            onChangeText={setPassword}
+            style={styles.input}
+          />
+          {persistNextLogin && <Text style={styles.text}>Biometrics enabled for next login</Text>}
+        </View>
+        <View style={styles.section}>
+          <Button
+            label="Log In"
+            size="large"
+            onPress={async () => {
+              if (persistNextLogin) {
+                // store credentials
+                Storage.SetItemAsync(userCredentialsKey, { email: username, password: password });
+                // don't think I need to run the below line, but leaving it here as a reminder
+                // setPersistNextLogin(false);
+              }
+              loginUser.mutate({
+                email: username,
+                password: password,
+              });
+            }}
+          />
+          <Button label="Create Account" size="large" type="secondary" onPress={setSignUp} />
+        </View>
       </KeyboardAvoidingView>
-      <BiometricsModal visible={openBiometrics} setVisible={setOpenBiometrics} />
+      <BiometricsModal
+        visible={openBiometrics}
+        setVisible={setOpenBiometrics}
+        setPersistNextLogin={setPersistNextLogin}
+      />
     </View>
   );
 };
@@ -193,43 +199,45 @@ const SignUpScreen = ({
     <View style={styles.container}>
       <KeyboardAvoidingView style={styles.form}>
         {createUser.isLoading && <LoadingSpinner />}
-        <TextInput placeholder="First Name" onChangeText={setFirstName} style={styles.input} />
-        <TextInput placeholder="Last Name" onChangeText={setLastName} style={styles.input} />
-        <TextInput placeholder="Username" autoCapitalize="none" onChangeText={setUsername} style={styles.input} />
-        <TextInput
-          placeholder="Password"
-          autoCapitalize="none"
-          secureTextEntry={true}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Confirm Password"
-          autoCapitalize="none"
-          secureTextEntry={true}
-          onChangeText={setPasswordConfirm}
-          style={styles.input}
-        />
-        <Button
-          label="Sign Up"
-          size="large"
-          onPress={() => {
-            // TODO: Validate inputs and show error messages under inputs if invalid
-            if (password !== passwordConfirm) {
-              Alert.alert('Passwords do not match');
-              return;
-            }
-            createUser.mutate({
-              firstName: firstName,
-              lastName: lastName,
-              email: username,
-              password: password,
-            });
-          }}
-        />
-        <Pressable onPress={setLogIn}>
-          <Text style={styles.textBtn}>Log In</Text>
-        </Pressable>
+        <View style={styles.section}>
+          <TextInput placeholder="First Name" onChangeText={setFirstName} style={styles.input} />
+          <TextInput placeholder="Last Name" onChangeText={setLastName} style={styles.input} />
+          <TextInput placeholder="Username" autoCapitalize="none" onChangeText={setUsername} style={styles.input} />
+          <TextInput
+            placeholder="Password"
+            autoCapitalize="none"
+            secureTextEntry={true}
+            onChangeText={setPassword}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Confirm Password"
+            autoCapitalize="none"
+            secureTextEntry={true}
+            onChangeText={setPasswordConfirm}
+            style={styles.input}
+          />
+        </View>
+        <View style={styles.section}>
+          <Button
+            label="Sign Up"
+            size="large"
+            onPress={() => {
+              // TODO: Validate inputs and show error messages under inputs if invalid
+              if (password !== passwordConfirm) {
+                Alert.alert('Passwords do not match');
+                return;
+              }
+              createUser.mutate({
+                firstName: firstName,
+                lastName: lastName,
+                email: username,
+                password: password,
+              });
+            }}
+          />
+          <Button label="Log In" size="large" type="secondary" onPress={setLogIn} />
+        </View>
       </KeyboardAvoidingView>
     </View>
   );
@@ -249,28 +257,28 @@ export default function Login({ setUser }: { setUser: Dispatch<SetStateAction<Us
 }
 
 const styles = StyleSheet.create({
-  form: {
-    padding: 20,
-    height: '100%',
-  },
   container: {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: colors.temp.gray,
+    height: '100%',
+  },
+  form: {
+    padding: 20,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  section: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20,
   },
   input: {
     backgroundColor: colors.temp.white,
     padding: 10,
     borderRadius: 5,
-    marginBottom: 20,
-  },
-  textBtn: {
-    color: colors.temp.black,
-    fontFamily: font.semiBold,
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 20,
-    textDecorationLine: 'underline',
   },
   text: {
     color: colors.temp.black,

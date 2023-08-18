@@ -1,4 +1,11 @@
 {
   "name": "BudgeIt",
-  "displayName": "BudgeIt"
+  "displayName": "BudgeIt",
+  "expo": {
+    "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    }
+  }
 }
