@@ -1,45 +1,40 @@
 import { API_URL } from '@env';
 import axios from 'axios';
-import { useContext } from 'react';
-import { UserContext } from '../state/context/UserProvider';
 
 const tokenStore = {
   accessToken: undefined,
   refreshToken: undefined,
 };
 
-function ClearUserSession() {
+function ClearTokenStore() {
   tokenStore.accessToken = undefined;
   tokenStore.refreshToken = undefined;
-  const { signOut } = useContext(UserContext);
-  signOut();
 }
 
-export default () => {
-  return axios.create({
-    baseURL: API_URL,
-    headers: {
-      Authorization: `Bearer ${tokenStore.accessToken}`,
-    },
-  });
-};
+const baseInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    Authorization: `Bearer ${tokenStore.accessToken}`,
+  },
+});
 
 // request interceptor to add auth token header to requests (if it exists)
-axios.interceptors.request.use(
-  config => {
+baseInstance.interceptors.request.use(
+  function (config) {
+    console.log('intercepted request', config.url, tokenStore.accessToken);
     if (tokenStore.accessToken) {
       config.headers.Authorization = 'Bearer ' + tokenStore.accessToken;
     }
     return config;
   },
-  error => {
+  function (error) {
     Promise.reject(error);
   },
 );
 
 // response interceptor to refresh token on receiving token expired error
-axios.interceptors.response.use(
-  response => {
+baseInstance.interceptors.response.use(
+  function (response) {
     console.log('tokens', response.data.tokens);
     if (response.data.tokens) {
       tokenStore.accessToken = response.data.tokens.accessToken;
@@ -50,10 +45,9 @@ axios.interceptors.response.use(
   function (error) {
     const originalRequest = error.config;
     console.log('intercepted error', originalRequest.url, error.response.status);
-    console.log('retry?', originalRequest._retry);
 
     if (error.response.status === 401 && originalRequest.url === `${API_URL}/users/refresh`) {
-      ClearUserSession();
+      ClearTokenStore();
       return Promise.reject(error);
     }
 
@@ -64,6 +58,7 @@ axios.interceptors.response.use(
           refreshToken: tokenStore.refreshToken,
         })
         .then(res => {
+          console.log('refresh response', res);
           if (res.status === 201) {
             tokenStore.accessToken = res.data.accessToken;
             tokenStore.refreshToken = res.data.refreshToken;
@@ -73,9 +68,11 @@ axios.interceptors.response.use(
         })
         .catch(err => {
           console.log('refresh error', err);
-          ClearUserSession();
+          ClearTokenStore();
         });
     }
     return Promise.reject(error);
   },
 );
+
+export default baseInstance;

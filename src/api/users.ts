@@ -1,10 +1,10 @@
 import { API_KEY } from '@env';
 import { User, UserLogin, UserRegister } from '../types';
-import BaseInstance from './base';
+import baseInstance from './base';
 
 const loginUser = async (loginData: UserLogin) => {
   try {
-    const response = await BaseInstance().request({
+    const response = await baseInstance.request({
       url: '/users/login',
       method: 'POST',
       headers: {
@@ -23,7 +23,7 @@ const loginUser = async (loginData: UserLogin) => {
 
 const createUser = async (userData: UserRegister) => {
   try {
-    const response = await BaseInstance().request({
+    const response = await baseInstance.request({
       url: '/users',
       method: 'POST',
       headers: {

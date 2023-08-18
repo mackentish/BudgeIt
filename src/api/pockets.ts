@@ -1,11 +1,9 @@
 import { Pocket } from '../types';
 import { API_KEY } from '@env';
-import BaseInstance from './base';
-// TODO: why do I have to use BaseInstance() here for the interceptors to work
-// but not in users.ts???
+import baseInstance from './base';
 
 const fetchPockets = async (userId: string) => {
-  const response = await BaseInstance().request({
+  const response = await baseInstance.request({
     url: `/pockets/${userId}`,
     method: 'GET',
     headers: {
@@ -18,7 +16,7 @@ const fetchPockets = async (userId: string) => {
 };
 
 const updatePocket = async (pocket: Pocket) => {
-  const response = await BaseInstance().request({
+  const response = await baseInstance.request({
     url: `/pockets/${pocket._id}`,
     method: 'PUT',
     headers: {
@@ -35,7 +33,7 @@ const updatePocket = async (pocket: Pocket) => {
 };
 
 const createPocket = async (pocket: Pocket, userId: string) => {
-  const response = await BaseInstance().request({
+  const response = await baseInstance.request({
     url: '/pockets',
     method: 'POST',
     headers: {
