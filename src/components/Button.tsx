@@ -11,7 +11,7 @@ export default function Button({
   type = 'primary',
   ...props
 }: {
-  label: string;
+  label?: string;
   onPress: () => void;
   children?: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
@@ -55,7 +55,7 @@ export default function Button({
       onPress={onPress}
       // eslint-disable-next-line react-native/no-inline-styles
       style={[defaultStyles.button, ...buttonStyles, children && { justifyContent: 'space-between' }, props.style]}>
-      <Text style={textStyles}>{label}</Text>
+      {label && <Text style={textStyles}>{label}</Text>}
       {children}
     </AnimatedPressable>
   );
@@ -64,11 +64,11 @@ export default function Button({
 const defaultStyles = StyleSheet.create({
   // button styles
   button: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
+    flex: 1,
   },
   small: {
     paddingHorizontal: 15,

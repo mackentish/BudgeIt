@@ -25,10 +25,14 @@ export default function Home() {
           {new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
         </Text>
         <View style={styles.headerButtons}>
-          <Button label="Add Transaction" type="tertiary" onPress={() => console.log('TODO: add transaction press')}>
+          <Button type="tertiary" onPress={() => console.log('TODO: add transaction press')}>
+            <Text style={styles.smBtnTxt}>Add Transaction</Text>
             <Icon name="plus" style={styles.icon} />
           </Button>
-          <Button label="Use Template" type="tertiary" onPress={() => console.log('TODO: use template press')} />
+          <Button type="tertiary" onPress={() => console.log('TODO: use template press')}>
+            <Text style={styles.smBtnTxt}>Use Template</Text>
+            <Icon name="template" style={styles.icon} />
+          </Button>
         </View>
       </View>
       <ScrollView>
@@ -97,6 +101,10 @@ const styles = StyleSheet.create({
   pocketTitle: {
     fontFamily: font.bold,
     fontSize: 22,
+  },
+  smBtnTxt: {
+    fontSize: 12,
+    fontFamily: font.regular,
   },
   icon: {
     fontSize: 14,

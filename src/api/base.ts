@@ -21,7 +21,6 @@ const baseInstance = axios.create({
 // request interceptor to add auth token header to requests (if it exists)
 baseInstance.interceptors.request.use(
   function (config) {
-    console.log('intercepted request', config.url, tokenStore.accessToken);
     if (tokenStore.accessToken) {
       config.headers.Authorization = 'Bearer ' + tokenStore.accessToken;
     }
@@ -35,41 +34,41 @@ baseInstance.interceptors.request.use(
 // response interceptor to refresh token on receiving token expired error
 baseInstance.interceptors.response.use(
   function (response) {
-    console.log('tokens', response.data.tokens);
     if (response.data.tokens) {
       tokenStore.accessToken = response.data.tokens.accessToken;
       tokenStore.refreshToken = response.data.tokens.refreshToken;
     }
     return response;
   },
-  function (error) {
+  async function (error) {
     const originalRequest = error.config;
-    console.log('intercepted error', originalRequest.url, error.response.status);
 
-    if (error.response.status === 401 && originalRequest.url === `${API_URL}/users/refresh`) {
+    console.log('refresh error?', originalRequest.url === `${API_URL}/users/refresh`, originalRequest.url);
+    if (originalRequest.url === `${API_URL}/users/refresh`) {
       ClearTokenStore();
       return Promise.reject(error);
     }
 
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      return axios
-        .post(`${API_URL}/users/refresh`, {
+      try {
+        const { data: tokens } = await axios.post(`${API_URL}/users/refresh`, {
+          email: 'john.doe@mailinator.com', // TODO: put the actual email here
           refreshToken: tokenStore.refreshToken,
-        })
-        .then(res => {
-          console.log('refresh response', res);
-          if (res.status === 201) {
-            tokenStore.accessToken = res.data.accessToken;
-            tokenStore.refreshToken = res.data.refreshToken;
-            originalRequest.headers.Authorization = 'Bearer ' + res.data.accessToken;
-            return axios(originalRequest);
-          }
-        })
-        .catch(err => {
-          console.log('refresh error', err);
-          ClearTokenStore();
         });
+
+        console.log('refreshed tokens', tokens);
+
+        tokenStore.accessToken = tokens.accessToken;
+        tokenStore.refreshToken = tokens.refreshToken;
+        baseInstance.defaults.headers.common.Authorization = `Bearer ${tokens.accessToken}`;
+
+        return baseInstance(originalRequest);
+      } catch (err) {
+        // handle error regarding token refresh
+        console.log(err);
+        ClearTokenStore();
+      }
     }
     return Promise.reject(error);
   },
