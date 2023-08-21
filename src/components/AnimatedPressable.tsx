@@ -13,7 +13,7 @@ const AnimatedPressable = (props: any) => {
   });
 
   const shrinkAnimation = Animated.spring(widthAnim, {
-    toValue: 95,
+    toValue: 98,
     useNativeDriver: false,
   });
   return (
@@ -24,8 +24,14 @@ const AnimatedPressable = (props: any) => {
           transform: [
             {
               scaleX: widthAnim.interpolate({
-                inputRange: [95, 100],
-                outputRange: [0.95, 1],
+                inputRange: [98, 100],
+                outputRange: [0.98, 1],
+              }),
+            },
+            {
+              scaleY: widthAnim.interpolate({
+                inputRange: [98, 100],
+                outputRange: [0.98, 1],
               }),
             },
           ],
