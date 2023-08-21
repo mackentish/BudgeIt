@@ -18,6 +18,7 @@ const AnimatedPressable = (props: PressableProps) => {
   });
   return (
     <AnimatedPressableWrapper
+      {...props}
       style={[
         props.style as RegisteredStyle<ViewStyle>,
         {
@@ -37,7 +38,6 @@ const AnimatedPressable = (props: PressableProps) => {
           ],
         },
       ]}
-      onPress={props.onPress}
       onPressIn={e => {
         shrinkAnimation.start();
         props.onPressIn && props.onPressIn(e);

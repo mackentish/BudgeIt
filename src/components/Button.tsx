@@ -56,7 +56,7 @@ export default function Button({
         defaultStyles.button,
         buttonStyles,
         // eslint-disable-next-line react-native/no-inline-styles
-        children ? { justifyContent: 'space-between' } : { justifyContent: 'center' },
+        children ? { flex: 1, justifyContent: 'space-between' } : { justifyContent: 'center' },
       ]}>
       {label && <Text style={textStyles}>{label}</Text>}
       {children}
@@ -70,6 +70,7 @@ const defaultStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    //flex: 1, fixed tertiary with children but broke login buttons. Leaving here for now
   },
   small: {
     paddingHorizontal: 15,
