@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet, PressableProps, StyleProp, ViewStyle } from 'react-native';
+import { Text, StyleSheet, PressableProps } from 'react-native';
 import { colors, font } from '../constants/globalStyle';
 import AnimatedPressable from './AnimatedPressable';
 
@@ -9,14 +9,12 @@ export default function Button({
   children,
   size = 'small',
   type = 'primary',
-  ...props
 }: {
   label?: string;
   onPress: () => void;
   children?: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
   type?: 'primary' | 'secondary' | 'tertiary';
-  style?: StyleProp<ViewStyle>;
 } & PressableProps) {
   let buttonStyles = [];
   let textStyles = [];
@@ -50,11 +48,16 @@ export default function Button({
       textStyles.push(defaultStyles.tertiaryText);
       break;
   }
+
   return (
     <AnimatedPressable
       onPress={onPress}
-      // eslint-disable-next-line react-native/no-inline-styles
-      style={[defaultStyles.button, ...buttonStyles, children && { justifyContent: 'space-between' }, props.style]}>
+      style={[
+        defaultStyles.button,
+        buttonStyles,
+        // eslint-disable-next-line react-native/no-inline-styles
+        children ? { justifyContent: 'space-between' } : { justifyContent: 'center' },
+      ]}>
       {label && <Text style={textStyles}>{label}</Text>}
       {children}
     </AnimatedPressable>
@@ -65,10 +68,8 @@ const defaultStyles = StyleSheet.create({
   // button styles
   button: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
-    flex: 1,
   },
   small: {
     paddingHorizontal: 15,

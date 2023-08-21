@@ -1,10 +1,10 @@
 import { useRef } from 'react';
-import { Animated, Pressable } from 'react-native';
+import { Animated, Pressable, PressableProps, RegisteredStyle, ViewStyle } from 'react-native';
 import React from 'react';
 
 const AnimatedPressableWrapper = Animated.createAnimatedComponent(Pressable);
 
-const AnimatedPressable = (props: any) => {
+const AnimatedPressable = (props: PressableProps) => {
   const widthAnim = useRef(new Animated.Value(100)).current; // Initial value for width multiplier
 
   const growAnimation = Animated.spring(widthAnim, {
@@ -19,7 +19,7 @@ const AnimatedPressable = (props: any) => {
   return (
     <AnimatedPressableWrapper
       style={[
-        props.style,
+        props.style as RegisteredStyle<ViewStyle>,
         {
           transform: [
             {
@@ -37,13 +37,14 @@ const AnimatedPressable = (props: any) => {
           ],
         },
       ]}
-      onPressIn={() => {
+      onPress={props.onPress}
+      onPressIn={e => {
         shrinkAnimation.start();
-        props.onPressIn && props.onPressIn();
+        props.onPressIn && props.onPressIn(e);
       }}
-      onPressOut={() => {
+      onPressOut={e => {
         growAnimation.start();
-        props.onPressOut && props.onPressOut();
+        props.onPressOut && props.onPressOut(e);
       }}>
       {props.children}
     </AnimatedPressableWrapper>
