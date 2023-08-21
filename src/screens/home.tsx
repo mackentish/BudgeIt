@@ -39,7 +39,7 @@ export default function Home() {
         <View style={styles.pocketContainer}>
           <View style={styles.pocketTitleRow}>
             <Text style={styles.pocketTitle}>Pockets</Text>
-            {/*<Icon name="ellipsis" style={styles.icon} />*/}
+            <Icon name="dot-3" style={styles.icon} />
           </View>
           {pockets.map(p => (
             <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
@@ -107,6 +107,6 @@ const styles = StyleSheet.create({
     fontFamily: font.regular,
   },
   icon: {
-    fontSize: 14,
+    fontSize: 24,
   },
 });

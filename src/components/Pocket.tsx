@@ -51,7 +51,7 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
             <Text style={styles.name}>{name}</Text>
             <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
           </View>
-          <Icon name="ellipsis" style={styles.icon} />
+          <Icon name="dot-3" style={styles.icon} />
         </View>
         {/*isOpen && (
           <View style={styles.updateForm}>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     color: colors.temp.red,
   },
   icon: {
-    fontSize: 4,
+    fontSize: 24,
     color: colors.temp.black,
   },
   /*
