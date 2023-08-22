@@ -1,13 +1,11 @@
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import React, { useContext } from 'react';
 import { colors, font } from '../constants/globalStyle';
-import Pocket from '../components/Pocket';
 import { UserContext } from '../state/context/UserProvider';
 import { usePockets } from '../state/queries';
-import { Button, LoadingSpinner } from '../components';
+import { Button, LoadingSpinner, Pocket, PopupMenu } from '../components';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from '../config.json';
-import PopoverMenu from '../components/PopoverMenu';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function Home() {
@@ -40,7 +38,7 @@ export default function Home() {
         <View style={styles.pocketContainer}>
           <View style={styles.pocketTitleRow}>
             <Text style={styles.pocketTitle}>Pockets</Text>
-            <PopoverMenu />
+            <PopupMenu />
           </View>
           {pockets.map(p => (
             <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />

@@ -4,5 +4,6 @@ import Pocket from './Pocket';
 import LoadingSpinner from './LoadingSpinner';
 import Footer from './Footer';
 import Modal from './Modal';
+import PopupMenu from './PopupMenu';
 
-export { AnimatedPressable, Modal, Button, Pocket, LoadingSpinner, Footer };
+export { AnimatedPressable, Modal, Button, Pocket, LoadingSpinner, Footer, PopupMenu };
