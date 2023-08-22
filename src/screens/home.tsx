@@ -7,6 +7,7 @@ import { usePockets } from '../state/queries';
 import { Button, LoadingSpinner } from '../components';
 import { createIconSetFromFontello } from 'react-native-vector-icons';
 import fontelloConfig from '../config.json';
+import PopoverMenu from '../components/PopoverMenu';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
 export default function Home() {
@@ -39,7 +40,7 @@ export default function Home() {
         <View style={styles.pocketContainer}>
           <View style={styles.pocketTitleRow}>
             <Text style={styles.pocketTitle}>Pockets</Text>
-            <Icon name="dot-3" style={styles.icon} />
+            <PopoverMenu />
           </View>
           {pockets.map(p => (
             <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
