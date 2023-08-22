@@ -17,6 +17,19 @@ export default function Home() {
 
   if (fetchPockets.isLoading) return <LoadingSpinner />;
 
+  const pocketMenuOptions = [
+    {
+      label: 'New Pocket',
+      icon: 'plus',
+      action: () => console.log('TODO: New pocket press'),
+    },
+    {
+      label: 'New Group',
+      icon: 'group',
+      action: () => console.log('TODO: New group press'),
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -38,7 +51,7 @@ export default function Home() {
         <View style={styles.pocketContainer}>
           <View style={styles.pocketTitleRow}>
             <Text style={styles.pocketTitle}>Pockets</Text>
-            <PopupMenu />
+            <PopupMenu options={pocketMenuOptions} />
           </View>
           {pockets.map(p => (
             <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />

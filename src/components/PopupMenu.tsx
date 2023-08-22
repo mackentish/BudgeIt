@@ -7,7 +7,13 @@ import { colors, font, numbers } from '../constants/globalStyle';
 import { OverlayContext } from '../state/context';
 const Icon = createIconSetFromFontello(fontelloConfig);
 
-export default function PopupMenu() {
+interface Option {
+  label: string;
+  icon: string;
+  action: () => void;
+}
+
+export default function PopupMenu({ options }: { options: Option[] }) {
   const { setShowOverlay } = useContext(OverlayContext);
 
   return (
@@ -29,15 +35,15 @@ export default function PopupMenu() {
             justifyContent: 'space-between',
           },
         }}>
-        <MenuOption onSelect={() => console.log('TODO: new pocket press')}>
-          <Text style={styles.text}>New Pocket</Text>
-          <Icon name="plus" style={styles.icon} />
-        </MenuOption>
-        <View style={styles.divider} />
-        <MenuOption onSelect={() => console.log('TODO: new group press')}>
-          <Text style={styles.text}>New Group</Text>
-          <Icon name="group" style={styles.icon} />
-        </MenuOption>
+        {options.map((o, i) => (
+          <>
+            <MenuOption key={`option-${i}`} onSelect={o.action}>
+              <Text style={styles.text}>{o.label}</Text>
+              <Icon name={o.icon} style={styles.icon} />
+            </MenuOption>
+            {i < options.length - 1 && <View key={`divider-${i}`} style={styles.divider} />}
+          </>
+        ))}
       </MenuOptions>
     </Menu>
   );
