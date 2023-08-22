@@ -3,9 +3,12 @@ import React, { useContext } from 'react';
 import { colors, font } from '../../constants/globalStyle';
 import { UserContext } from '../../state/context/UserProvider';
 import { usePockets } from '../../state/queries';
-import { Icon, Button, LoadingSpinner, Pocket, PopupMenu } from '../../components';
+import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Footer } from '../../components';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FooterTabs } from '../../constants/navigation';
+import { Profile, Summary, Template } from '..';
 
-export default function Dashboard({ navigation }: { navigation: any }) {
+function DashboardPage({ navigation }: { navigation: any }) {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
@@ -62,6 +65,21 @@ export default function Dashboard({ navigation }: { navigation: any }) {
         </View>
       </ScrollView>
     </View>
+  );
+}
+
+export default function Dashboard() {
+  const Tab = createBottomTabNavigator();
+  return (
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={FooterTabs.HOME}
+      tabBar={props => Footer({ ...props })}>
+      <Tab.Screen name={FooterTabs.HOME} component={DashboardPage} />
+      <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
+      <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
+      <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
+    </Tab.Navigator>
   );
 }
 
