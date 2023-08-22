@@ -1,14 +1,11 @@
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import React, { useContext } from 'react';
-import { colors, font } from '../constants/globalStyle';
-import { UserContext } from '../state/context/UserProvider';
-import { usePockets } from '../state/queries';
-import { Button, LoadingSpinner, Pocket, PopupMenu } from '../components';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import fontelloConfig from '../config.json';
-const Icon = createIconSetFromFontello(fontelloConfig);
+import { colors, font } from '../../constants/globalStyle';
+import { UserContext } from '../../state/context/UserProvider';
+import { usePockets } from '../../state/queries';
+import { Icon, Button, LoadingSpinner, Pocket, PopupMenu } from '../../components';
 
-export default function Home() {
+export default function Dashboard({ navigation }: { navigation: any }) {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
@@ -21,7 +18,7 @@ export default function Home() {
     {
       label: 'New Pocket',
       icon: 'plus',
-      action: () => console.log('TODO: New pocket press'),
+      action: () => navigation.navigate('addPocket'),
     },
     {
       label: 'New Group',

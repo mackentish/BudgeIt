@@ -3,9 +3,7 @@ import React from 'react';
 import { currencyFormatter } from '../utils';
 import AnimatedPressable from './AnimatedPressable';
 import { colors, numbers, font } from '../constants/globalStyle';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import fontelloConfig from '../config.json';
-const Icon = createIconSetFromFontello(fontelloConfig);
+import { Icon } from '../components';
 
 export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
   /*

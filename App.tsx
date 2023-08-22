@@ -9,6 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MenuProvider } from 'react-native-popup-menu';
+import { FooterTabs } from './src/constants/navigation';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,12 +37,12 @@ function App(): JSX.Element {
                 <UserProvider>
                   <Tab.Navigator
                     screenOptions={{ headerShown: false }}
-                    initialRouteName="home"
+                    initialRouteName={FooterTabs.HOME}
                     tabBar={props => Footer({ ...props })}>
-                    <Tab.Screen name="home" component={Home} />
-                    <Tab.Screen name="templates" component={Template} />
-                    <Tab.Screen name="summary" component={Summary} />
-                    <Tab.Screen name="profile" component={Profile} />
+                    <Tab.Screen name={FooterTabs.HOME} component={Home} />
+                    <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
+                    <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
+                    <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
                   </Tab.Navigator>
                 </UserProvider>
               </MenuProvider>

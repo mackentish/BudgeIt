@@ -1,9 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { colors, font } from '../constants/globalStyle';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import fontelloConfig from '../config.json';
-const Icon = createIconSetFromFontello(fontelloConfig);
+import { Icon } from '../components';
 
 const getIcon = (name: string, isFocused: boolean) => {
   let iconName = 'home';

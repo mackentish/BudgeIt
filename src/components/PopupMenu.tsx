@@ -1,11 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext } from 'react';
-import { createIconSetFromFontello } from 'react-native-vector-icons';
-import fontelloConfig from '../config.json';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { colors, font, numbers } from '../constants/globalStyle';
 import { OverlayContext } from '../state/context';
-const Icon = createIconSetFromFontello(fontelloConfig);
+import { Icon } from '../components';
 
 interface Option {
   label: string;
