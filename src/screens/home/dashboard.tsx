@@ -1,22 +1,18 @@
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import React, { useCallback, useContext, useMemo, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { colors, font } from '../../constants/globalStyle';
 import { UserContext } from '../../state/context/UserProvider';
 import { usePockets } from '../../state/queries';
-import { Icon, Button, LoadingSpinner, Pocket, PopupMenu } from '../../components';
-import BottomSheet from '@gorhom/bottom-sheet';
+import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Sheet } from '../../components';
 import AddPocket from './addPocket';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
-  // BottomSheet
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  // BottomSheets
+  const addPocketMenu = useRef<BottomSheet>(null);
 
   if (fetchPockets.isError) return <Text>Error loading pockets</Text>;
 
@@ -26,7 +22,7 @@ export default function Dashboard() {
     {
       label: 'New Pocket',
       icon: 'plus',
-      action: () => console.log('TODO: pull up action sheet'),
+      action: () => addPocketMenu.current?.expand(),
     },
     {
       label: 'New Group',
@@ -69,9 +65,9 @@ export default function Dashboard() {
           />
         </View>
       </ScrollView>
-      <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints} onChange={handleSheetChanges}>
+      <Sheet bottomSheetRef={addPocketMenu}>
         <AddPocket />
-      </BottomSheet>
+      </Sheet>
     </View>
   );
 }

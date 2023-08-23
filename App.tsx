@@ -10,6 +10,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FooterTabs } from './src/constants/navigation';
 import { Footer } from './src/components';
+import { PortalProvider } from '@gorhom/portal';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,25 +31,27 @@ function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.gestureWrapper}>
         <OverlayContext.Provider value={{ showOverlay, setShowOverlay }}>
-          <NavigationContainer>
-            <SafeAreaView style={styles.topSafeView} />
-            <SafeAreaView style={styles.bottomSafeView}>
-              <MenuProvider>
-                {showOverlay && <View style={styles.overlay} />}
-                <UserProvider>
-                  <Tab.Navigator
-                    screenOptions={{ headerShown: false }}
-                    initialRouteName={FooterTabs.HOME}
-                    tabBar={props => Footer({ ...props })}>
-                    <Tab.Screen name={FooterTabs.HOME} component={Home} />
-                    <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
-                    <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
-                    <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
-                  </Tab.Navigator>
-                </UserProvider>
-              </MenuProvider>
-            </SafeAreaView>
-          </NavigationContainer>
+          <SafeAreaView style={styles.topSafeView} />
+          <SafeAreaView style={styles.bottomSafeView}>
+            <PortalProvider>
+              <NavigationContainer>
+                <MenuProvider>
+                  {showOverlay && <View style={styles.overlay} />}
+                  <UserProvider>
+                    <Tab.Navigator
+                      screenOptions={{ headerShown: false }}
+                      initialRouteName={FooterTabs.HOME}
+                      tabBar={props => Footer({ ...props })}>
+                      <Tab.Screen name={FooterTabs.HOME} component={Home} />
+                      <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
+                      <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
+                      <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
+                    </Tab.Navigator>
+                  </UserProvider>
+                </MenuProvider>
+              </NavigationContainer>
+            </PortalProvider>
+          </SafeAreaView>
         </OverlayContext.Provider>
       </GestureHandlerRootView>
     </QueryClientProvider>
