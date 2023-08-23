@@ -5,9 +5,4 @@ const FooterTabs = {
   PROFILE: 'profile',
 };
 
-const HomeStack = {
-  DASHBOARD: 'dashboard',
-  ADD_POCKET: 'addPocket',
-};
-
-export { FooterTabs, HomeStack };
+export { FooterTabs };
