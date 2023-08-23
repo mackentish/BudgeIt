@@ -3,12 +3,9 @@ import React, { useContext } from 'react';
 import { colors, font } from '../../constants/globalStyle';
 import { UserContext } from '../../state/context/UserProvider';
 import { usePockets } from '../../state/queries';
-import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Footer } from '../../components';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FooterTabs } from '../../constants/navigation';
-import { Profile, Summary, Template } from '..';
+import { Icon, Button, LoadingSpinner, Pocket, PopupMenu } from '../../components';
 
-function DashboardPage({ navigation }: { navigation: any }) {
+export default function Dashboard() {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
@@ -21,7 +18,7 @@ function DashboardPage({ navigation }: { navigation: any }) {
     {
       label: 'New Pocket',
       icon: 'plus',
-      action: () => navigation.navigate('addPocket'),
+      action: () => console.log('TODO: pull up action sheet'),
     },
     {
       label: 'New Group',
@@ -65,21 +62,6 @@ function DashboardPage({ navigation }: { navigation: any }) {
         </View>
       </ScrollView>
     </View>
-  );
-}
-
-export default function Dashboard() {
-  const Tab = createBottomTabNavigator();
-  return (
-    <Tab.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={FooterTabs.HOME}
-      tabBar={props => Footer({ ...props })}>
-      <Tab.Screen name={FooterTabs.HOME} component={DashboardPage} />
-      <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
-      <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
-      <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
-    </Tab.Navigator>
   );
 }
 

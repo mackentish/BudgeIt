@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../constants/globalStyle';
 import { Icon } from '../../components';
 
@@ -20,8 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.temp.gray,
     paddingVertical: 30,
     paddingHorizontal: 20,
-    zIndex: 100,
-    height: Dimensions.get('window').height,
   },
   closeBtn: {
     position: 'absolute',
