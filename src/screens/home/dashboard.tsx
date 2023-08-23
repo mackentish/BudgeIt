@@ -1,14 +1,22 @@
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo, useRef } from 'react';
 import { colors, font } from '../../constants/globalStyle';
 import { UserContext } from '../../state/context/UserProvider';
 import { usePockets } from '../../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PopupMenu } from '../../components';
+import BottomSheet from '@gorhom/bottom-sheet';
+import AddPocket from './addPocket';
 
 export default function Dashboard() {
   const { user } = useContext(UserContext);
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
+  // BottomSheet
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
   if (fetchPockets.isError) return <Text>Error loading pockets</Text>;
 
@@ -61,6 +69,9 @@ export default function Dashboard() {
           />
         </View>
       </ScrollView>
+      <BottomSheet ref={bottomSheetRef} index={1} snapPoints={snapPoints} onChange={handleSheetChanges}>
+        <AddPocket />
+      </BottomSheet>
     </View>
   );
 }

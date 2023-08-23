@@ -441,14 +441,13 @@ PODS:
     - React-perflogger (= 0.71.4)
   - RNCMaskedView (0.1.11):
     - React
-  - RNGestureHandler (2.12.0):
+  - RNGestureHandler (2.12.1):
     - React-Core
-  - RNReanimated (3.3.0):
+  - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
     - glog
-    - hermes-engine
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -458,7 +457,6 @@ PODS:
     - React-Core/RCTWebSocket
     - React-CoreModules
     - React-cxxreact
-    - React-hermes
     - React-jsi
     - React-jsiexecutor
     - React-jsinspector
@@ -729,8 +727,8 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8fa50b38df6b992c76537993a2b0553d3b088004
   ReactCommon: b49a4b00ca6d181ff74b17c12b2d59ac4add0bde
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
-  RNReanimated: 9976fbaaeb8a188c36026154c844bf374b3b7eeb
+  RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
+  RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: d037903436160a4b039d32606668350d2a808806
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 79dd7410de6f8ad73a77c868d3d368843f0c93e0

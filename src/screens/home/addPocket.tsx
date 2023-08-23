@@ -1,14 +1,10 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../constants/globalStyle';
-import { Icon } from '../../components';
 
-export default function AddPocket({ navigation }: { navigation: any }) {
+export default function AddPocket() {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.closeBtn} onPress={() => navigation.goBack()}>
-        <Icon name="x" style={styles.icon} />
-      </Pressable>
       <Text>Add Pocket</Text>
     </View>
   );
