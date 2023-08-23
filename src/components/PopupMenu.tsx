@@ -34,13 +34,13 @@ export default function PopupMenu({ options }: { options: Option[] }) {
           },
         }}>
         {options.map((o, i) => (
-          <>
-            <MenuOption key={`option-${i}`} onSelect={o.action}>
+          <View key={i}>
+            <MenuOption onSelect={o.action}>
               <Text style={styles.text}>{o.label}</Text>
               <Icon name={o.icon} style={styles.icon} />
             </MenuOption>
-            {i < options.length - 1 && <View key={`divider-${i}`} style={styles.divider} />}
-          </>
+            {i < options.length - 1 && <View style={styles.divider} />}
+          </View>
         ))}
       </MenuOptions>
     </Menu>
