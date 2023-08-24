@@ -14,9 +14,21 @@ export default function Home() {
   // BottomSheets
   const addPocketMenu = useRef<BottomSheet>(null);
 
-  if (fetchPockets.isError) return <Text>Error loading pockets</Text>;
+  if (fetchPockets.isError) {
+    return (
+      <SafeAreaView style={styles.safeView}>
+        <Text>Error loading pockets</Text>
+      </SafeAreaView>
+    );
+  }
 
-  if (fetchPockets.isLoading) return <LoadingSpinner />;
+  if (fetchPockets.isLoading) {
+    return (
+      <SafeAreaView style={styles.safeView}>
+        <LoadingSpinner />
+      </SafeAreaView>
+    );
+  }
 
   const pocketMenuOptions = [
     {

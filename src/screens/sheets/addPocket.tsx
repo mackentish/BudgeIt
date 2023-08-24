@@ -111,7 +111,10 @@ export default function AddPocket() {
         />
       </View>
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Note - first 20 characters will be shown as subtitle</Text>
+        <View style={styles.labelRow}>
+          <Text style={styles.label}>Note</Text>
+          <Text style={styles.labelLight}> - first 20 characters will be shown as subtitle</Text>
+        </View>
         <TextInput value={note} placeholder="Ex: Use Jan-May to help pay off loan." style={styles.input} />
       </View>
       <View style={styles.gap} />
@@ -152,9 +155,18 @@ const styles = StyleSheet.create({
     fontFamily: font.bold,
     textAlign: 'center',
   },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   label: {
     fontSize: 14,
     fontFamily: font.medium,
+  },
+  labelLight: {
+    fontSize: 13,
+    fontFamily: font.medium,
+    color: colors.temp.darkGray,
   },
   input: {
     backgroundColor: colors.temp.white,

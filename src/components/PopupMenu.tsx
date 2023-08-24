@@ -4,6 +4,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import { colors, font, numbers } from '../constants/globalStyle';
 import { OverlayContext } from '../state/context';
 import { Icon } from '../components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Option {
   label: string;
@@ -13,6 +14,7 @@ interface Option {
 
 export default function PopupMenu({ options }: { options: Option[] }) {
   const { setShowOverlay } = useContext(OverlayContext);
+  const { top } = useSafeAreaInsets();
 
   return (
     <Menu onClose={() => setShowOverlay(false)} onOpen={() => setShowOverlay(true)}>
@@ -22,6 +24,7 @@ export default function PopupMenu({ options }: { options: Option[] }) {
       <MenuOptions
         customStyles={{
           optionsContainer: {
+            marginTop: top,
             backgroundColor: colors.temp.white,
             paddingHorizontal: 10,
             paddingVertical: 5,
