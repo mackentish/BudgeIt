@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Home, Profile, Summary, Template } from './src/screens';
 import { UserProvider, OverlayContext } from './src/state/context';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { colors } from './src/constants/globalStyle';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MenuProvider } from 'react-native-popup-menu';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FooterTabs } from './src/constants/navigation';
-import { Footer } from './src/components';
 import { PortalProvider } from '@gorhom/portal';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import TabNavigator from './src/navigation/TabNavigator';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,36 +20,29 @@ const queryClient = new QueryClient({
   },
 });
 
-const Tab = createBottomTabNavigator();
-
 function App(): JSX.Element {
   const [showOverlay, setShowOverlay] = useState(false);
+  // TODO:
+  // rename Footer to TabNavigator
+  // set it up with <Navigator> and <Screen> components
+  // TabNavigator would have the paddingBottom based on bottom inset
 
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.gestureWrapper}>
         <OverlayContext.Provider value={{ showOverlay, setShowOverlay }}>
-          <SafeAreaView style={styles.topSafeView} />
-          <SafeAreaView style={styles.bottomSafeView}>
-            <PortalProvider>
+          <PortalProvider>
+            <SafeAreaProvider>
               <NavigationContainer>
                 <MenuProvider>
                   {showOverlay && <View style={styles.overlay} />}
                   <UserProvider>
-                    <Tab.Navigator
-                      screenOptions={{ headerShown: false }}
-                      initialRouteName={FooterTabs.HOME}
-                      tabBar={props => Footer({ ...props })}>
-                      <Tab.Screen name={FooterTabs.HOME} component={Home} />
-                      <Tab.Screen name={FooterTabs.TEMPLATES} component={Template} />
-                      <Tab.Screen name={FooterTabs.SUMMARY} component={Summary} />
-                      <Tab.Screen name={FooterTabs.PROFILE} component={Profile} />
-                    </Tab.Navigator>
+                    <TabNavigator />
                   </UserProvider>
                 </MenuProvider>
               </NavigationContainer>
-            </PortalProvider>
-          </SafeAreaView>
+            </SafeAreaProvider>
+          </PortalProvider>
         </OverlayContext.Provider>
       </GestureHandlerRootView>
     </QueryClientProvider>

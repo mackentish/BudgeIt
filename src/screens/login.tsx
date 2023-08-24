@@ -12,6 +12,7 @@ import {
 import { User, UserLogin } from '../types';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Storage } from '../utils';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * Modal prompting user to enable biometrics
@@ -249,14 +250,22 @@ const SignUpScreen = ({
 export default function Login({ setUser }: { setUser: Dispatch<SetStateAction<User | undefined>> }) {
   const [isLogIn, setIsLogIn] = useState(true);
 
-  return isLogIn ? (
-    <LoginScreen setSignUp={() => setIsLogIn(false)} setUser={setUser} />
-  ) : (
-    <SignUpScreen setLogIn={() => setIsLogIn(true)} setUser={setUser} />
+  return (
+    <SafeAreaView style={styles.safeView}>
+      {isLogIn ? (
+        <LoginScreen setSignUp={() => setIsLogIn(false)} setUser={setUser} />
+      ) : (
+        <SignUpScreen setLogIn={() => setIsLogIn(true)} setUser={setUser} />
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeView: {
+    flex: 1,
+    backgroundColor: colors.temp.gray,
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, font } from '../constants/globalStyle';
 import { AnimatedPressable } from '../components';
 import { UserContext } from '../state/context/UserProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * Default page for user settings. User has access to other screens from here
@@ -10,16 +11,22 @@ import { UserContext } from '../state/context/UserProvider';
 export default function Profile() {
   const { signOut } = useContext(UserContext);
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>User Settings</Text>
-      <AnimatedPressable style={styles.signOutBtn} onPress={signOut}>
-        <Text style={styles.btnText}>Sign Out</Text>
-      </AnimatedPressable>
-    </View>
+    <SafeAreaView style={styles.safeView}>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>User Settings</Text>
+        <AnimatedPressable style={styles.signOutBtn} onPress={signOut}>
+          <Text style={styles.btnText}>Sign Out</Text>
+        </AnimatedPressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeView: {
+    flex: 1,
+    backgroundColor: colors.temp.gray,
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,16 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, font } from '../constants/globalStyle';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Summary() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Summary</Text>
-    </View>
+    <SafeAreaView style={styles.safeView}>
+      <View style={styles.container}>
+        <Text style={styles.headerText}>Summary</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeView: {
+    flex: 1,
+    backgroundColor: colors.temp.gray,
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',

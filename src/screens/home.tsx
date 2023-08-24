@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, SafeAreaView } from 'react-native';
 import React, { useContext, useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
 import { UserContext } from '../state/context/UserProvider';
@@ -32,47 +32,53 @@ export default function Home() {
   ];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerDate}>
-          {new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-        </Text>
-        <View style={styles.headerButtons}>
-          <Button type="tertiary" onPress={() => console.log('TODO: add transaction press')}>
-            <Text style={styles.smBtnTxt}>Add Transaction</Text>
-            <Icon name="plus" style={styles.icon} />
-          </Button>
-          <Button type="tertiary" onPress={() => console.log('TODO: use template press')}>
-            <Text style={styles.smBtnTxt}>Use Template</Text>
-            <Icon name="template" style={styles.icon} />
-          </Button>
-        </View>
-      </View>
-      <ScrollView>
-        <View style={styles.pocketContainer}>
-          <View style={styles.pocketTitleRow}>
-            <Text style={styles.pocketTitle}>Pockets</Text>
-            <PopupMenu options={pocketMenuOptions} />
+    <SafeAreaView style={styles.safeView}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerDate}>
+            {new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </Text>
+          <View style={styles.headerButtons}>
+            <Button type="tertiary" onPress={() => console.log('TODO: add transaction press')}>
+              <Text style={styles.smBtnTxt}>Add Transaction</Text>
+              <Icon name="plus" style={styles.icon} />
+            </Button>
+            <Button type="tertiary" onPress={() => console.log('TODO: use template press')}>
+              <Text style={styles.smBtnTxt}>Use Template</Text>
+              <Icon name="template" style={styles.icon} />
+            </Button>
           </View>
-          {pockets.map(p => (
-            <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
-          ))}
-          <Button
-            label="View All Pockets"
-            size="medium"
-            type="secondary"
-            onPress={() => console.log('TODO: view all pockets press')}
-          />
         </View>
-      </ScrollView>
-      <Sheet bottomSheetRef={addPocketMenu}>
-        <AddPocket />
-      </Sheet>
-    </View>
+        <ScrollView>
+          <View style={styles.pocketContainer}>
+            <View style={styles.pocketTitleRow}>
+              <Text style={styles.pocketTitle}>Pockets</Text>
+              <PopupMenu options={pocketMenuOptions} />
+            </View>
+            {pockets.map(p => (
+              <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
+            ))}
+            <Button
+              label="View All Pockets"
+              size="medium"
+              type="secondary"
+              onPress={() => console.log('TODO: view all pockets press')}
+            />
+          </View>
+        </ScrollView>
+        <Sheet bottomSheetRef={addPocketMenu}>
+          <AddPocket />
+        </Sheet>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeView: {
+    flex: 1,
+    backgroundColor: colors.temp.white,
+  },
   container: {
     backgroundColor: colors.temp.gray,
     flex: 1,
