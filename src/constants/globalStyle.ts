@@ -3,35 +3,14 @@ export const colors = {
     black: '#000000',
     white: '#FFFFFF',
     gray: '#E7E7E7',
+    midGray: '#BBB',
     red: '#FF0000',
   },
-  /*
-  background: '#373737',
-  paleGray: '#F5F5F5',
-  gray: '#E0E0E0',
-  white: '#F3EEFF',
-  red: '#FF0000',
-  primary: '#6D569E',
-  secondary: '#73BA9B',
-  tertiary: '#7785AC',
-  pocketColors: [
-    '#F5C1B2',
-    '#F4B744',
-    '#CDD5AE',
-    '#D0E4E5',
-    '#E7E6F4',
-    '#BDCD74',
-    '#CBBECF',
-    '#FEFEFE',
-    '#FDCA92',
-    '#FFE8DA',
-  ],
-  */
 };
 
 export const numbers = {
   borderRadius: {
-    small: 4,
+    small: 6,
     medium: 10,
     large: 16,
   },

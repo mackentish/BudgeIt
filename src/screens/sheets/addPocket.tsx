@@ -4,13 +4,29 @@ import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, Icon } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { currencyFormatter } from '../../utils';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 export default function AddPocket() {
   const { close } = useBottomSheet();
   const [pocketName, setPocketName] = useState('');
   const [startingAmount, setStartingAmount] = useState('$0.00');
-  const [pocketGroup, setPocketGroup] = useState(''); // TODO: use react-native-dropdown-select-list
+  const [pocketGroup, setPocketGroup] = useState('');
   const [note, setNote] = useState('');
+
+  // TODO: get pocket groups from API
+  const pocketGroupsMockData = [
+    { key: '', value: 'Choose a Pocket Group' },
+    { key: '1', value: 'Pocket Group 1' },
+    { key: '2', value: 'Pocket Group 2' },
+    { key: '3', value: 'Pocket Group 3' },
+    { key: '4', value: 'Pocket Group 4' },
+    { key: '5', value: 'Pocket Group 5' },
+    { key: '6', value: 'Pocket Group 6' },
+    { key: '7', value: 'Pocket Group 7' },
+    { key: '8', value: 'Pocket Group 8' },
+    { key: '9', value: 'Pocket Group 9' },
+    { key: '10', value: 'Pocket Group 10' },
+  ];
 
   const closeAndReset = () => {
     setPocketName('');
@@ -77,7 +93,22 @@ export default function AddPocket() {
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Pocket Group</Text>
-        <Text>TODO: use react-native-dropdown-select-list</Text>
+        <SelectList
+          data={pocketGroupsMockData}
+          setSelected={setPocketGroup}
+          save="key"
+          placeholder="Choose a Pocket Group"
+          search
+          maxHeight={200}
+          arrowicon={<Icon name="chevron-down" style={styles.iconSm} />}
+          closeicon={<Icon name="x" style={styles.iconSm} />}
+          searchPlaceholder="Search Pocket Groups"
+          fontFamily={font.regular}
+          notFoundText="No matching groups found"
+          boxStyles={styles.select}
+          inputStyles={styles.selectInput}
+          dropdownStyles={styles.dropDown}
+        />
       </View>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Note - first 20 characters will be shown as subtitle</Text>
@@ -107,6 +138,11 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 18,
   },
+  iconSm: {
+    alignSelf: 'center',
+    fontSize: 12,
+    color: colors.temp.midGray,
+  },
   inputGroup: {
     flexDirection: 'column',
     gap: 10,
@@ -123,10 +159,30 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.medium,
+    borderColor: colors.temp.midGray,
+    borderWidth: 1,
     paddingVertical: 10,
     paddingHorizontal: 14,
     fontFamily: font.regular,
     fontSize: 16,
+  },
+  select: {
+    backgroundColor: colors.temp.white,
+    borderRadius: numbers.borderRadius.medium,
+    borderWidth: 0,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    fontFamily: font.regular,
+    fontSize: 16,
+  },
+  selectInput: {
+    fontFamily: font.regular,
+    fontSize: 16,
+  },
+  dropDown: {
+    backgroundColor: colors.temp.white,
+    borderRadius: numbers.borderRadius.small,
+    borderWidth: 0,
   },
   amountInput: {
     fontFamily: font.bold,
