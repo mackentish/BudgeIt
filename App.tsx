@@ -22,10 +22,6 @@ const queryClient = new QueryClient({
 
 function App(): JSX.Element {
   const [showOverlay, setShowOverlay] = useState(false);
-  // TODO:
-  // rename Footer to TabNavigator
-  // set it up with <Navigator> and <Screen> components
-  // TabNavigator would have the paddingBottom based on bottom inset
 
   return (
     <QueryClientProvider client={queryClient}>

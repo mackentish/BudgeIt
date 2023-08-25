@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Text, SafeAreaView } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, SafeAreaView, Alert } from 'react-native';
 import React, { useContext, useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
 import { UserContext } from '../state/context/UserProvider';
@@ -52,11 +52,11 @@ export default function Home() {
             {new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Text>
           <View style={styles.headerButtons}>
-            <Button type="tertiary" onPress={() => console.log('TODO: add transaction press')}>
+            <Button type="tertiary" onPress={() => Alert.alert('TODO: add transaction press')}>
               <Text style={styles.smBtnTxt}>Add Transaction</Text>
               <Icon name="plus" style={styles.icon} />
             </Button>
-            <Button type="tertiary" onPress={() => console.log('TODO: use template press')}>
+            <Button type="tertiary" onPress={() => Alert.alert('TODO: use template press')}>
               <Text style={styles.smBtnTxt}>Use Template</Text>
               <Icon name="template" style={styles.icon} />
             </Button>
@@ -75,7 +75,7 @@ export default function Home() {
               label="View All Pockets"
               size="medium"
               type="secondary"
-              onPress={() => console.log('TODO: view all pockets press')}
+              onPress={() => Alert.alert('TODO: view all pockets press')}
             />
           </View>
         </ScrollView>

@@ -28,21 +28,22 @@ export default function AddGroup() {
   const { close } = useBottomSheet();
   const [groupName, setGroupName] = useState('');
   const [note, setNote] = useState('');
-  const [pockets, setPockets] = useState<Pocket[]>([
+  const groupPocketsMockData = [
     { _id: '1', name: 'test', amount: 100 },
     { _id: '2', name: 'test2', amount: 200 },
-  ]);
+  ];
+  const [pockets, setPockets] = useState<Pocket[]>(groupPocketsMockData);
 
   const closeAndReset = () => {
     setGroupName('');
     setNote('');
-    setPockets([]);
+    setPockets(groupPocketsMockData);
     Keyboard.dismiss();
     close();
   };
 
   const onSave = () => {
-    // TODO: save group and update pockets
+    Alert.alert('TODO: save group and update pockets');
     closeAndReset();
   };
 

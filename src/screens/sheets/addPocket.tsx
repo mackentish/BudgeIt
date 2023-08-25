@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, Icon } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
@@ -38,7 +38,7 @@ export default function AddPocket() {
   };
 
   const onSave = () => {
-    // TODO: save pocket
+    Alert.alert('TODO: save pocket');
     closeAndReset();
   };
 
