@@ -1,7 +1,7 @@
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Alert } from 'react-native';
 import React, { useContext, useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
-import { UserContext } from '../state/context/UserProvider';
+import { UserContext } from '../state/context';
 import { usePockets } from '../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Sheet } from '../components';
 import { AddGroup, AddPocket } from './sheets';
@@ -83,7 +83,7 @@ export default function Home() {
           <AddPocket />
         </Sheet>
         <Sheet bottomSheetRef={addGroupSheet}>
-          <AddGroup />
+          <AddGroup pockets={pockets} />
         </Sheet>
       </View>
     </SafeAreaView>

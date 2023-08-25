@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, Icon } from '../../components';
+import { Button, Icon, Modal } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
+import { ScrollView } from 'react-native-gesture-handler';
 
 function GroupPocket({ name, amount, onPress }: { name: string; amount: number; onPress: () => void }) {
   return (
@@ -24,20 +25,41 @@ function GroupPocket({ name, amount, onPress }: { name: string; amount: number; 
   );
 }
 
-export default function AddGroup() {
+function PocketOption({
+  name,
+  amount,
+  disabled,
+  onPress,
+}: {
+  name: string;
+  amount: number;
+  disabled: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable style={[pocketOptionStyles.pocketOption, disabled && pocketOptionStyles.disabled]} onPress={onPress}>
+      <View style={pocketStyles.pocketInfo}>
+        <Text style={pocketOptionStyles.name}>{name}</Text>
+        <Text style={[pocketOptionStyles.amount, amount < 0 && pocketStyles.negativeAmount]}>
+          {currencyFormatter.format(amount)}
+        </Text>
+      </View>
+      <Icon name="plus" style={styles.icon} />
+    </Pressable>
+  );
+}
+
+export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
   const { close } = useBottomSheet();
   const [groupName, setGroupName] = useState('');
   const [note, setNote] = useState('');
-  const groupPocketsMockData = [
-    { _id: '1', name: 'test', amount: 100 },
-    { _id: '2', name: 'test2', amount: 200 },
-  ];
-  const [pockets, setPockets] = useState<Pocket[]>(groupPocketsMockData);
+  const [groupPockets, setGroupPockets] = useState<Pocket[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
   const closeAndReset = () => {
     setGroupName('');
     setNote('');
-    setPockets(groupPocketsMockData);
+    setGroupPockets([]);
     Keyboard.dismiss();
     close();
   };
@@ -48,7 +70,7 @@ export default function AddGroup() {
   };
 
   const removePocket = (id: string) => {
-    setPockets(pockets.filter(p => p._id !== id));
+    setGroupPockets(groupPockets.filter(p => p._id !== id));
   };
 
   return (
@@ -69,27 +91,45 @@ export default function AddGroup() {
         </View>
         <TextInput value={note} placeholder="Ex: Tahoe trip expenses." style={styles.input} />
       </View>
-      {pockets.length > 0 && (
+      {groupPockets.length > 0 && (
         <View style={styles.addedPockets}>
           <View style={styles.totalRow}>
             <Text style={styles.header}>Total</Text>
             <Text style={styles.header}>
-              {currencyFormatter.format(pockets.reduce((total, { amount }) => total + amount, 0))}
+              {currencyFormatter.format(groupPockets.reduce((total, { amount }) => total + amount, 0))}
             </Text>
           </View>
-          {pockets.map(p => (
+          {groupPockets.map(p => (
             <GroupPocket key={p._id} name={p.name} amount={p.amount} onPress={() => removePocket(p._id)} />
           ))}
         </View>
       )}
-      <Button
-        size="medium"
-        type="secondary"
-        label="Add Pockets"
-        onPress={() => {
-          Alert.alert('TODO: add pockets?');
-        }}
-      />
+      <Button size="medium" type="secondary" label="Add Pockets" onPress={() => setShowModal(true)} />
+      <Modal visible={showModal}>
+        <View style={modalStyles.modal}>
+          <ScrollView style={modalStyles.scrollView}>
+            <View style={modalStyles.pocketContainer}>
+              {pockets.map(p => (
+                <PocketOption
+                  key={p._id}
+                  name={p.name}
+                  amount={p.amount}
+                  disabled={groupPockets.some(gp => gp._id === p._id)}
+                  onPress={() => {
+                    if (groupPockets.some(gp => gp._id === p._id)) {
+                      // if pocket is already in group, remove it
+                      setGroupPockets(groupPockets.filter(gp => gp._id !== p._id));
+                    } else {
+                      setGroupPockets([...groupPockets, p]);
+                    }
+                  }}
+                />
+              ))}
+            </View>
+          </ScrollView>
+          <Button label="Done" size="medium" onPress={() => setShowModal(false)} />
+        </View>
+      </Modal>
       <View style={styles.gap} />
       <Button size="large" label="Save" onPress={onSave} />
     </View>
@@ -174,7 +214,7 @@ const pocketStyles = StyleSheet.create({
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.medium,
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 3,
@@ -203,5 +243,53 @@ const pocketStyles = StyleSheet.create({
   },
   negativeAmount: {
     color: colors.temp.red,
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  closeBtn: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+  },
+  modal: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20,
+  },
+  scrollView: {
+    backgroundColor: colors.temp.gray,
+    borderRadius: numbers.borderRadius.small,
+    maxHeight: 300,
+  },
+  pocketContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    padding: 8,
+  },
+});
+
+const pocketOptionStyles = StyleSheet.create({
+  pocketOption: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    backgroundColor: colors.temp.white,
+    borderRadius: numbers.borderRadius.medium,
+    padding: 10,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  name: {
+    color: colors.temp.black,
+    fontFamily: font.regular,
+    fontSize: 14,
+  },
+  amount: {
+    color: colors.temp.black,
+    fontFamily: font.bold,
+    fontSize: 16,
   },
 });

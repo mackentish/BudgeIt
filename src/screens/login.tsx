@@ -306,6 +306,7 @@ const modalStyles = StyleSheet.create({
   },
   text: {
     color: 'black',
+    alignSelf: 'center',
   },
   header: {
     fontFamily: font.extraBold,
