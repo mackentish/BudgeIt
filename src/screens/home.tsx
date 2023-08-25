@@ -4,7 +4,7 @@ import { colors, font } from '../constants/globalStyle';
 import { UserContext } from '../state/context/UserProvider';
 import { usePockets } from '../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Sheet } from '../components';
-import { AddPocket } from './sheets';
+import { AddGroup, AddPocket } from './sheets';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Home() {
@@ -12,7 +12,8 @@ export default function Home() {
   const { fetchPockets } = usePockets(user._id);
   const pockets = fetchPockets.data || [];
   // BottomSheets
-  const addPocketMenu = useRef<BottomSheet>(null);
+  const addPocketSheet = useRef<BottomSheet>(null);
+  const addGroupSheet = useRef<BottomSheet>(null);
 
   if (fetchPockets.isError) {
     return (
@@ -34,12 +35,12 @@ export default function Home() {
     {
       label: 'New Pocket',
       icon: 'plus',
-      action: () => addPocketMenu.current?.expand(),
+      action: () => addPocketSheet.current?.expand(),
     },
     {
       label: 'New Group',
       icon: 'group',
-      action: () => console.log('TODO: New group press'),
+      action: () => addGroupSheet.current?.expand(),
     },
   ];
 
@@ -78,8 +79,11 @@ export default function Home() {
             />
           </View>
         </ScrollView>
-        <Sheet bottomSheetRef={addPocketMenu}>
+        <Sheet bottomSheetRef={addPocketSheet}>
           <AddPocket />
+        </Sheet>
+        <Sheet bottomSheetRef={addGroupSheet}>
+          <AddGroup />
         </Sheet>
       </View>
     </SafeAreaView>
