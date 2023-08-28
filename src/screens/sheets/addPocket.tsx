@@ -12,10 +12,12 @@ export default function AddPocket() {
   const [startingAmount, setStartingAmount] = useState('$0.00');
   const [pocketGroup, setPocketGroup] = useState('');
   const [note, setNote] = useState('');
+  // Only name and amount are required. Amount can be 0
+  const isValid = pocketName.length > 0 && !isNaN(Number(startingAmount.replace(/[^0-9.]/g, '')));
 
   // TODO: get pocket groups from API
   const pocketGroupsMockData = [
-    { key: '', value: 'Choose a Pocket Group' },
+    { key: '', value: 'No Group' },
     { key: '1', value: 'Pocket Group 1' },
     { key: '2', value: 'Pocket Group 2' },
     { key: '3', value: 'Pocket Group 3' },
@@ -118,7 +120,7 @@ export default function AddPocket() {
         <TextInput value={note} placeholder="Ex: Use Jan-May to help pay off loan." style={styles.input} />
       </View>
       <View style={styles.gap} />
-      <Button size="large" label="Save" onPress={onSave} />
+      <Button size="large" label="Save" onPress={onSave} disabled={!isValid} />
     </View>
   );
 }

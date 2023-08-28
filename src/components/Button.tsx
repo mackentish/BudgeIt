@@ -6,12 +6,14 @@ import AnimatedPressable from './AnimatedPressable';
 export default function Button({
   label,
   onPress,
+  disabled = false,
   children,
   size = 'small',
   type = 'primary',
 }: {
   label?: string;
   onPress: () => void;
+  disabled?: boolean;
   children?: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
   type?: 'primary' | 'secondary' | 'tertiary';
@@ -51,6 +53,7 @@ export default function Button({
 
   return (
     <AnimatedPressable
+      disabled={disabled}
       onPress={onPress}
       style={[
         defaultStyles.button,

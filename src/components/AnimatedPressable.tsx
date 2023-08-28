@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Animated, Pressable, PressableProps, RegisteredStyle, ViewStyle } from 'react-native';
+import { Animated, Pressable, PressableProps, RegisteredStyle, StyleSheet, ViewStyle } from 'react-native';
 import React from 'react';
 
 const AnimatedPressableWrapper = Animated.createAnimatedComponent(Pressable);
@@ -37,6 +37,7 @@ const AnimatedPressable = (props: PressableProps) => {
             },
           ],
         },
+        props.disabled && defaultStyles.disabled,
       ]}
       onPressIn={e => {
         shrinkAnimation.start();
@@ -50,5 +51,11 @@ const AnimatedPressable = (props: PressableProps) => {
     </AnimatedPressableWrapper>
   );
 };
+
+const defaultStyles = StyleSheet.create({
+  disabled: {
+    opacity: 0.5,
+  },
+});
 
 export default AnimatedPressable;

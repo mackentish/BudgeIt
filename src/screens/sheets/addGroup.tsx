@@ -56,6 +56,9 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
   const [groupPockets, setGroupPockets] = useState<Pocket[]>([]);
   const [showModal, setShowModal] = useState(false);
 
+  // only name and at least one pocket is required
+  const isValid = groupName.length > 0 && groupPockets.length > 0;
+
   const closeAndReset = () => {
     setGroupName('');
     setNote('');
@@ -131,7 +134,7 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
         </View>
       </Modal>
       <View style={styles.gap} />
-      <Button size="large" label="Save" onPress={onSave} />
+      <Button size="large" label="Save" onPress={onSave} disabled={!isValid} />
     </View>
   );
 }
