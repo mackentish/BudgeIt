@@ -1,17 +1,24 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { fetchPockets as fetchPocketsFn, updatePocket as updateFn, createPocket as createFn } from '../../api/pockets';
+import {
+  fetchPockets as fetchPocketsFn,
+  updatePocket as updateFn,
+  createPocket as createFn,
+  deletePocket as deleteFn,
+} from '../../api/pockets';
 import { Alert } from 'react-native';
 import { Pocket } from '../../types';
 
 export default function usePockets() {
   // GET /pockets
   const fetchPockets = useQuery(['userPockets'], () => fetchPocketsFn());
+
   // PUT /pockets/:id
   const updatePocket = useMutation(updateFn, {
     onSuccess: () => {
       fetchPockets.refetch();
     },
   });
+
   // POST /pockets
   const createPocket = useMutation(
     (pocket: Omit<Pocket, '_id'>) => {
@@ -27,5 +34,20 @@ export default function usePockets() {
     },
   );
 
-  return { fetchPockets, updatePocket, createPocket };
+  // DELETE /pockets/:id
+  const deletePocket = useMutation(
+    (id: string) => {
+      return deleteFn(id);
+    },
+    {
+      onSuccess: () => {
+        fetchPockets.refetch();
+      },
+      onError: () => {
+        Alert.alert('Error', 'Sorry, we are unable to delete this pocket.');
+      },
+    },
+  );
+
+  return { fetchPockets, updatePocket, createPocket, deletePocket };
 }

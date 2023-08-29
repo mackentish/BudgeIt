@@ -46,4 +46,17 @@ const createPocket = async (pocket: Omit<Pocket, '_id'>) => {
   return data as Pocket;
 };
 
-export { fetchPockets, updatePocket, createPocket };
+const deletePocket = async (id: string) => {
+  const response = await baseInstance.request({
+    url: `/pockets/${id}`,
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.data;
+  return data as Pocket;
+};
+
+export { fetchPockets, updatePocket, createPocket, deletePocket };

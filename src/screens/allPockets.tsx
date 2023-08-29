@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     gap: 10,
     justifyContent: 'center',
     padding: 20,
+    paddingBottom: 80,
   },
   pocketTitleRow: {
     flexDirection: 'row',

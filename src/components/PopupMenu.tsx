@@ -10,6 +10,7 @@ interface Option {
   label: string;
   icon: string;
   action: () => void;
+  color?: string;
 }
 
 export default function PopupMenu({ options }: { options: Option[] }) {
@@ -39,8 +40,8 @@ export default function PopupMenu({ options }: { options: Option[] }) {
         {options.map((o, i) => (
           <View key={i}>
             <MenuOption onSelect={o.action}>
-              <Text style={styles.text}>{o.label}</Text>
-              <Icon name={o.icon} style={styles.icon} />
+              <Text style={[styles.text, o.color ? { color: o.color } : {}]}>{o.label}</Text>
+              <Icon name={o.icon} style={[styles.icon, o.color && { color: o.color }]} />
             </MenuOption>
             {i < options.length - 1 && <View style={styles.divider} />}
           </View>
@@ -54,10 +55,14 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: font.regular,
     fontSize: 16,
+    color: colors.temp.black,
   },
   divider: {
     height: 1,
     backgroundColor: colors.temp.gray,
   },
-  icon: { fontSize: 24 },
+  icon: {
+    color: colors.temp.black,
+    fontSize: 24,
+  },
 });

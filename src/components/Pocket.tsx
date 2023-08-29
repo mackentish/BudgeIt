@@ -1,79 +1,75 @@
 import { Text, StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { currencyFormatter } from '../utils';
-import AnimatedPressable from './AnimatedPressable';
 import { colors, numbers, font } from '../constants/globalStyle';
-import { Icon } from '../components';
+import { Button, Modal, PopupMenu } from '../components';
+import { usePockets } from '../state/queries';
 
 export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
-  /*
-  const [isOpen, setIsOpen] = useState(false);
-  const [changeAmount, setChangeAmount] = useState(amount);
-  const { user } = useContext(UserContext);
-  const { updatePocket } = usePockets(user._id);
+  const { deletePocket } = usePockets();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [notZeroOpen, setNotZeroOpen] = useState(false);
 
-  const onInputChange = (text: string) => {
-    setChangeAmount(Number(text));
-  };
+  const pocketMenuOptions = [
+    {
+      label: 'Rename',
+      icon: 'edit',
+      action: () => console.log('TODO: rename pocket'),
+    },
+    {
+      label: 'Add to group',
+      icon: 'plus',
+      action: () => console.log('TODO: add pocket to group'),
+    },
+    {
+      label: 'Delete',
+      icon: 'delete',
+      action: () => setDeleteOpen(true),
+      color: colors.temp.red,
+    },
+  ];
 
-  const changePocketAmount = () => {
-    // update pocket data using updatePocket query
-    updatePocket.mutate(
-      {
-        _id,
-        name,
-        amount: changeAmount,
-      },
-      {
-        onSuccess: () => {
-          setIsOpen(false);
-        },
-      },
-    );
-  };
-
-  const openClosePocket = () => {
-    // if closing pocket, reset changeAmount to amount
-    if (isOpen) {
-      setChangeAmount(amount);
+  function deletePocketLogic() {
+    setDeleteOpen(false);
+    if (amount !== 0) {
+      setNotZeroOpen(true);
+    } else {
+      deletePocket.mutate(_id, {
+        onSuccess: () => setDeleteOpen(false),
+      });
     }
-    setIsOpen(!isOpen);
-  };
-  */
+  }
 
   return (
-    <AnimatedPressable onPress={() => /*setIsOpen(true)*/ console.log('pressed')}>
-      <View style={styles.pocket}>
-        <View style={styles.pocketRow}>
-          <View style={styles.pocketInfo}>
-            <Text style={styles.name}>{name}</Text>
-            <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
-          </View>
-          <Icon name="dot-3" style={styles.icon} />
+    <View style={styles.pocket}>
+      <View style={styles.pocketRow}>
+        <View style={styles.pocketInfo}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
         </View>
-        {/*isOpen && (
-          <View style={styles.updateForm}>
-            <View style={styles.pocketRow}>
-              <Text style={styles.title}>Change Pocket Amount:</Text>
-              <TextInput
-                style={styles.amountInput}
-                keyboardType="numeric"
-                value={changeAmount.toString()}
-                onChangeText={onInputChange}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <AnimatedPressable onPress={openClosePocket} style={styles.button}>
-                <Text style={[styles.buttonText, styles.cancelButtonText]}>Cancel</Text>
-              </AnimatedPressable>
-              <AnimatedPressable onPress={changePocketAmount} style={styles.button}>
-                <Text style={[styles.buttonText, styles.submitButtonText]}>Done</Text>
-              </AnimatedPressable>
-            </View>
-          </View>
-        )*/}
+        <PopupMenu options={pocketMenuOptions} />
       </View>
-    </AnimatedPressable>
+
+      {/* Delete pocket modal */}
+      <Modal visible={deleteOpen}>
+        <View style={modalStyles.container}>
+          <Text style={modalStyles.header}>Are you sure?</Text>
+          <Text style={modalStyles.message}>This pocket will be permanently deleted.</Text>
+          <Button size="medium" type="secondary" label="Cancel" onPress={() => setDeleteOpen(false)} />
+          <Button size="medium" label="Delete" onPress={deletePocketLogic} />
+        </View>
+      </Modal>
+
+      {/* Pocket amount not zero modal */}
+      <Modal visible={notZeroOpen}>
+        <View style={modalStyles.container}>
+          <Text style={modalStyles.header}>{`${currencyFormatter.format(amount)} left in pocket.`}</Text>
+          <Text style={modalStyles.message}>Pockets must have a balance of $0 to be deleted</Text>
+          <Button size="medium" type="secondary" label="Cancel" onPress={() => setNotZeroOpen(false)} />
+          <Button size="medium" label="Add Transaction" onPress={() => console.log('TODO: add transaction')} />
+        </View>
+      </Modal>
+    </View>
   );
 }
 
@@ -122,40 +118,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.temp.black,
   },
-  /*
-  updateForm: {
+});
+
+const modalStyles = StyleSheet.create({
+  container: {
     flexDirection: 'column',
-    gap: 8,
-    marginTop: 10,
+    gap: 10,
   },
-  amountInput: {
-    backgroundColor: colors.temp.white,
-    padding: 10,
-    borderRadius: 10,
-  },
-  title: {
+  header: {
     fontFamily: font.bold,
+    fontSize: 24,
+    color: colors.temp.black,
+    alignSelf: 'center',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 16,
+  message: {
+    fontFamily: font.regular,
+    fontSize: 16,
+    color: colors.temp.black,
+    alignSelf: 'center',
+    marginBottom: 10,
   },
-  button: {
-    backgroundColor: colors.temp.black,
-    borderRadius: 10,
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-  },
-  buttonText: {
-    fontFamily: font.bold,
-  },
-  submitButtonText: {
-    color: 'green',
-  },
-  cancelButtonText: {
-    color: 'red',
-  },
-  */
 });

@@ -4,13 +4,11 @@ import { colors, numbers } from '../constants/globalStyle';
 
 export default function Modal({ visible, children }: { visible: boolean; children: React.ReactNode }) {
   return (
-    <View style={styles.centeredView}>
-      <ReactModal animationType="slide" transparent={true} visible={visible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>{children}</View>
-        </View>
-      </ReactModal>
-    </View>
+    <ReactModal animationType="slide" transparent={true} visible={visible} style={styles.centeredView}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>{children}</View>
+      </View>
+    </ReactModal>
   );
 }
 
@@ -23,7 +21,7 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.large,
-    padding: 30,
+    padding: 25,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
