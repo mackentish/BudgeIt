@@ -5,12 +5,14 @@ import { useGroups, usePockets } from '../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { AddGroup, AddPocket } from './sheets';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { DashboardStacks } from '../constants/navigation';
 
-export default function Home() {
-  const { fetchPockets } = usePockets();
+export default function Dashboard({ navigation }: { navigation: any }) {
   const { fetchGroups } = useGroups();
-  const pockets = (fetchPockets.data || []).filter(p => !p.groupId);
+  const { fetchPockets } = usePockets();
   const groups = fetchGroups.data || [];
+  // only show 6 items on the dashboard, counting groups and pockets
+  const pockets = (fetchPockets.data || []).filter(p => !p.groupId).splice(0, 6 - groups.length);
   const isLoading = fetchPockets.isLoading || fetchGroups.isLoading;
   // BottomSheets
   const addPocketSheet = useRef<BottomSheet>(null);
@@ -79,7 +81,7 @@ export default function Home() {
               label="View All Pockets"
               size="medium"
               type="secondary"
-              onPress={() => Alert.alert('TODO: view all pockets press')}
+              onPress={() => navigation.navigate(DashboardStacks.ALL_POCKETS)}
             />
           </View>
         </ScrollView>
