@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, View, LayoutAnimation } from 'react-native';
 import Icon from './Icon';
 import Pocket from './Pocket';
 import { colors, font, numbers } from '../constants/globalStyle';
@@ -8,6 +8,10 @@ import { Pocket as PocketType } from '../types';
 
 export default function PocketGroup({ name, pockets }: { name: string; pockets: PocketType[] }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [isOpen]);
 
   return (
     <View style={styles.container}>
