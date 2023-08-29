@@ -1,27 +1,30 @@
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Alert } from 'react-native';
 import React, { useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
-import { usePockets } from '../state/queries';
-import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Sheet } from '../components';
+import { useGroups, usePockets } from '../state/queries';
+import { Icon, Button, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { AddGroup, AddPocket } from './sheets';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Home() {
   const { fetchPockets } = usePockets();
-  const pockets = fetchPockets.data || [];
+  const { fetchGroups } = useGroups();
+  const pockets = (fetchPockets.data || []).filter(p => !p.groupId);
+  const groups = fetchGroups.data || [];
+  const isLoading = fetchPockets.isLoading || fetchGroups.isLoading;
   // BottomSheets
   const addPocketSheet = useRef<BottomSheet>(null);
   const addGroupSheet = useRef<BottomSheet>(null);
 
-  if (fetchPockets.isError) {
+  if (fetchPockets.isError || fetchGroups.isError) {
     return (
       <SafeAreaView style={styles.safeView}>
-        <Text>Error loading pockets</Text>
+        <Text>Error loading pockets or groups</Text>
       </SafeAreaView>
     );
   }
 
-  if (fetchPockets.isLoading) {
+  if (isLoading) {
     return (
       <SafeAreaView style={styles.safeView}>
         <LoadingSpinner />
@@ -66,6 +69,9 @@ export default function Home() {
               <Text style={styles.pocketTitle}>Pockets</Text>
               <PopupMenu options={pocketMenuOptions} />
             </View>
+            {groups.map(g => (
+              <PocketGroup key={g._id} {...g} />
+            ))}
             {pockets.map(p => (
               <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
             ))}
@@ -81,7 +87,7 @@ export default function Home() {
           <AddPocket />
         </Sheet>
         <Sheet bottomSheetRef={addGroupSheet}>
-          <AddGroup pockets={pockets.filter(p => !p.groupId)} />
+          <AddGroup pockets={pockets} />
         </Sheet>
       </View>
     </SafeAreaView>

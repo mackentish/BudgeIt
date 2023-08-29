@@ -6,5 +6,6 @@ import Modal from './Modal';
 import PopupMenu from './PopupMenu';
 import Icon from './Icon';
 import Sheet from './Sheet';
+import PocketGroup from './PocketGroup';
 
-export { AnimatedPressable, Modal, Button, Pocket, LoadingSpinner, PopupMenu, Icon, Sheet };
+export { AnimatedPressable, Modal, Button, Pocket, LoadingSpinner, PopupMenu, Icon, Sheet, PocketGroup };
