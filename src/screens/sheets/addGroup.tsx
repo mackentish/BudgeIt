@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, Icon, Modal } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useGroups } from '../../state/queries';
 
 function GroupPocket({ name, amount, onPress }: { name: string; amount: number; onPress: () => void }) {
   return (
@@ -55,6 +56,7 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
   const [note, setNote] = useState('');
   const [groupPockets, setGroupPockets] = useState<Pocket[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const { createGroup } = useGroups();
 
   // only name and at least one pocket is required
   const isValid = groupName.length > 0 && groupPockets.length > 0;
@@ -68,7 +70,11 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
   };
 
   const onSave = () => {
-    Alert.alert('TODO: save group and update pockets');
+    createGroup.mutate({
+      name: groupName,
+      note: note ? note : undefined,
+      pockets: groupPockets,
+    });
     closeAndReset();
   };
 
@@ -86,13 +92,20 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
         onChangeText={setGroupName}
         placeholder="New Pocket Group"
         style={styles.nameInput}
+        spellCheck
       />
       <View style={styles.inputGroup}>
         <View style={styles.labelRow}>
           <Text style={styles.label}>Note</Text>
           <Text style={styles.labelLight}> - first 20 characters will be shown as subtitle</Text>
         </View>
-        <TextInput value={note} placeholder="Ex: Tahoe trip expenses." style={styles.input} />
+        <TextInput
+          value={note}
+          onChangeText={setNote}
+          placeholder="Ex: Tahoe trip expenses."
+          style={styles.input}
+          spellCheck
+        />
       </View>
       {groupPockets.length > 0 && (
         <View style={styles.addedPockets}>

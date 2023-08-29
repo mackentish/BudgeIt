@@ -3,15 +3,9 @@ import { fetchPockets as fetchPocketsFn, updatePocket as updateFn, createPocket 
 import { Alert } from 'react-native';
 import { Pocket } from '../../types';
 
-export default function usePockets(userId: string | undefined) {
+export default function usePockets() {
   // GET /pockets
-  const fetchPockets = useQuery(
-    ['userPockets', userId],
-    () => fetchPocketsFn(userId!), // userId is not undefined here because of the query config below (enabled)
-    {
-      enabled: !!userId,
-    },
-  );
+  const fetchPockets = useQuery(['userPockets'], () => fetchPocketsFn());
   // PUT /pockets/:id
   const updatePocket = useMutation(updateFn, {
     onSuccess: () => {
@@ -20,18 +14,15 @@ export default function usePockets(userId: string | undefined) {
   });
   // POST /pockets
   const createPocket = useMutation(
-    (pocket: Pocket) => {
-      return createFn(pocket, userId!);
+    (pocket: Omit<Pocket, '_id'>) => {
+      return createFn(pocket);
     },
     {
       onSuccess: () => {
         fetchPockets.refetch();
       },
       onError: () => {
-        Alert.alert(
-          'Error',
-          'Sorry, we are unable to create another pocket for you. You might be at your maximum (10)',
-        );
+        Alert.alert('Error', 'Sorry, we are unable to create another pocket for you.');
       },
     },
   );

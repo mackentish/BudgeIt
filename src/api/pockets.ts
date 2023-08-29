@@ -2,9 +2,9 @@ import { Pocket } from '../types';
 import { API_KEY } from '@env';
 import baseInstance from './base';
 
-const fetchPockets = async (userId: string) => {
+const fetchPockets = async () => {
   const response = await baseInstance.request({
-    url: `/pockets/${userId}`,
+    url: '/pockets',
     method: 'GET',
     headers: {
       'X-API-KEY': API_KEY,
@@ -32,7 +32,7 @@ const updatePocket = async (pocket: Pocket) => {
   return data as Pocket;
 };
 
-const createPocket = async (pocket: Pocket, userId: string) => {
+const createPocket = async (pocket: Omit<Pocket, '_id'>) => {
   const response = await baseInstance.request({
     url: '/pockets',
     method: 'POST',
@@ -40,11 +40,7 @@ const createPocket = async (pocket: Pocket, userId: string) => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    data: {
-      name: pocket.name,
-      amount: pocket.amount,
-      user: userId,
-    },
+    data: pocket,
   });
   const data = await response.data;
   return data as Pocket;

@@ -1,15 +1,13 @@
 import { View, StyleSheet, ScrollView, Text, SafeAreaView, Alert } from 'react-native';
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
-import { UserContext } from '../state/context';
 import { usePockets } from '../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PopupMenu, Sheet } from '../components';
 import { AddGroup, AddPocket } from './sheets';
 import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Home() {
-  const { user } = useContext(UserContext);
-  const { fetchPockets } = usePockets(user._id);
+  const { fetchPockets } = usePockets();
   const pockets = fetchPockets.data || [];
   // BottomSheets
   const addPocketSheet = useRef<BottomSheet>(null);
@@ -83,7 +81,7 @@ export default function Home() {
           <AddPocket />
         </Sheet>
         <Sheet bottomSheetRef={addGroupSheet}>
-          <AddGroup pockets={pockets} />
+          <AddGroup pockets={pockets.filter(p => !p.groupId)} />
         </Sheet>
       </View>
     </SafeAreaView>

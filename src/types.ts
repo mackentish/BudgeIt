@@ -24,4 +24,13 @@ export interface Pocket {
   _id: string;
   name: string;
   amount: number;
+  note?: string;
+  groupId?: string;
+}
+
+export interface PocketGroup {
+  _id: string;
+  name: string;
+  note?: string;
+  pockets: Pocket[];
 }

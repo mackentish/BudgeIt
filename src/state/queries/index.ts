@@ -1,4 +1,5 @@
 import usePockets from './pockets';
+import useGroups from './groups';
 import useUser from './users';
 
-export { usePockets, useUser };
+export { usePockets, useGroups, useUser };

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, Icon } from '../../components';
+import { Button, Icon, LoadingSpinner } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { currencyFormatter } from '../../utils';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { useGroups, usePockets } from '../../state/queries';
 
 export default function AddPocket() {
   const { close } = useBottomSheet();
@@ -12,23 +13,17 @@ export default function AddPocket() {
   const [startingAmount, setStartingAmount] = useState('$0.00');
   const [pocketGroup, setPocketGroup] = useState('');
   const [note, setNote] = useState('');
+  const { fetchGroups } = useGroups();
+  const { createPocket } = usePockets();
+
+  if (fetchGroups.isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  const groupList = fetchGroups.data?.map(({ _id, name }) => ({ key: _id, value: name })) || [];
+
   // Only name and amount are required. Amount can be 0
   const isValid = pocketName.length > 0 && !isNaN(Number(startingAmount.replace(/[^0-9.]/g, '')));
-
-  // TODO: get pocket groups from API
-  const pocketGroupsMockData = [
-    { key: '', value: 'No Group' },
-    { key: '1', value: 'Pocket Group 1' },
-    { key: '2', value: 'Pocket Group 2' },
-    { key: '3', value: 'Pocket Group 3' },
-    { key: '4', value: 'Pocket Group 4' },
-    { key: '5', value: 'Pocket Group 5' },
-    { key: '6', value: 'Pocket Group 6' },
-    { key: '7', value: 'Pocket Group 7' },
-    { key: '8', value: 'Pocket Group 8' },
-    { key: '9', value: 'Pocket Group 9' },
-    { key: '10', value: 'Pocket Group 10' },
-  ];
 
   const closeAndReset = () => {
     setPocketName('');
@@ -40,7 +35,13 @@ export default function AddPocket() {
   };
 
   const onSave = () => {
-    Alert.alert('TODO: save pocket');
+    const amount = Number(startingAmount.replace(/[^0-9.]/g, ''));
+    createPocket.mutate({
+      name: pocketName,
+      amount,
+      groupId: pocketGroup ? pocketGroup : undefined,
+      note: note.length > 0 ? note : undefined,
+    });
     closeAndReset();
   };
 
@@ -93,31 +94,38 @@ export default function AddPocket() {
           style={[styles.input, styles.amountInput]}
         />
       </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Pocket Group</Text>
-        <SelectList
-          data={pocketGroupsMockData}
-          setSelected={setPocketGroup}
-          save="key"
-          placeholder="Choose a Pocket Group"
-          search
-          maxHeight={200}
-          arrowicon={<Icon name="chevron-down" style={styles.iconSm} />}
-          closeicon={<Icon name="x" style={styles.iconSm} />}
-          searchPlaceholder="Search Pocket Groups"
-          fontFamily={font.regular}
-          notFoundText="No matching groups found"
-          boxStyles={styles.select}
-          inputStyles={styles.selectInput}
-          dropdownStyles={styles.dropDown}
-        />
-      </View>
+      {fetchGroups.data && fetchGroups.data.length > 0 && (
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Pocket Group</Text>
+          <SelectList
+            data={[{ key: '', value: 'No Group' }, ...groupList]}
+            setSelected={setPocketGroup}
+            save="key"
+            placeholder="Choose a Pocket Group"
+            search
+            maxHeight={200}
+            arrowicon={<Icon name="chevron-down" style={styles.iconSm} />}
+            closeicon={<Icon name="x" style={styles.iconSm} />}
+            searchPlaceholder="Search Pocket Groups"
+            fontFamily={font.regular}
+            notFoundText="No matching groups found"
+            boxStyles={styles.select}
+            inputStyles={styles.selectInput}
+            dropdownStyles={styles.dropDown}
+          />
+        </View>
+      )}
       <View style={styles.inputGroup}>
         <View style={styles.labelRow}>
           <Text style={styles.label}>Note</Text>
           <Text style={styles.labelLight}> - first 20 characters will be shown as subtitle</Text>
         </View>
-        <TextInput value={note} placeholder="Ex: Use Jan-May to help pay off loan." style={styles.input} />
+        <TextInput
+          value={note}
+          onChangeText={setNote}
+          placeholder="Ex: Use Jan-May to help pay off loan."
+          style={styles.input}
+        />
       </View>
       <View style={styles.gap} />
       <Button size="large" label="Save" onPress={onSave} disabled={!isValid} />
