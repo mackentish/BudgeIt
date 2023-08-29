@@ -69,16 +69,16 @@ export default function AllPockets({ navigation }: { navigation: any }) {
         <ScrollView>
           <View style={styles.pocketContainer}>
             {groups.map((g, i) => (
-              <>
-                <PocketGroup key={g._id} {...g} />
+              <View key={g._id}>
+                <PocketGroup {...g} />
                 {i === 5 && <Divider />}
-              </>
+              </View>
             ))}
             {pockets.map((p, i) => (
-              <>
-                <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
+              <View key={p._id}>
+                <Pocket {...p} />
                 {i === 5 - groups.length && <Divider />}
-              </>
+              </View>
             ))}
           </View>
         </ScrollView>

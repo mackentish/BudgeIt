@@ -75,7 +75,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
               <PocketGroup key={g._id} {...g} />
             ))}
             {pockets.map(p => (
-              <Pocket key={p._id} _id={p._id} name={p.name} amount={p.amount} />
+              <Pocket key={p._id} {...p} />
             ))}
             <Button
               label="View All Pockets"
