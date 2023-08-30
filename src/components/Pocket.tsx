@@ -1,20 +1,27 @@
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { currencyFormatter } from '../utils';
 import { colors, numbers, font } from '../constants/globalStyle';
 import { Button, Modal, PopupMenu } from '../components';
 import { usePockets } from '../state/queries';
+import { Pocket as PocketType } from '../types';
 
-export default function Pocket({ _id, name, amount }: { _id: string; name: string; amount: number }) {
-  const { deletePocket } = usePockets();
+export default function Pocket({ pocket }: { pocket: PocketType }) {
+  const { updatePocket, deletePocket } = usePockets();
+  // delete pocket
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [notZeroOpen, setNotZeroOpen] = useState(false);
+  // edit pocket
+  const [isEditing, setIsEditing] = useState(false);
+  const [newName, setNewName] = useState(pocket.name);
+  // add to group
+  // TODO
 
   const pocketMenuOptions = [
     {
       label: 'Rename',
       icon: 'edit',
-      action: () => console.log('TODO: rename pocket'),
+      action: () => setIsEditing(true),
     },
     {
       label: 'Add to group',
@@ -31,24 +38,54 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
 
   function deletePocketLogic() {
     setDeleteOpen(false);
-    if (amount !== 0) {
+    if (pocket.amount !== 0) {
       setNotZeroOpen(true);
     } else {
-      deletePocket.mutate(_id, {
+      deletePocket.mutate(pocket._id, {
         onSuccess: () => setDeleteOpen(false),
+        onError: () => Alert.alert('Error deleting pocket'),
       });
     }
   }
 
-  return (
-    <View style={styles.pocket}>
-      <View style={styles.pocketRow}>
-        <View style={styles.pocketInfo}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={[styles.amount, amount < 0 && styles.negativeAmount]}>{currencyFormatter.format(amount)}</Text>
-        </View>
-        <PopupMenu options={pocketMenuOptions} />
+  if (isEditing) {
+    return (
+      <View style={[styles.pocketRow, editStyles.container]}>
+        <TextInput
+          value={newName}
+          onChangeText={setNewName}
+          autoFocus
+          selectTextOnFocus
+          multiline
+          style={[styles.name, editStyles.input]}
+        />
+        <Button size="small" type="secondary" label="Cancel" onPress={() => setIsEditing(false)} />
+        <Button
+          size="small"
+          type="primary"
+          label="Done"
+          onPress={() => {
+            updatePocket.mutate(
+              { ...pocket, name: newName },
+              {
+                onSuccess: () => setIsEditing(false),
+                onError: () => Alert.alert('Error updating pocket'),
+              },
+            );
+          }}
+        />
       </View>
+    );
+  }
+  return (
+    <View style={styles.pocketRow}>
+      <View style={styles.pocketInfo}>
+        <Text style={styles.name}>{pocket.name}</Text>
+        <Text style={[styles.amount, pocket.amount < 0 && styles.negativeAmount]}>
+          {currencyFormatter.format(pocket.amount)}
+        </Text>
+      </View>
+      <PopupMenu options={pocketMenuOptions} />
 
       {/* Delete pocket modal */}
       <Modal visible={deleteOpen}>
@@ -63,7 +100,7 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
       {/* Pocket amount not zero modal */}
       <Modal visible={notZeroOpen}>
         <View style={modalStyles.container}>
-          <Text style={modalStyles.header}>{`${currencyFormatter.format(amount)} left in pocket.`}</Text>
+          <Text style={modalStyles.header}>{`${currencyFormatter.format(pocket.amount)} left in pocket.`}</Text>
           <Text style={modalStyles.message}>Pockets must have a balance of $0 to be deleted</Text>
           <Button size="medium" type="secondary" label="Cancel" onPress={() => setNotZeroOpen(false)} />
           <Button size="medium" label="Add Transaction" onPress={() => console.log('TODO: add transaction')} />
@@ -74,11 +111,10 @@ export default function Pocket({ _id, name, amount }: { _id: string; name: strin
 }
 
 const styles = StyleSheet.create({
-  pocket: {
-    flexDirection: 'column',
-    gap: 8,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+  pocketRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
     alignSelf: 'stretch',
     padding: 16,
     backgroundColor: colors.temp.white,
@@ -88,12 +124,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     elevation: 3,
-  },
-  pocketRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-    alignSelf: 'stretch',
   },
   pocketInfo: {
     flexDirection: 'row',
@@ -137,5 +167,21 @@ const modalStyles = StyleSheet.create({
     color: colors.temp.black,
     alignSelf: 'center',
     marginBottom: 10,
+  },
+});
+
+const editStyles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.temp.gray,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: colors.temp.black,
+    borderStyle: 'dashed',
+  },
+  input: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlign: 'justify',
   },
 });

@@ -76,7 +76,7 @@ export default function AllPockets({ navigation }: { navigation: any }) {
             ))}
             {pockets.map((p, i) => (
               <View key={p._id}>
-                <Pocket {...p} />
+                <Pocket pocket={p} />
                 {i === 5 - groups.length && <Divider />}
               </View>
             ))}

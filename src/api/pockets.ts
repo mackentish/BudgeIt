@@ -25,7 +25,6 @@ const updatePocket = async (pocket: Pocket) => {
     },
     data: {
       name: pocket.name,
-      amount: pocket.amount,
     },
   });
   const data = await response.data;

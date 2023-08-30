@@ -30,7 +30,7 @@ export default function PocketGroup({ name, pockets }: { name: string; pockets: 
       {isOpen && (
         <View style={styles.pockets}>
           {pockets.map(pocket => (
-            <Pocket key={pocket._id} {...pocket} />
+            <Pocket key={pocket._id} pocket={pocket} />
           ))}
         </View>
       )}

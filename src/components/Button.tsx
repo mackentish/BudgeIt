@@ -87,6 +87,7 @@ const defaultStyles = StyleSheet.create({
   primary: {
     borderRadius: 16,
     backgroundColor: colors.temp.black,
+    borderWidth: 1,
   },
   secondary: {
     borderRadius: 16,
