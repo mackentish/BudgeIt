@@ -166,6 +166,7 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
                     onSuccess: () => {
                       setAddToGroupOpen(false);
                       setSelectedGroup('');
+                      fetchGroups.refetch();
                     },
                     onError: () => Alert.alert('Error updating pocket'),
                   },
