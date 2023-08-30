@@ -99,9 +99,9 @@ const defaultStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: colors.temp.gray,
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
-    shadowRadius: 10,
+    shadowRadius: 1,
     elevation: 3,
   },
 

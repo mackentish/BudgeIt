@@ -70,7 +70,7 @@ export default function AllPockets({ navigation }: { navigation: any }) {
           <View style={styles.pocketContainer}>
             {groups.map((g, i) => (
               <View key={g._id}>
-                <PocketGroup {...g} />
+                <PocketGroup group={g} />
                 {i === 5 && <Divider />}
               </View>
             ))}

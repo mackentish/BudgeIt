@@ -72,7 +72,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
               <PopupMenu options={pocketMenuOptions} />
             </View>
             {groups.map(g => (
-              <PocketGroup key={g._id} {...g} />
+              <PocketGroup key={g._id} group={g} />
             ))}
             {pockets.map(p => (
               <Pocket key={p._id} pocket={p} />
@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingBottom: 10,
     shadowColor: colors.temp.black,
-    shadowOffset: { width: 0, height: 5 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowRadius: 10,
     elevation: 5,
   },
   headerDate: {

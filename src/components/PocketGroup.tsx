@@ -4,9 +4,9 @@ import Icon from './Icon';
 import Pocket from './Pocket';
 import { colors, font, numbers } from '../constants/globalStyle';
 import { currencyFormatter } from '../utils';
-import { Pocket as PocketType } from '../types';
+import { PocketGroup as PocketGroupType } from '../types';
 
-export default function PocketGroup({ name, pockets }: { name: string; pockets: PocketType[] }) {
+export default function PocketGroup({ group }: { group: PocketGroupType }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -19,17 +19,17 @@ export default function PocketGroup({ name, pockets }: { name: string; pockets: 
         <View style={styles.info}>
           <View style={styles.title}>
             <Icon name="group" style={styles.groupIcon} />
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name}>{group.name}</Text>
           </View>
           <Text style={styles.amount}>
-            {currencyFormatter.format(pockets.reduce((acc, curr) => acc + curr.amount, 0))}
+            {currencyFormatter.format(group.pockets.reduce((acc, curr) => acc + curr.amount, 0))}
           </Text>
           <Icon name={`chevron-${isOpen ? 'up' : 'down'}`} style={styles.chevronIcon} />
         </View>
       </Pressable>
       {isOpen && (
         <View style={styles.pockets}>
-          {pockets.map(pocket => (
+          {group.pockets.map(pocket => (
             <Pocket key={pocket._id} pocket={pocket} />
           ))}
         </View>
@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: numbers.borderRadius.medium,
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
-    shadowRadius: 10,
+    shadowRadius: 1,
     elevation: 3,
   },
   groupIcon: {

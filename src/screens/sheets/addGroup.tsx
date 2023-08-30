@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, Icon, Modal } from '../../components';
+import { Button, Icon, LoadingSpinner, Modal } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useGroups } from '../../state/queries';
+import { useGroups, usePockets } from '../../state/queries';
 
 function GroupPocket({ name, amount, onPress }: { name: string; amount: number; onPress: () => void }) {
   return (
@@ -50,13 +50,15 @@ function PocketOption({
   );
 }
 
-export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
+export default function AddGroup() {
   const { close } = useBottomSheet();
   const [groupName, setGroupName] = useState('');
   const [note, setNote] = useState('');
   const [groupPockets, setGroupPockets] = useState<Pocket[]>([]);
   const [showModal, setShowModal] = useState(false);
   const { createGroup } = useGroups();
+  const { fetchPockets } = usePockets();
+  const pockets = fetchPockets.data?.filter(p => !p.groupId) ?? [];
 
   // only name and at least one pocket is required
   const isValid = groupName.length > 0 && groupPockets.length > 0;
@@ -81,6 +83,10 @@ export default function AddGroup({ pockets }: { pockets: Pocket[] }) {
   const removePocket = (id: string) => {
     setGroupPockets(groupPockets.filter(p => p._id !== id));
   };
+
+  if (fetchPockets.isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <View style={styles.container}>
@@ -230,9 +236,9 @@ const pocketStyles = StyleSheet.create({
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.medium,
     shadowColor: 'black',
-    shadowOffset: { width: 0, height: 5 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
-    shadowRadius: 10,
+    shadowRadius: 1,
     elevation: 3,
   },
   pocketRow: {

@@ -25,6 +25,7 @@ const updatePocket = async (pocket: Pocket) => {
     },
     data: {
       name: pocket.name,
+      groupId: pocket.groupId,
     },
   });
   const data = await response.data;

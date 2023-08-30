@@ -8,9 +8,11 @@ import { Dimensions } from 'react-native';
 
 export default function Sheet({
   bottomSheetRef,
+  closeFn = () => {},
   children,
 }: {
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
+  closeFn?: () => void;
   children: React.ReactNode;
 }) {
   const { top } = useSafeAreaInsets();
@@ -19,6 +21,9 @@ export default function Sheet({
   return (
     <Portal>
       <BottomSheet
+        onAnimate={(fromIndex, toIndex) => {
+          if (toIndex === -1) closeFn();
+        }}
         ref={bottomSheetRef}
         index={-1}
         snapPoints={snapPoints}
