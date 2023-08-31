@@ -2,17 +2,16 @@ import { Text, StyleSheet, View, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { currencyFormatter } from '../utils';
 import { colors, numbers, font } from '../constants/globalStyle';
-import { Button, Modal, PopupMenu } from '../components';
+import { Button, PopupMenu } from '../components';
 import { useGroups, usePockets } from '../state/queries';
 import { Pocket as PocketType } from '../types';
-import { AddToGroupModal } from './modals';
+import { AddToGroupModal, DeletePocketModal } from './modals';
 
 export default function Pocket({ pocket }: { pocket: PocketType }) {
-  const { updatePocket, deletePocket } = usePockets();
+  const { updatePocket } = usePockets();
   const { fetchGroups } = useGroups();
   // delete pocket
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [notZeroOpen, setNotZeroOpen] = useState(false);
   // edit pocket
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(pocket.name);
@@ -41,21 +40,6 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
       color: colors.temp.red,
     },
   ];
-
-  function deletePocketLogic() {
-    setDeleteOpen(false);
-    if (pocket.amount !== 0) {
-      setNotZeroOpen(true);
-    } else {
-      deletePocket.mutate(pocket._id, {
-        onSuccess: () => {
-          fetchGroups.refetch();
-          setDeleteOpen(false);
-        },
-        onError: () => Alert.alert('Error deleting pocket'),
-      });
-    }
-  }
 
   if (isEditing) {
     return (
@@ -98,26 +82,7 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
         </Text>
       </View>
       <PopupMenu options={pocketMenuOptions} />
-
-      {/* Delete pocket modal */}
-      <Modal visible={deleteOpen}>
-        <View style={modalStyles.container}>
-          <Text style={modalStyles.header}>Are you sure?</Text>
-          <Text style={modalStyles.message}>This pocket will be permanently deleted.</Text>
-          <Button size="medium" type="secondary" label="Cancel" onPress={() => setDeleteOpen(false)} />
-          <Button size="medium" label="Delete" onPress={deletePocketLogic} />
-        </View>
-      </Modal>
-
-      {/* Pocket amount not zero modal */}
-      <Modal visible={notZeroOpen}>
-        <View style={modalStyles.container}>
-          <Text style={modalStyles.header}>{`${currencyFormatter.format(pocket.amount)} left in pocket.`}</Text>
-          <Text style={modalStyles.message}>Pockets must have a balance of $0 to be deleted</Text>
-          <Button size="medium" type="secondary" label="Cancel" onPress={() => setNotZeroOpen(false)} />
-          <Button size="medium" label="Add Transaction" onPress={() => console.log('TODO: add transaction')} />
-        </View>
-      </Modal>
+      <DeletePocketModal isOpen={deleteOpen} setIsOpen={setDeleteOpen} pocket={pocket} />
       <AddToGroupModal isOpen={addToGroupOpen} setIsOpen={setAddToGroupOpen} pocket={pocket} />
     </View>
   );
@@ -160,26 +125,6 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 24,
     color: colors.temp.black,
-  },
-});
-
-const modalStyles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    gap: 10,
-  },
-  header: {
-    fontFamily: font.bold,
-    fontSize: 24,
-    color: colors.temp.black,
-    alignSelf: 'center',
-  },
-  message: {
-    fontFamily: font.regular,
-    fontSize: 16,
-    color: colors.temp.black,
-    alignSelf: 'center',
-    marginBottom: 10,
   },
 });
 
