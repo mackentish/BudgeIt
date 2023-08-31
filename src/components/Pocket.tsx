@@ -1,12 +1,11 @@
-import { Text, StyleSheet, View, TextInput, Alert, Pressable, ScrollView } from 'react-native';
-import React, { useRef, useState } from 'react';
+import { Text, StyleSheet, View, TextInput, Alert } from 'react-native';
+import React, { useState } from 'react';
 import { currencyFormatter } from '../utils';
 import { colors, numbers, font } from '../constants/globalStyle';
-import { Icon, Button, Modal, PopupMenu, Sheet } from '../components';
+import { Button, Modal, PopupMenu } from '../components';
 import { useGroups, usePockets } from '../state/queries';
 import { Pocket as PocketType } from '../types';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { AddGroup } from '../screens/sheets';
+import { AddToGroupModal } from './modals';
 
 export default function Pocket({ pocket }: { pocket: PocketType }) {
   const { updatePocket, deletePocket } = usePockets();
@@ -19,8 +18,6 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
   const [newName, setNewName] = useState(pocket.name);
   // add to group
   const [addToGroupOpen, setAddToGroupOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState('');
-  const newGroupSheet = useRef<BottomSheet>(null);
 
   const pocketMenuOptions = [
     {
@@ -121,71 +118,7 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
           <Button size="medium" label="Add Transaction" onPress={() => console.log('TODO: add transaction')} />
         </View>
       </Modal>
-
-      {/* Add to group modal */}
-      <Modal visible={addToGroupOpen}>
-        <View style={addToGroupStyles.container}>
-          <Pressable onPress={() => setAddToGroupOpen(false)} style={addToGroupStyles.closeBtn}>
-            <Icon name="x" style={addToGroupStyles.icon} />
-          </Pressable>
-          <Text style={modalStyles.header}>Add to Group</Text>
-          {fetchGroups.data ? (
-            <ScrollView style={addToGroupStyles.scroll}>
-              <View style={addToGroupStyles.groupsContainer}>
-                {fetchGroups.data.map(g => (
-                  <Pressable
-                    key={g._id}
-                    onPress={() => {
-                      if (selectedGroup === g._id) {
-                        setSelectedGroup('');
-                      } else {
-                        setSelectedGroup(g._id);
-                      }
-                    }}
-                    style={[addToGroupStyles.group, selectedGroup === g._id && addToGroupStyles.selected]}>
-                    <Icon name="group" style={addToGroupStyles.groupIcon} />
-                    <Text style={addToGroupStyles.groupName}>{g.name}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            </ScrollView>
-          ) : (
-            <Text style={modalStyles.message}>You don't have any pocket groups yet. Create one now!</Text>
-          )}
-          <Button
-            size="medium"
-            type="secondary"
-            label="Create New Pocket Group"
-            onPress={() => {
-              setAddToGroupOpen(false);
-              newGroupSheet.current?.expand();
-            }}
-          />
-          {fetchGroups.data && (
-            <Button
-              size="medium"
-              label="Add to Pocket Group"
-              onPress={() => {
-                updatePocket.mutate(
-                  { ...pocket, groupId: selectedGroup },
-                  {
-                    onSuccess: () => {
-                      fetchGroups.refetch();
-                      setAddToGroupOpen(false);
-                      setSelectedGroup('');
-                    },
-                    onError: () => Alert.alert('Error updating pocket'),
-                  },
-                );
-              }}
-              disabled={!selectedGroup}
-            />
-          )}
-        </View>
-      </Modal>
-      <Sheet bottomSheetRef={newGroupSheet} closeFn={() => setAddToGroupOpen(true)}>
-        <AddGroup />
-      </Sheet>
+      <AddToGroupModal isOpen={addToGroupOpen} setIsOpen={setAddToGroupOpen} pocket={pocket} />
     </View>
   );
 }
@@ -247,55 +180,6 @@ const modalStyles = StyleSheet.create({
     color: colors.temp.black,
     alignSelf: 'center',
     marginBottom: 10,
-  },
-});
-
-const addToGroupStyles = StyleSheet.create({
-  closeBtn: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  icon: {
-    fontSize: 16,
-    color: colors.temp.darkGray,
-  },
-  container: {
-    flexDirection: 'column',
-    gap: 20,
-  },
-  scroll: {
-    maxHeight: 500,
-    minHeight: 200,
-  },
-  groupsContainer: {
-    flexDirection: 'column',
-    flex: 1,
-    gap: 10,
-    justifyContent: 'center',
-    padding: 5,
-  },
-  selected: {
-    borderColor: colors.temp.lightGreen,
-  },
-  group: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    padding: 10,
-    backgroundColor: colors.temp.black,
-    borderWidth: 2,
-    borderRadius: numbers.borderRadius.medium,
-    borderColor: colors.temp.black,
-  },
-  groupIcon: {
-    fontSize: 20,
-    color: colors.temp.white,
-  },
-  groupName: {
-    fontFamily: font.regular,
-    fontSize: 16,
-    color: colors.temp.white,
   },
 });
 

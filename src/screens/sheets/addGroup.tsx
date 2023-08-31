@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, Icon, LoadingSpinner, Modal } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
@@ -56,7 +56,7 @@ export default function AddGroup() {
   const [note, setNote] = useState('');
   const [groupPockets, setGroupPockets] = useState<Pocket[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const { createGroup } = useGroups();
+  const { fetchGroups, createGroup } = useGroups();
   const { fetchPockets } = usePockets();
   const pockets = fetchPockets.data?.filter(p => !p.groupId) ?? [];
 
@@ -72,12 +72,21 @@ export default function AddGroup() {
   };
 
   const onSave = () => {
-    createGroup.mutate({
-      name: groupName,
-      note: note ? note : undefined,
-      pockets: groupPockets,
-    });
-    closeAndReset();
+    createGroup.mutate(
+      {
+        name: groupName,
+        note: note ? note : undefined,
+        pockets: groupPockets,
+      },
+      {
+        onSuccess: () => {
+          fetchGroups.refetch();
+          fetchPockets.refetch();
+          closeAndReset();
+        },
+        onError: () => Alert.alert('Could not create group.'),
+      },
+    );
   };
 
   const removePocket = (id: string) => {

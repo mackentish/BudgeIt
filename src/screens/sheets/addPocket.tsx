@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, Icon, LoadingSpinner } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
@@ -14,7 +14,7 @@ export default function AddPocket() {
   const [pocketGroup, setPocketGroup] = useState('');
   const [note, setNote] = useState('');
   const { fetchGroups } = useGroups();
-  const { createPocket } = usePockets();
+  const { fetchPockets, createPocket } = usePockets();
 
   if (fetchGroups.isLoading) {
     return <LoadingSpinner />;
@@ -36,13 +36,22 @@ export default function AddPocket() {
 
   const onSave = () => {
     const amount = Number(startingAmount.replace(/[^0-9.]/g, ''));
-    createPocket.mutate({
-      name: pocketName,
-      amount,
-      groupId: pocketGroup ? pocketGroup : undefined,
-      note: note.length > 0 ? note : undefined,
-    });
-    closeAndReset();
+    createPocket.mutate(
+      {
+        name: pocketName,
+        amount,
+        groupId: pocketGroup ? pocketGroup : undefined,
+        note: note.length > 0 ? note : undefined,
+      },
+      {
+        onSuccess: () => {
+          fetchPockets.refetch();
+          fetchGroups.refetch();
+          closeAndReset();
+        },
+        onError: () => Alert.alert('Error creating pocket'),
+      },
+    );
   };
 
   const onAmountChange = (text: string) => {
