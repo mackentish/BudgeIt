@@ -51,7 +51,10 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
       setNotZeroOpen(true);
     } else {
       deletePocket.mutate(pocket._id, {
-        onSuccess: () => setDeleteOpen(false),
+        onSuccess: () => {
+          fetchGroups.refetch();
+          setDeleteOpen(false);
+        },
         onError: () => Alert.alert('Error deleting pocket'),
       });
     }
@@ -77,7 +80,10 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
             updatePocket.mutate(
               { ...pocket, name: newName },
               {
-                onSuccess: () => setIsEditing(false),
+                onSuccess: () => {
+                  fetchGroups.refetch();
+                  setIsEditing(false);
+                },
                 onError: () => Alert.alert('Error updating pocket'),
               },
             );
@@ -164,9 +170,9 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
                   { ...pocket, groupId: selectedGroup },
                   {
                     onSuccess: () => {
+                      fetchGroups.refetch();
                       setAddToGroupOpen(false);
                       setSelectedGroup('');
-                      fetchGroups.refetch();
                     },
                     onError: () => Alert.alert('Error updating pocket'),
                   },

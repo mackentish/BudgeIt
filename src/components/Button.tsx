@@ -10,6 +10,7 @@ export default function Button({
   children,
   size = 'small',
   type = 'primary',
+  style = {},
 }: {
   label?: string;
   onPress: () => void;
@@ -17,6 +18,7 @@ export default function Button({
   children?: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
   type?: 'primary' | 'secondary' | 'tertiary';
+  style?: any;
 } & PressableProps) {
   let buttonStyles = [];
   let textStyles = [];
@@ -50,6 +52,7 @@ export default function Button({
       textStyles.push(defaultStyles.tertiaryText);
       break;
   }
+  buttonStyles.push(style);
 
   return (
     <AnimatedPressable

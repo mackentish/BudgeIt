@@ -29,4 +29,17 @@ const postGroup = async (group: Omit<PocketGroup, '_id'>) => {
   return data as PocketGroup;
 };
 
-export { getGroups, postGroup };
+const deleteGroup = async (id: string) => {
+  const response = await baseInstance.request({
+    url: `/groups/${id}`,
+    method: 'DELETE',
+    headers: {
+      'X-API-KEY': API_KEY,
+      Accept: 'application/json',
+    },
+  });
+  const data = response.data;
+  return data as PocketGroup;
+};
+
+export { getGroups, postGroup, deleteGroup };

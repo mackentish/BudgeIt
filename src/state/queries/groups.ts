@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getGroups, postGroup } from '../../api/groups';
+import { getGroups, postGroup, deleteGroup as deleteFn } from '../../api/groups';
 import { Alert } from 'react-native';
 import { PocketGroup } from '../../types';
 
-export default function usePockets() {
-  // GET /pockets
+export default function useGroups() {
+  // GET /groups
   const fetchGroups = useQuery(['userPocketGroups'], () => getGroups());
-  // POST /pockets
+
+  // POST /groups
   const createGroup = useMutation(
     (group: Omit<PocketGroup, '_id'>) => {
       return postGroup(group);
@@ -21,5 +22,20 @@ export default function usePockets() {
     },
   );
 
-  return { fetchGroups, createGroup };
+  // DELETE /groups/:id
+  const deleteGroup = useMutation(
+    (id: string) => {
+      return deleteFn(id);
+    },
+    {
+      onSuccess: () => {
+        fetchGroups.refetch();
+      },
+      onError: () => {
+        Alert.alert('Error', 'Sorry, we are unable to delete this pocket.');
+      },
+    },
+  );
+
+  return { fetchGroups, createGroup, deleteGroup };
 }

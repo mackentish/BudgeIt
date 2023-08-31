@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, LayoutAnimation } from 'react-native';
 import Icon from './Icon';
 import Pocket from './Pocket';
+import { ConfirmDeleteGroup } from './modals';
 import { colors, font, numbers } from '../constants/globalStyle';
 import { currencyFormatter } from '../utils';
 import { PocketGroup as PocketGroupType } from '../types';
+import { useGroups, usePockets } from '../state/queries';
 
 export default function PocketGroup({ group }: { group: PocketGroupType }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { deleteGroup } = useGroups();
+  const { fetchPockets } = usePockets();
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -32,8 +37,21 @@ export default function PocketGroup({ group }: { group: PocketGroupType }) {
           {group.pockets.map(pocket => (
             <Pocket key={pocket._id} pocket={pocket} />
           ))}
+          <Pressable style={styles.deleteBtn} onPress={() => setIsConfirmOpen(true)}>
+            <Text style={styles.btnText}>Delete Group</Text>
+          </Pressable>
         </View>
       )}
+      <ConfirmDeleteGroup
+        isOpen={isConfirmOpen}
+        close={() => setIsConfirmOpen(false)}
+        deleteFn={() => {
+          deleteGroup.mutate(group._id, {
+            onSuccess: () => fetchPockets.refetch(),
+          });
+          setIsConfirmOpen(false);
+        }}
+      />
     </View>
   );
 }
@@ -92,5 +110,18 @@ const styles = StyleSheet.create({
     color: colors.temp.white,
     fontSize: 20,
     fontFamily: font.bold,
+  },
+  deleteBtn: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: colors.temp.red,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: numbers.borderRadius.medium,
+  },
+  btnText: {
+    color: colors.temp.white,
+    fontFamily: font.bold,
+    fontSize: 16,
   },
 });
