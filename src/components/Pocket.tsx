@@ -1,20 +1,16 @@
-import { Text, StyleSheet, View, TextInput, Alert } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { currencyFormatter } from '../utils';
 import { colors, numbers, font } from '../constants/globalStyle';
-import { Button, PopupMenu } from '../components';
-import { useGroups, usePockets } from '../state/queries';
+import { PopupMenu, EditPocket } from '.';
 import { Pocket as PocketType } from '../types';
 import { AddToGroupModal, DeletePocketModal } from './modals';
 
 export default function Pocket({ pocket }: { pocket: PocketType }) {
-  const { updatePocket } = usePockets();
-  const { fetchGroups } = useGroups();
   // delete pocket
   const [deleteOpen, setDeleteOpen] = useState(false);
   // edit pocket
   const [isEditing, setIsEditing] = useState(false);
-  const [newName, setNewName] = useState(pocket.name);
   // add to group
   const [addToGroupOpen, setAddToGroupOpen] = useState(false);
 
@@ -42,36 +38,7 @@ export default function Pocket({ pocket }: { pocket: PocketType }) {
   ];
 
   if (isEditing) {
-    return (
-      <View style={[styles.pocketRow, editStyles.container]}>
-        <TextInput
-          value={newName}
-          onChangeText={setNewName}
-          autoFocus
-          selectTextOnFocus
-          multiline
-          style={[styles.name, editStyles.input]}
-        />
-        <Button size="small" type="secondary" label="Cancel" onPress={() => setIsEditing(false)} />
-        <Button
-          size="small"
-          type="primary"
-          label="Done"
-          onPress={() => {
-            updatePocket.mutate(
-              { ...pocket, name: newName },
-              {
-                onSuccess: () => {
-                  fetchGroups.refetch();
-                  setIsEditing(false);
-                },
-                onError: () => Alert.alert('Error updating pocket'),
-              },
-            );
-          }}
-        />
-      </View>
-    );
+    return <EditPocket pocket={pocket} close={() => setIsEditing(false)} />;
   }
   return (
     <View style={styles.pocketRow}>
@@ -125,21 +92,5 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 24,
     color: colors.temp.black,
-  },
-});
-
-const editStyles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.temp.gray,
-    gap: 4,
-    borderWidth: 1,
-    borderColor: colors.temp.black,
-    borderStyle: 'dashed',
-  },
-  input: {
-    flex: 1,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    textAlign: 'justify',
   },
 });
