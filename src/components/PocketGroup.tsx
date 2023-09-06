@@ -21,11 +21,11 @@ export default function PocketGroup({ group }: { group: PocketGroupType }) {
   return (
     <View style={styles.container}>
       <Pressable onPress={() => setIsOpen(!isOpen)} style={styles.header}>
-        <View style={styles.info}>
-          <View style={styles.title}>
-            <Icon name="group" style={styles.groupIcon} />
-            <Text style={styles.name}>{group.name}</Text>
-          </View>
+        <View style={styles.title}>
+          <Icon name="group" style={styles.groupIcon} />
+          <Text style={styles.name}>{group.name}</Text>
+        </View>
+        <View style={styles.headerGroup}>
           <Text style={styles.amount}>
             {currencyFormatter.format(group.pockets.reduce((acc, curr) => acc + curr.amount, 0))}
           </Text>
@@ -82,19 +82,18 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
     paddingHorizontal: 15,
     alignItems: 'center',
-    gap: 20,
+    justifyContent: 'space-between',
+  },
+  headerGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   pockets: {
     flexDirection: 'column',
     gap: 10,
     paddingHorizontal: 15,
     paddingBottom: 15,
-  },
-  info: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
   },
   title: {
     flexDirection: 'row',

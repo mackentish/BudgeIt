@@ -16,7 +16,7 @@ export default function Sheet({
   children: React.ReactNode;
 }) {
   const { top } = useSafeAreaInsets();
-  const snapPoints = useMemo(() => [Dimensions.get('window').height - top - 10], [top]);
+  const snapPoints = useMemo(() => [Dimensions.get('window').height - top], [top]);
 
   return (
     <Portal>

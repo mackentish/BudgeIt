@@ -2,6 +2,7 @@ export const colors = {
   temp: {
     black: '#000000',
     white: '#FFFFFF',
+    lightGray: '#F9FAFB',
     gray: '#E7E7E7',
     midGray: '#BBB',
     darkGray: '#515151',

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, Icon, LoadingSpinner } from '../../components';
+import { Button, CurrencyInput, Icon, LoadingSpinner } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
-import { currencyFormatter } from '../../utils';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { useGroups, usePockets } from '../../state/queries';
 
@@ -54,38 +53,6 @@ export default function AddPocket() {
     );
   };
 
-  const onAmountChange = (text: string) => {
-    // don't allow more than one decimal
-    const splitText = text.split('.');
-    if (splitText.length > 2) {
-      return;
-    }
-    // don't allow more than two decimal places
-    if (splitText.length > 1 && splitText[1].length > 2) {
-      return;
-    }
-    setStartingAmount(text);
-  };
-  const onAmountBlur = () => {
-    try {
-      // remove all non-numeric characters and split on decimal
-      const splitText = startingAmount.replace(/[^0-9.]/g, '').split('.');
-      let newText = splitText[0];
-      // if there is a decimal, add it back
-      if (splitText.length > 1) {
-        newText += '.' + splitText[1].slice(0, 2);
-      }
-      // if there is no decimal, add one
-      else {
-        newText += '.00';
-      }
-      setStartingAmount(currencyFormatter.format(Number(newText)));
-    } catch (err) {
-      console.log(err);
-      setStartingAmount('$0.00');
-    }
-  };
-
   return (
     <View style={styles.container}>
       <Pressable onPress={closeAndReset} style={styles.closeBtn}>
@@ -94,14 +61,7 @@ export default function AddPocket() {
       <TextInput value={pocketName} onChangeText={setPocketName} placeholder="Pocket Name" style={styles.nameInput} />
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Starting Amount</Text>
-        <TextInput
-          value={startingAmount}
-          onBlur={onAmountBlur}
-          clearTextOnFocus
-          onChangeText={onAmountChange}
-          keyboardType="numeric"
-          style={[styles.input, styles.amountInput]}
-        />
+        <CurrencyInput value={startingAmount} setValue={setStartingAmount} style={[styles.input, styles.amountInput]} />
       </View>
       {fetchGroups.data && fetchGroups.data.length > 0 && (
         <View style={styles.inputGroup}>

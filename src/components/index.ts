@@ -8,5 +8,20 @@ import Icon from './Icon';
 import Sheet from './Sheet';
 import PocketGroup from './PocketGroup';
 import EditPocket from './EditPocket';
+import CurrencyInput from './CurrencyInput';
+import Dropdown from './Dropdown';
 
-export { AnimatedPressable, Modal, Button, Pocket, LoadingSpinner, PopupMenu, Icon, Sheet, PocketGroup, EditPocket };
+export {
+  AnimatedPressable,
+  Modal,
+  Button,
+  Pocket,
+  LoadingSpinner,
+  PopupMenu,
+  Icon,
+  Sheet,
+  PocketGroup,
+  EditPocket,
+  CurrencyInput,
+  Dropdown,
+};

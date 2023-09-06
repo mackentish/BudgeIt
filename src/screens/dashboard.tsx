@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { colors, font } from '../constants/globalStyle';
 import { useGroups, usePockets } from '../state/queries';
 import { Icon, Button, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
-import { AddGroup, AddPocket } from './sheets';
+import { AddGroup, AddPocket, AddTransaction } from './sheets';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { DashboardStacks } from '../constants/navigation';
 
@@ -17,6 +17,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
   // BottomSheets
   const addPocketSheet = useRef<BottomSheet>(null);
   const addGroupSheet = useRef<BottomSheet>(null);
+  const addTransactionSheet = useRef<BottomSheet>(null);
 
   if (fetchPockets.isError || fetchGroups.isError) {
     return (
@@ -55,7 +56,7 @@ export default function Dashboard({ navigation }: { navigation: any }) {
             {new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </Text>
           <View style={styles.headerButtons}>
-            <Button type="tertiary" onPress={() => Alert.alert('TODO: add transaction press')}>
+            <Button type="tertiary" onPress={() => addTransactionSheet.current?.expand()}>
               <Text style={styles.smBtnTxt}>Add Transaction</Text>
               <Icon name="plus" style={styles.icon} />
             </Button>
@@ -89,7 +90,10 @@ export default function Dashboard({ navigation }: { navigation: any }) {
           <AddPocket />
         </Sheet>
         <Sheet bottomSheetRef={addGroupSheet}>
-          <AddGroup pockets={pockets} />
+          <AddGroup />
+        </Sheet>
+        <Sheet bottomSheetRef={addTransactionSheet}>
+          <AddTransaction />
         </Sheet>
       </View>
     </SafeAreaView>
