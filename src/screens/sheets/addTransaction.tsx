@@ -1,16 +1,17 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { DropdownOption } from '../../types';
 import { usePockets } from '../../state/queries';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function AddTransaction() {
   // Form fields
   const [transactionTitle, setTransactionTitle] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('$0.00');
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState(new Date());
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
   const externalOption = { label: 'External', value: 'external' };
@@ -44,19 +45,23 @@ export default function AddTransaction() {
       />
       <CurrencyInput value={transactionAmount} setValue={setTransactionAmount} style={styles.amount} />
       <View style={styles.details}>
-        <View style={[styles.input, styles.datePickerRow]}>
-          <Text style={styles.text}>Date:</Text>
-          {/* 
-          <DateTimePicker
-            value={date}
-            onChange={(e, newDate) => {
-              if (newDate) setDate(newDate);
-            }}
-            mode="date"
-            accentColor={colors.temp.black}
-          />
-          */}
-        </View>
+        <Pressable onPress={() => setDatePickerVisibility(true)} style={[styles.input, styles.datePickerRow]}>
+          <Text style={styles.text}>{date.toLocaleDateString()}</Text>
+          <Icon name={`chevron-${isDatePickerVisible ? 'up' : 'down'}`} style={styles.chevronIcon} />
+        </Pressable>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          date={date}
+          mode="date"
+          display="inline"
+          onConfirm={newDate => {
+            setDate(newDate);
+            setDatePickerVisibility(false);
+          }}
+          onCancel={() => setDatePickerVisibility(false)}
+          buttonTextColorIOS={colors.temp.black}
+          accentColor={colors.temp.black}
+        />
 
         <Dropdown
           label="Inflow"
@@ -122,6 +127,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 18,
+    color: colors.temp.black,
+  },
+  chevronIcon: {
+    fontSize: 10,
+    color: colors.temp.darkGray,
   },
   title: {
     fontSize: 22,

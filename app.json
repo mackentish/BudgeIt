@@ -6,6 +6,7 @@
       "config": {
         "usesNonExemptEncryption": false
       }
-    }
+    },
+    "userInterfaceStyle": "automatic"
   }
 }
