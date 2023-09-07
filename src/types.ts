@@ -34,3 +34,9 @@ export interface PocketGroup {
   note?: string;
   pockets: Pocket[];
 }
+
+export interface DropdownOption {
+  label: string;
+  value: string;
+  isHeader?: boolean;
+}

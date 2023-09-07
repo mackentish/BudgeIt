@@ -4,17 +4,31 @@ import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { Button, CurrencyInput, Dropdown, Icon } from '../../components';
+import { DropdownOption } from '../../types';
+import { usePockets } from '../../state/queries';
 
 export default function AddTransaction() {
+  // Form fields
   const [transactionTitle, setTransactionTitle] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('$0.00');
   const [date, setDate] = useState(new Date());
-  const [inflow, setInflow] = useState('');
-  const [outflow, setOutflow] = useState('');
+  const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
+  const [outflow, setOutflow] = useState<DropdownOption | undefined>(undefined);
   const [tags, setTags] = useState('');
   const [note, setNote] = useState('');
+
   const { close } = useBottomSheet();
-  const isValid = transactionTitle && transactionAmount && date && inflow && outflow;
+  const { fetchPockets } = usePockets();
+  const isValid = transactionTitle && transactionAmount && date && inflow && outflow && inflow.value !== outflow.value;
+
+  const flowOptions = [{ label: 'Pockets', value: '', isHeader: true }];
+  flowOptions.push(
+    ...(fetchPockets.data || []).map(pocket => ({
+      label: pocket.name,
+      value: pocket._id,
+      isHeader: false,
+    })),
+  );
 
   return (
     <View style={styles.container}>
@@ -46,26 +60,20 @@ export default function AddTransaction() {
         <Dropdown
           label="Inflow"
           placeholder="Where's the money coming from?"
-          options={[
-            { label: 'Pockets', value: '', isHeader: true },
-            { label: 'Option 1', value: '1' },
-            { label: 'Option 2', value: '2' },
-            { label: 'Option 3', value: '3' },
-            { label: 'Other', value: '', isHeader: true },
-            { label: 'Other 1', value: 'O1' },
-            { label: 'Other 2', value: 'O2' },
-          ]}
+          options={flowOptions}
+          value={inflow}
+          setValue={setInflow}
+          topOption={{ label: 'External', value: 'external' }}
         />
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Outflow</Text>
-          <TextInput
-            value={outflow}
-            onChangeText={setOutflow}
-            placeholder="Where's the money going?"
-            style={styles.input}
-          />
-        </View>
+        <Dropdown
+          label="Outflow"
+          placeholder="Where's the money going?"
+          options={flowOptions}
+          value={outflow}
+          setValue={setOutflow}
+          topOption={{ label: 'External', value: 'external' }}
+        />
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Tags</Text>

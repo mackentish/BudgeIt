@@ -1,25 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { LayoutAnimation, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { ScrollView, LayoutAnimation, Pressable, StyleSheet, Text, View, Dimensions } from 'react-native';
 import { font, colors, numbers } from '../constants/globalStyle';
 import Icon from './Icon';
 import { Portal } from '@gorhom/portal';
-
-interface Option {
-  label: string;
-  value: string;
-  isHeader?: boolean;
-}
+import { DropdownOption } from '../types';
 
 export default function Dropdown({
   label,
   placeholder,
   options,
+  value,
+  setValue,
+  topOption,
 }: {
   label: string;
   placeholder: string;
-  options: Option[];
+  options: DropdownOption[];
+  value: DropdownOption | undefined;
+  setValue: Dispatch<SetStateAction<DropdownOption | undefined>>;
+  topOption?: DropdownOption;
 }) {
-  const [value, setValue] = useState<Option | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<View>(null);
   const [measure, setMeasure] = useState({ x: 0, y: 0, width: 0, height: 0 });
@@ -36,8 +36,16 @@ export default function Dropdown({
     }
   }, [measure]);
 
-  function isSelected(option: Option) {
+  function isSelected(option: DropdownOption) {
     return value?.value === option.value;
+  }
+
+  /**
+   * Determines whether or not we have the screen real estate to render the dropdown below the input
+   * in it's entirety. If not, we render it above the input.
+   */
+  function canRenderBelow() {
+    return measure.y + measure.height + 8 + 220 < Dimensions.get('window').height - 144;
   }
 
   return (
@@ -52,31 +60,51 @@ export default function Dropdown({
           <View
             style={[
               styles.options,
+              canRenderBelow()
+                ? {
+                    top: measure.y + measure.height + 8,
+                  }
+                : {
+                    bottom: Dimensions.get('window').height - measure.y + 8,
+                  },
               {
-                top: measure.y + measure.height + 8,
                 left: measure.x,
                 width: measure.width,
               },
             ]}>
-            {options.map((option, i) => {
-              return option.isHeader ? (
-                <View key={i} style={styles.header}>
-                  <Text style={styles.headerText}>{option.label}</Text>
-                </View>
-              ) : (
+            <ScrollView style={styles.scroll}>
+              {topOption && (
                 <Pressable
-                  key={i}
                   onPress={() => {
-                    if (isSelected(option)) setValue(undefined);
-                    else setValue(option);
+                    if (isSelected(topOption)) setValue(undefined);
+                    else setValue(topOption);
                     setIsOpen(false);
                   }}
-                  style={[styles.selectable, isSelected(option) && styles.selected]}>
-                  <Text style={styles.selectableText}>{option.label}</Text>
-                  {isSelected(option) && <Icon name="check" style={styles.checkIcon} />}
+                  style={[styles.topOption, isSelected(topOption) && styles.selected]}>
+                  <Text style={styles.selectableText}>{topOption.label}</Text>
+                  {isSelected(topOption) && <Icon name="check" style={styles.checkIcon} />}
                 </Pressable>
-              );
-            })}
+              )}
+              {options.map((option, i) => {
+                return option.isHeader ? (
+                  <View key={i} style={styles.header}>
+                    <Text style={styles.headerText}>{option.label}</Text>
+                  </View>
+                ) : (
+                  <Pressable
+                    key={i}
+                    onPress={() => {
+                      if (isSelected(option)) setValue(undefined);
+                      else setValue(option);
+                      setIsOpen(false);
+                    }}
+                    style={[styles.selectable, isSelected(option) && styles.selected]}>
+                    <Text style={styles.selectableText}>{option.label}</Text>
+                    {isSelected(option) && <Icon name="check" style={styles.checkIcon} />}
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
           </View>
         </Portal>
       )}
@@ -131,6 +159,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.small,
+    overflow: 'hidden',
+  },
+  scroll: {
+    maxHeight: 220,
   },
   header: {
     flexDirection: 'row',
@@ -158,5 +190,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: font.regular,
     color: colors.temp.black,
+  },
+  topOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderBottomWidth: 3,
+    borderBottomColor: colors.temp.midGray,
   },
 });
