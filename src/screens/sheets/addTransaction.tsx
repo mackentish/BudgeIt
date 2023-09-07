@@ -13,7 +13,8 @@ export default function AddTransaction() {
   const [transactionAmount, setTransactionAmount] = useState('$0.00');
   const [date, setDate] = useState(new Date());
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
-  const [outflow, setOutflow] = useState<DropdownOption | undefined>(undefined);
+  const externalOption = { label: 'External', value: 'external' };
+  const [outflow, setOutflow] = useState<DropdownOption | undefined>(externalOption);
   const [tags, setTags] = useState('');
   const [note, setNote] = useState('');
 
@@ -63,7 +64,7 @@ export default function AddTransaction() {
           options={flowOptions}
           value={inflow}
           setValue={setInflow}
-          topOption={{ label: 'External', value: 'external' }}
+          topOption={externalOption}
         />
 
         <Dropdown
@@ -72,7 +73,7 @@ export default function AddTransaction() {
           options={flowOptions}
           value={outflow}
           setValue={setOutflow}
-          topOption={{ label: 'External', value: 'external' }}
+          topOption={externalOption}
         />
 
         <View style={styles.inputGroup}>

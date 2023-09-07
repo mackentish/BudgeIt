@@ -22,36 +22,38 @@ export default function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<View>(null);
+  /**
+   * This gives us the position of the input in the window
+   */
   const [measure, setMeasure] = useState({ x: 0, y: 0, width: 0, height: 0 });
-
-  useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.measureInWindow((x, y, width, height) => {
-        setMeasure({ x, y, width, height });
-      });
-    }
-  }, [measure]);
+  /**
+   * This tells us if we can render the dropdown below the input or if we need to render it above
+   */
+  const [canRenderBelow, setCanRenderBelow] = useState(true);
 
   function isSelected(option: DropdownOption) {
     return value?.value === option.value;
   }
 
-  /**
-   * Determines whether or not we have the screen real estate to render the dropdown below the input
-   * in it's entirety. If not, we render it above the input.
-   */
-  function canRenderBelow() {
-    return measure.y + measure.height + 8 + 220 < Dimensions.get('window').height - 144;
-  }
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }, [isOpen]);
 
   return (
     <View style={styles.inputGroup}>
       <Text style={styles.label}>{label}</Text>
-      <Pressable ref={inputRef} onPress={() => setIsOpen(!isOpen)} style={[styles.input, isOpen && styles.open]}>
+      <Pressable
+        ref={inputRef}
+        onPress={() => {
+          if (inputRef.current) {
+            inputRef.current.measureInWindow((x, y, width, height) => {
+              setMeasure({ x, y, width, height });
+              setCanRenderBelow(y + height + 8 + 220 < Dimensions.get('window').height - 144);
+            });
+          }
+          setIsOpen(!isOpen);
+        }}
+        style={[styles.input, isOpen && styles.open]}>
         <Text style={value ? styles.text : styles.placeholder}>{value?.label || placeholder}</Text>
         <Icon name={`chevron-${isOpen ? 'up' : 'down'}`} style={styles.icon} />
       </Pressable>
@@ -60,17 +62,17 @@ export default function Dropdown({
           <View
             style={[
               styles.options,
-              canRenderBelow()
+              {
+                left: measure.x,
+                width: measure.width,
+              },
+              canRenderBelow
                 ? {
                     top: measure.y + measure.height + 8,
                   }
                 : {
                     bottom: Dimensions.get('window').height - measure.y + 8,
                   },
-              {
-                left: measure.x,
-                width: measure.width,
-              },
             ]}>
             <ScrollView style={styles.scroll}>
               {topOption && (

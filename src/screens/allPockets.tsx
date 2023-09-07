@@ -86,7 +86,7 @@ export default function AllPockets({ navigation }: { navigation: any }) {
           <AddPocket />
         </Sheet>
         <Sheet bottomSheetRef={addGroupSheet}>
-          <AddGroup pockets={pockets} />
+          <AddGroup />
         </Sheet>
       </View>
     </SafeAreaView>
