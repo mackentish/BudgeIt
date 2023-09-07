@@ -2,12 +2,11 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Summary, Profile } from '../screens';
+import { Dashboard, Summary, Profile } from '../screens';
 import Templates from '../screens/templates';
 import { Icon } from '../components';
 import { colors, font } from '../constants/globalStyle';
 import { FooterTabs } from '../constants/navigation';
-import DashboardNavigator from './DashboardNavigator';
 
 function HomeIcon({ color }: { color: string }) {
   return <Icon name="home" style={[styles.icon, { color: color }]} />;
@@ -51,7 +50,7 @@ export default function TabNavigator() {
           tabBarLabel: 'Home',
         }}
         name={FooterTabs.HOME}
-        component={DashboardNavigator}
+        component={Dashboard}
       />
       <Screen
         options={{
