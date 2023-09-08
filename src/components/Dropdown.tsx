@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { ScrollView, LayoutAnimation, Pressable, StyleSheet, Text, View, Dimensions } from 'react-native';
+import { ScrollView, LayoutAnimation, Pressable, StyleSheet, Text, TextInput, View, Dimensions } from 'react-native';
 import { font, colors, numbers } from '../constants/globalStyle';
 import { Icon, AnimatedChevron } from '.';
 import { Portal } from '@gorhom/portal';
@@ -20,15 +20,22 @@ export default function Dropdown({
   setValue: Dispatch<SetStateAction<DropdownOption | undefined>>;
   topOption?: DropdownOption;
 }) {
+  // Determines if the dropdown is open or not
   const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef<View>(null);
   // This gives us the position of the input in the window
   const [measure, setMeasure] = useState({ x: 0, y: 0, width: 0, height: 0 });
   // This tells us if we can render the dropdown below the input or if we need to render it above
   const [canRenderBelow, setCanRenderBelow] = useState(true);
+  // This is the filtered list of options based on the search text
+  const [filteredOptions, setFilteredOptions] = useState<DropdownOption[]>(options);
+  const inputRef = useRef<View>(null);
 
   function isSelected(option: DropdownOption) {
     return value?.value === option.value;
+  }
+
+  function filterOptions(searchText: string) {
+    setFilteredOptions(options.filter(o => o.isHeader || o.label.toLowerCase().includes(searchText.toLowerCase())));
   }
 
   useEffect(() => {
@@ -50,7 +57,11 @@ export default function Dropdown({
           setIsOpen(!isOpen);
         }}
         style={[styles.input, isOpen && styles.open]}>
-        <Text style={value ? styles.text : styles.placeholder}>{value?.label || placeholder}</Text>
+        {isOpen ? (
+          <TextInput style={styles.text} onChangeText={filterOptions} autoFocus />
+        ) : (
+          <Text style={value ? styles.text : styles.placeholder}>{value?.label || placeholder}</Text>
+        )}
         <AnimatedChevron chevronUp={isOpen} />
       </Pressable>
       {isOpen && (
@@ -83,22 +94,22 @@ export default function Dropdown({
                   {isSelected(topOption) && <Icon name="check" style={styles.icon} />}
                 </Pressable>
               )}
-              {options.map((option, i) => {
-                return option.isHeader ? (
+              {filteredOptions.map((o, i) => {
+                return o.isHeader ? (
                   <View key={i} style={styles.header}>
-                    <Text style={styles.headerText}>{option.label}</Text>
+                    <Text style={styles.headerText}>{o.label}</Text>
                   </View>
                 ) : (
                   <Pressable
                     key={i}
                     onPress={() => {
-                      if (isSelected(option)) setValue(undefined);
-                      else setValue(option);
+                      if (isSelected(o)) setValue(undefined);
+                      else setValue(o);
                       setIsOpen(false);
                     }}
-                    style={[styles.selectable, isSelected(option) && styles.selected]}>
-                    <Text style={styles.selectableText}>{option.label}</Text>
-                    {isSelected(option) && <Icon name="check" style={styles.icon} />}
+                    style={[styles.selectable, isSelected(o) && styles.selected]}>
+                    <Text style={styles.selectableText}>{o.label}</Text>
+                    {isSelected(o) && <Icon name="check" style={styles.icon} />}
                   </Pressable>
                 );
               })}
@@ -154,6 +165,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.small,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.temp.midGray,
   },
   scroll: {
     maxHeight: 220,
