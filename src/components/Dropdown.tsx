@@ -13,7 +13,7 @@ export default function Dropdown({
   setValue,
   topOption,
 }: {
-  label: string;
+  label?: string;
   placeholder: string;
   options: DropdownOption[];
   value: DropdownOption | undefined;
@@ -40,11 +40,14 @@ export default function Dropdown({
 
   useEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, [isOpen]);
+    if (!isOpen) {
+      setFilteredOptions(options);
+    }
+  }, [isOpen, options]);
 
   return (
     <View style={styles.inputGroup}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <Pressable
         ref={inputRef}
         onPress={() => {
@@ -58,7 +61,15 @@ export default function Dropdown({
         }}
         style={[styles.input, isOpen && styles.open]}>
         {isOpen ? (
-          <TextInput style={styles.text} onChangeText={filterOptions} autoFocus />
+          <TextInput
+            style={styles.text}
+            autoFocus
+            onChangeText={filterOptions}
+            onSubmitEditing={() => {
+              setValue(filteredOptions[0]);
+              setIsOpen(false);
+            }}
+          />
         ) : (
           <Text style={value ? styles.text : styles.placeholder}>{value?.label || placeholder}</Text>
         )}

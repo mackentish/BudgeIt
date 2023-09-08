@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, CurrencyInput, Icon, LoadingSpinner } from '../../components';
+import { Button, CurrencyInput, Dropdown, Icon, LoadingSpinner } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
-import { SelectList } from 'react-native-dropdown-select-list';
 import { useGroups, usePockets } from '../../state/queries';
+import { DropdownOption } from '../../types';
 
 export default function AddPocket() {
   const { close } = useBottomSheet();
   const [pocketName, setPocketName] = useState('');
   const [startingAmount, setStartingAmount] = useState('$0.00');
-  const [pocketGroup, setPocketGroup] = useState('');
+  const [pocketGroup, setPocketGroup] = useState<DropdownOption | undefined>(undefined);
   const [note, setNote] = useState('');
   const { fetchGroups } = useGroups();
   const { fetchPockets, createPocket } = usePockets();
@@ -19,7 +19,7 @@ export default function AddPocket() {
     return <LoadingSpinner />;
   }
 
-  const groupList = fetchGroups.data?.map(({ _id, name }) => ({ key: _id, value: name })) || [];
+  const groupList = (fetchGroups.data || []).map(({ _id, name }) => ({ value: _id, label: name }));
 
   // Only name and amount are required. Amount can be 0
   const isValid = pocketName.length > 0 && !isNaN(Number(startingAmount.replace(/[^0-9.]/g, '')));
@@ -27,7 +27,7 @@ export default function AddPocket() {
   const closeAndReset = () => {
     setPocketName('');
     setStartingAmount('$0.00');
-    setPocketGroup('');
+    setPocketGroup(undefined);
     setNote('');
     Keyboard.dismiss();
     close();
@@ -39,7 +39,7 @@ export default function AddPocket() {
       {
         name: pocketName,
         amount,
-        groupId: pocketGroup ? pocketGroup : undefined,
+        groupId: pocketGroup ? pocketGroup.value : undefined,
         note: note.length > 0 ? note : undefined,
       },
       {
@@ -66,7 +66,13 @@ export default function AddPocket() {
       {fetchGroups.data && fetchGroups.data.length > 0 && (
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Pocket Group</Text>
-          <SelectList
+          <Dropdown
+            placeholder="Choose a pocket group"
+            options={groupList}
+            value={pocketGroup}
+            setValue={setPocketGroup}
+          />
+          {/* <SelectList
             data={[{ key: '', value: 'No Group' }, ...groupList]}
             setSelected={setPocketGroup}
             save="key"
@@ -81,7 +87,7 @@ export default function AddPocket() {
             boxStyles={styles.select}
             inputStyles={styles.selectInput}
             dropdownStyles={styles.dropDown}
-          />
+          /> */}
         </View>
       )}
       <View style={styles.inputGroup}>
@@ -140,11 +146,11 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontFamily: font.medium,
+    fontFamily: font.regular,
   },
   labelLight: {
     fontSize: 13,
-    fontFamily: font.medium,
+    fontFamily: font.regular,
     color: colors.temp.darkGray,
   },
   input: {
