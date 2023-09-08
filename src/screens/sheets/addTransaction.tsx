@@ -2,7 +2,7 @@ import { useBottomSheet } from '@gorhom/bottom-sheet';
 import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, CurrencyInput, Dropdown, Icon } from '../../components';
+import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { DropdownOption } from '../../types';
 import { usePockets } from '../../state/queries';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -47,7 +47,7 @@ export default function AddTransaction() {
       <View style={styles.details}>
         <Pressable onPress={() => setDatePickerVisibility(true)} style={[styles.input, styles.datePickerRow]}>
           <Text style={styles.text}>{date.toLocaleDateString()}</Text>
-          <Icon name={`chevron-${isDatePickerVisible ? 'up' : 'down'}`} style={styles.chevronIcon} />
+          <AnimatedChevron chevronUp={isDatePickerVisible} />
         </Pressable>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -128,10 +128,6 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 18,
     color: colors.temp.black,
-  },
-  chevronIcon: {
-    fontSize: 10,
-    color: colors.temp.darkGray,
   },
   title: {
     fontSize: 22,

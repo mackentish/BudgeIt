@@ -10,6 +10,7 @@ import PocketGroup from './PocketGroup';
 import EditPocket from './EditPocket';
 import CurrencyInput from './CurrencyInput';
 import Dropdown from './Dropdown';
+import AnimatedChevron from './AnimatedChevron';
 
 export {
   AnimatedPressable,
@@ -24,4 +25,5 @@ export {
   EditPocket,
   CurrencyInput,
   Dropdown,
+  AnimatedChevron,
 };

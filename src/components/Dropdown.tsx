@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ScrollView, LayoutAnimation, Pressable, StyleSheet, Text, View, Dimensions } from 'react-native';
 import { font, colors, numbers } from '../constants/globalStyle';
-import Icon from './Icon';
+import { Icon, AnimatedChevron } from '.';
 import { Portal } from '@gorhom/portal';
 import { DropdownOption } from '../types';
 
@@ -22,13 +22,9 @@ export default function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<View>(null);
-  /**
-   * This gives us the position of the input in the window
-   */
+  // This gives us the position of the input in the window
   const [measure, setMeasure] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  /**
-   * This tells us if we can render the dropdown below the input or if we need to render it above
-   */
+  // This tells us if we can render the dropdown below the input or if we need to render it above
   const [canRenderBelow, setCanRenderBelow] = useState(true);
 
   function isSelected(option: DropdownOption) {
@@ -55,7 +51,7 @@ export default function Dropdown({
         }}
         style={[styles.input, isOpen && styles.open]}>
         <Text style={value ? styles.text : styles.placeholder}>{value?.label || placeholder}</Text>
-        <Icon name={`chevron-${isOpen ? 'up' : 'down'}`} style={styles.icon} />
+        <AnimatedChevron chevronUp={isOpen} />
       </Pressable>
       {isOpen && (
         <Portal>
@@ -84,7 +80,7 @@ export default function Dropdown({
                   }}
                   style={[styles.topOption, isSelected(topOption) && styles.selected]}>
                   <Text style={styles.selectableText}>{topOption.label}</Text>
-                  {isSelected(topOption) && <Icon name="check" style={styles.checkIcon} />}
+                  {isSelected(topOption) && <Icon name="check" style={styles.icon} />}
                 </Pressable>
               )}
               {options.map((option, i) => {
@@ -102,7 +98,7 @@ export default function Dropdown({
                     }}
                     style={[styles.selectable, isSelected(option) && styles.selected]}>
                     <Text style={styles.selectableText}>{option.label}</Text>
-                    {isSelected(option) && <Icon name="check" style={styles.checkIcon} />}
+                    {isSelected(option) && <Icon name="check" style={styles.icon} />}
                   </Pressable>
                 );
               })}
@@ -149,10 +145,6 @@ const styles = StyleSheet.create({
     color: colors.temp.midGray,
   },
   icon: {
-    fontSize: 10,
-    color: colors.temp.darkGray,
-  },
-  checkIcon: {
     fontSize: 14,
     color: colors.temp.midGray,
   },

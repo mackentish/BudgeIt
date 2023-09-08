@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, LayoutAnimation } from 'react-native';
-import Icon from './Icon';
-import Pocket from './Pocket';
+import { Icon, Pocket, AnimatedChevron } from '.';
 import { ConfirmDeleteGroup } from './modals';
 import { colors, font, numbers } from '../constants/globalStyle';
 import { currencyFormatter } from '../utils';
@@ -22,14 +21,14 @@ export default function PocketGroup({ group }: { group: PocketGroupType }) {
     <View style={styles.container}>
       <Pressable onPress={() => setIsOpen(!isOpen)} style={styles.header}>
         <View style={styles.title}>
-          <Icon name="group" style={styles.groupIcon} />
+          <Icon name="group" style={styles.icon} />
           <Text style={styles.name}>{group.name}</Text>
         </View>
         <View style={styles.headerGroup}>
           <Text style={styles.amount}>
             {currencyFormatter.format(group.pockets.reduce((acc, curr) => acc + curr.amount, 0))}
           </Text>
-          <Icon name={`chevron-${isOpen ? 'up' : 'down'}`} style={styles.chevronIcon} />
+          <AnimatedChevron chevronUp={isOpen} color={colors.temp.white} />
         </View>
       </Pressable>
       {isOpen && (
@@ -68,14 +67,9 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 3,
   },
-  groupIcon: {
+  icon: {
     color: colors.temp.white,
     fontSize: 20,
-  },
-  chevronIcon: {
-    color: colors.temp.white,
-    fontSize: 12,
-    alignSelf: 'center',
   },
   header: {
     flexDirection: 'row',
