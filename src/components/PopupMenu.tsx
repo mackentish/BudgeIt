@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { useContext } from 'react';
-import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import { StyleSheet, Text, View } from 'react-native';
+import { Menu, MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Icon } from '../components';
 import { colors, font, numbers } from '../constants/globalStyle';
 import { OverlayContext } from '../state/context';
-import { Icon } from '../components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Option {
   label: string;

@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { Portal } from '@gorhom/portal';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { colors } from '../constants/globalStyle';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Portal } from '@gorhom/portal';
+import React, { useMemo } from 'react';
 import { Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { colors } from '../constants/globalStyle';
 
 export default function Sheet({
   bottomSheetRef,

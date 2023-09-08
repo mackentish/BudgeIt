@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Animated, Pressable, PressableProps, RegisteredStyle, StyleSheet, ViewStyle } from 'react-native';
 import React from 'react';
+import { Animated, Pressable, PressableProps, RegisteredStyle, StyleSheet, ViewStyle } from 'react-native';
 
 const AnimatedPressableWrapper = Animated.createAnimatedComponent(Pressable);
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet, PressableProps } from 'react-native';
+import { PressableProps, StyleSheet, Text } from 'react-native';
+
 import { colors, font } from '../constants/globalStyle';
 import AnimatedPressable from './AnimatedPressable';
 

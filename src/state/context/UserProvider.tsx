@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
-import { User } from '../../types';
+
 import { Login } from '../../screens';
+import { User } from '../../types';
 
 type ContextType = {
   user: User;

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Modal as ReactModal, StyleSheet } from 'react-native';
+import { Modal as ReactModal, StyleSheet, View } from 'react-native';
+
 import { colors, numbers } from '../constants/globalStyle';
 
 export default function Modal({ visible, children }: { visible: boolean; children: React.ReactNode }) {

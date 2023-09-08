@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Pressable, Keyboard, Alert } from 'react-native';
-import { colors, font, numbers } from '../../constants/globalStyle';
-import { Button, Icon, LoadingSpinner, Modal } from '../../components';
 import { useBottomSheet } from '@gorhom/bottom-sheet';
+import React, { useState } from 'react';
+import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { Button, Icon, LoadingSpinner, Modal } from '../../components';
+import { colors, font, numbers } from '../../constants/globalStyle';
+import { useGroups, usePockets } from '../../state/queries';
 import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useGroups, usePockets } from '../../state/queries';
 
 function GroupPocket({ name, amount, onPress }: { name: string; amount: number; onPress: () => void }) {
   return (

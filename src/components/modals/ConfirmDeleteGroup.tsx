@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
 import { Button, Modal } from '..';
 import { colors, font } from '../../constants/globalStyle';
 

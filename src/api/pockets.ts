@@ -1,5 +1,6 @@
-import { Pocket } from '../types';
 import { API_KEY } from '@env';
+
+import { Pocket } from '../types';
 import baseInstance from './base';
 
 const fetchPockets = async () => {

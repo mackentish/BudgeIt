@@ -1,5 +1,6 @@
-import { PocketGroup } from '../types';
 import { API_KEY } from '@env';
+
+import { PocketGroup } from '../types';
 import baseInstance from './base';
 
 const getGroups = async () => {

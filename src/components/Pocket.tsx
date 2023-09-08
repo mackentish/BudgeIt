@@ -1,9 +1,10 @@
-import { Text, StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
-import { currencyFormatter } from '../utils';
-import { colors, numbers, font } from '../constants/globalStyle';
-import { PopupMenu, EditPocket } from '.';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { EditPocket, PopupMenu } from '.';
+import { colors, font, numbers } from '../constants/globalStyle';
 import { Pocket as PocketType } from '../types';
+import { currencyFormatter } from '../utils';
 import { AddToGroupModal, DeletePocketModal } from './modals';
 
 export default function Pocket({ pocket }: { pocket: PocketType }) {

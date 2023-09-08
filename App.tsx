@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { UserProvider, OverlayContext } from './src/state/context';
-import { StyleSheet, View } from 'react-native';
-import { colors } from './src/constants/globalStyle';
+import { PortalProvider } from '@gorhom/portal';
 import { NavigationContainer } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { MenuProvider } from 'react-native-popup-menu';
-import { PortalProvider } from '@gorhom/portal';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { colors } from './src/constants/globalStyle';
 import TabNavigator from './src/navigation/TabNavigator';
+import { OverlayContext, UserProvider } from './src/state/context';
 
 const queryClient = new QueryClient({
   defaultOptions: {

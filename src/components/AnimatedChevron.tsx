@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
+
 import { Icon } from '.';
 import { colors } from '../constants/globalStyle';
 

@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { ScrollView, LayoutAnimation, Pressable, StyleSheet, Text, TextInput, View, Dimensions } from 'react-native';
-import { font, colors, numbers } from '../constants/globalStyle';
-import { Icon, AnimatedChevron } from '.';
 import { Portal } from '@gorhom/portal';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dimensions, LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+
+import { AnimatedChevron, Icon } from '.';
+import { colors, font, numbers } from '../constants/globalStyle';
 import { DropdownOption } from '../types';
 
 export default function Dropdown({

@@ -1,11 +1,12 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import React, { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { colors, font, numbers } from '../../constants/globalStyle';
-import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
-import { DropdownOption } from '../../types';
-import { usePockets } from '../../state/queries';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
+import { colors, font, numbers } from '../../constants/globalStyle';
+import { usePockets } from '../../state/queries';
+import { DropdownOption } from '../../types';
 
 export default function AddTransaction() {
   // Form fields

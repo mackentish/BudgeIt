@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { StyleSheet, TextInput, TextInputProps } from 'react-native';
-import { currencyFormatter } from '../utils';
+
 import { colors } from '../constants/globalStyle';
+import { currencyFormatter } from '../utils';
 
 export default function CurrencyInput(
   props: TextInputProps & { value: string; setValue: Dispatch<SetStateAction<string>> },

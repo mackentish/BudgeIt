@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { colors, font } from '../constants/globalStyle';
-import { AnimatedPressable } from '../components';
-import { UserContext } from '../state/context/UserProvider';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { AnimatedPressable } from '../components';
+import { colors, font } from '../constants/globalStyle';
+import { UserContext } from '../state/context/UserProvider';
 
 /**
  * Default page for user settings. User has access to other screens from here

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, StyleSheet, TextInput, View } from 'react-native';
-import { Pocket } from '../types';
+
 import { Button } from '.';
-import { useGroups, usePockets } from '../state/queries';
 import { colors, font, numbers } from '../constants/globalStyle';
+import { useGroups, usePockets } from '../state/queries';
+import { Pocket } from '../types';
 
 export default function EditPocket({ pocket, close }: { pocket: Pocket; close: () => void }) {
   const [newName, setNewName] = useState(pocket.name);

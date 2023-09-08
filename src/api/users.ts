@@ -1,4 +1,5 @@
 import { API_KEY } from '@env';
+
 import { User, UserLogin, UserRegister } from '../types';
 import baseInstance from './base';
 

@@ -1,6 +1,8 @@
+import * as LocalAuthentication from 'expo-local-authentication';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { TextInput, KeyboardAvoidingView, StyleSheet, View, Text, Alert } from 'react-native';
-import { useUser } from '../state/queries';
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Button, LoadingSpinner, Modal } from '../components';
 import { colors, font } from '../constants/globalStyle';
 import {
@@ -9,10 +11,9 @@ import {
   havePromptedForBiometricsKey,
   userCredentialsKey,
 } from '../constants/persistentStorage';
+import { useUser } from '../state/queries';
 import { User, UserLogin } from '../types';
-import * as LocalAuthentication from 'expo-local-authentication';
 import { Storage } from '../utils';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 /**
  * Modal prompting user to enable biometrics

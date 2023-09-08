@@ -1,16 +1,17 @@
+import AnimatedChevron from './AnimatedChevron';
 import AnimatedPressable from './AnimatedPressable';
 import Button from './Button';
-import Pocket from './Pocket';
-import LoadingSpinner from './LoadingSpinner';
-import Modal from './Modal';
-import PopupMenu from './PopupMenu';
-import Icon from './Icon';
-import Sheet from './Sheet';
-import PocketGroup from './PocketGroup';
-import EditPocket from './EditPocket';
 import CurrencyInput from './CurrencyInput';
 import Dropdown from './Dropdown';
-import AnimatedChevron from './AnimatedChevron';
+import EditPocket from './EditPocket';
+import Icon from './Icon';
+import LoadingSpinner from './LoadingSpinner';
+import Modal from './Modal';
+import Pocket from './Pocket';
+import PocketGroup from './PocketGroup';
+import PopupMenu from './PopupMenu';
+import Sheet from './Sheet';
+import TagSelector from './TagSelector';
 
 export {
   AnimatedPressable,
@@ -26,4 +27,5 @@ export {
   CurrencyInput,
   Dropdown,
   AnimatedChevron,
+  TagSelector,
 };

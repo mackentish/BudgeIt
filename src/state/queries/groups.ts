@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getGroups, postGroup, deleteGroup as deleteFn } from '../../api/groups';
 import { Alert } from 'react-native';
+
+import { deleteGroup as deleteFn, getGroups, postGroup } from '../../api/groups';
 import { PocketGroup } from '../../types';
 
 export default function useGroups() {

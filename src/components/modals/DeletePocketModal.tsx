@@ -1,9 +1,10 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import { Pocket } from '../../types';
+
 import { Button, Modal } from '..';
 import { colors, font } from '../../constants/globalStyle';
 import { useGroups, usePockets } from '../../state/queries';
+import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
 
 export default function DeletePocketModal({

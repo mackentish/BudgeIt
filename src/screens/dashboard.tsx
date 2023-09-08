@@ -1,10 +1,11 @@
-import { View, StyleSheet, ScrollView, Text, SafeAreaView, Alert } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
 import React, { useRef } from 'react';
+import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+
+import { Button, Icon, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { colors, font } from '../constants/globalStyle';
 import { useGroups, usePockets } from '../state/queries';
-import { Icon, Button, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { AddGroup, AddPocket, AddTransaction } from './sheets';
-import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function Dashboard() {
   const { fetchGroups } = useGroups();
