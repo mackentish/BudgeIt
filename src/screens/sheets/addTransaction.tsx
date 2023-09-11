@@ -1,9 +1,9 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import React, { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
+import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon, TagSelector } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { usePockets } from '../../state/queries';
 import { DropdownOption } from '../../types';
@@ -17,7 +17,9 @@ export default function AddTransaction() {
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
   const externalOption = { label: 'External', value: 'external' };
   const [outflow, setOutflow] = useState<DropdownOption | undefined>(externalOption);
-  const [tags, setTags] = useState('');
+  // TODO: delete mockTags
+  const mockTags = ['Food', 'Groceries', 'Gas', 'Rent', 'Utilities', 'Entertainment', 'Clothing', 'Misc'];
+  const [tags, setTags] = useState<string[]>(mockTags);
   const [note, setNote] = useState('');
 
   const { close } = useBottomSheet();
@@ -35,7 +37,12 @@ export default function AddTransaction() {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => close()} style={styles.closeBtn}>
+      <Pressable
+        onPress={() => {
+          Keyboard.dismiss();
+          close();
+        }}
+        style={styles.closeBtn}>
         <Icon name="x" style={styles.icon} />
       </Pressable>
       <TextInput
@@ -84,12 +91,7 @@ export default function AddTransaction() {
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Tags</Text>
-          <TextInput
-            value={tags}
-            onChangeText={setTags}
-            placeholder="Type to select/create tags"
-            style={styles.input}
-          />
+          <TagSelector tags={tags} setTags={setTags} />
         </View>
 
         <View style={styles.inputGroup}>
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 10,
     paddingHorizontal: 20,
+    overflow: 'scroll',
   },
   flex: {
     flex: 1,
