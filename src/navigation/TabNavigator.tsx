@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon } from '../components';
 import { colors, font } from '../constants/globalStyle';
-import { FooterTabs } from '../constants/navigation';
 import { Dashboard, Profile, Summary } from '../screens';
 import Templates from '../screens/templates';
 
@@ -50,7 +49,7 @@ export default function TabNavigator() {
           tabBarIcon: HomeIcon,
           tabBarLabel: 'Home',
         }}
-        name={FooterTabs.HOME}
+        name="home"
         component={Dashboard}
       />
       <Screen
@@ -58,7 +57,7 @@ export default function TabNavigator() {
           tabBarIcon: TemplateIcon,
           tabBarLabel: 'Templates',
         }}
-        name={FooterTabs.TEMPLATES}
+        name="templates"
         component={Templates}
       />
       <Screen
@@ -66,7 +65,7 @@ export default function TabNavigator() {
           tabBarIcon: SummaryIcon,
           tabBarLabel: 'Summary',
         }}
-        name={FooterTabs.SUMMARY}
+        name="summary"
         component={Summary}
       />
       <Screen
@@ -74,7 +73,7 @@ export default function TabNavigator() {
           tabBarIcon: ProfileIcon,
           tabBarLabel: 'Profile',
         }}
-        name={FooterTabs.PROFILE}
+        name="profile"
         component={Profile}
       />
     </Navigator>

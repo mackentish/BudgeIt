@@ -11,7 +11,6 @@ import Pocket from './Pocket';
 import PocketGroup from './PocketGroup';
 import PopupMenu from './PopupMenu';
 import Sheet from './Sheet';
-import TagSelector from './TagSelector';
 
 export {
   AnimatedPressable,
@@ -27,5 +26,4 @@ export {
   CurrencyInput,
   Dropdown,
   AnimatedChevron,
-  TagSelector,
 };

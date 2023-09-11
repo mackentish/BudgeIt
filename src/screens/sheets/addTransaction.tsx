@@ -1,14 +1,16 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
+import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
 import React, { useState } from 'react';
 import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon, TagSelector } from '../../components';
+import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
+import { TransactionStackParams } from '../../navigation/TransactionNavigator';
 import { usePockets } from '../../state/queries';
 import { DropdownOption } from '../../types';
 
-export default function AddTransaction() {
+export default function AddTransaction({ navigation }: StackScreenProps<TransactionStackParams, 'addTransaction'>) {
   // Form fields
   const [transactionTitle, setTransactionTitle] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('$0.00');
@@ -17,9 +19,6 @@ export default function AddTransaction() {
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
   const externalOption = { label: 'External', value: 'external' };
   const [outflow, setOutflow] = useState<DropdownOption | undefined>(externalOption);
-  // TODO: delete mockTags
-  const mockTags = ['Food', 'Groceries', 'Gas', 'Rent', 'Utilities', 'Entertainment', 'Clothing', 'Misc'];
-  const [tags, setTags] = useState<string[]>(mockTags);
   const [note, setNote] = useState('');
 
   const { close } = useBottomSheet();
@@ -43,7 +42,7 @@ export default function AddTransaction() {
           close();
         }}
         style={styles.closeBtn}>
-        <Icon name="x" style={styles.icon} />
+        <Icon name="x" style={styles.close} />
       </Pressable>
       <TextInput
         value={transactionTitle}
@@ -89,10 +88,13 @@ export default function AddTransaction() {
           topOption={externalOption}
         />
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Tags</Text>
-          <TagSelector tags={tags} setTags={setTags} />
-        </View>
+        <Pressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
+          <View style={styles.tagContainer}>
+            <Text style={styles.text}>Select Tags</Text>
+            <Text style={styles.smallText}>TODO: selected tags go here</Text>
+          </View>
+          <Icon name="chevron-right" style={styles.chevron} />
+        </Pressable>
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Note</Text>
@@ -119,7 +121,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingBottom: 10,
     paddingHorizontal: 20,
-    overflow: 'scroll',
   },
   flex: {
     flex: 1,
@@ -129,9 +130,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 10,
   },
-  icon: {
+  close: {
     fontSize: 18,
     color: colors.temp.black,
+  },
+  chevron: {
+    fontSize: 16,
+    color: colors.temp.darkGray,
   },
   title: {
     fontSize: 22,
@@ -159,6 +164,18 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems: 'center',
   },
+  tagPressable: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.temp.white,
+    borderRadius: numbers.borderRadius.small,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  tagContainer: {
+    flexDirection: 'column',
+  },
   datePickerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -167,6 +184,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: font.semiBold,
     color: colors.temp.black,
+  },
+  smallText: {
+    fontSize: 12,
+    fontFamily: font.regular,
+    color: colors.temp.darkGray,
   },
   inputGroup: {
     flexDirection: 'column',

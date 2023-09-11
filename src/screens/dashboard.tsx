@@ -4,8 +4,9 @@ import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-n
 
 import { Button, Icon, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { colors, font } from '../constants/globalStyle';
+import TransactionNavigator from '../navigation/TransactionNavigator';
 import { useGroups, usePockets } from '../state/queries';
-import { AddGroup, AddPocket, AddTransaction } from './sheets';
+import { AddGroup, AddPocket } from './sheets';
 
 export default function Dashboard() {
   const { fetchGroups } = useGroups();
@@ -86,7 +87,8 @@ export default function Dashboard() {
           <AddGroup />
         </Sheet>
         <Sheet bottomSheetRef={addTransactionSheet}>
-          <AddTransaction />
+          {/* <AddTransaction /> */}
+          <TransactionNavigator />
         </Sheet>
       </View>
     </SafeAreaView>
