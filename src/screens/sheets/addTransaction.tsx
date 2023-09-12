@@ -1,16 +1,21 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
-import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
-import React, { useState } from 'react';
+import { NavigationProp } from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
 import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
+import { TransactionContext } from '../../state/context';
 import { usePockets } from '../../state/queries';
 import { DropdownOption } from '../../types';
 
-export default function AddTransaction({ navigation }: StackScreenProps<TransactionStackParams, 'addTransaction'>) {
+type Props = {
+  navigation: NavigationProp<TransactionStackParams, 'addTransaction'>;
+};
+
+export default function AddTransaction({ navigation }: Props) {
   // Form fields
   const [transactionTitle, setTransactionTitle] = useState('');
   const [transactionAmount, setTransactionAmount] = useState('$0.00');
@@ -19,6 +24,7 @@ export default function AddTransaction({ navigation }: StackScreenProps<Transact
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
   const externalOption = { label: 'External', value: 'external' };
   const [outflow, setOutflow] = useState<DropdownOption | undefined>(externalOption);
+  const { transactionTags } = useContext(TransactionContext);
   const [note, setNote] = useState('');
 
   const { close } = useBottomSheet();
@@ -91,19 +97,22 @@ export default function AddTransaction({ navigation }: StackScreenProps<Transact
         <Pressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
           <View style={styles.tagContainer}>
             <Text style={styles.text}>Select Tags</Text>
-            <Text style={styles.smallText}>TODO: selected tags go here</Text>
+            {transactionTags.length > 0 && (
+              <Text style={styles.smallText}>
+                {transactionTags.length <= 3
+                  ? transactionTags.join(', ')
+                  : transactionTags.slice(0, 3).join(', ') +
+                    (transactionTags.length > 3 && ` +${transactionTags.length - 3} more`)}
+              </Text>
+            )}
           </View>
           <Icon name="chevron-right" style={styles.chevron} />
         </Pressable>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Note</Text>
-          <TextInput value={note} onChangeText={setNote} placeholder="Optional note" style={styles.input} />
-        </View>
+        <TextInput value={note} onChangeText={setNote} placeholder="Add a note" style={styles.input} />
       </View>
       <View style={styles.flex} />
       <Button
-        size="large"
         label="Add Transaction"
         onPress={() => Alert.alert('TODO: add transaction & update pocket(s)')}
         disabled={!isValid}
@@ -163,6 +172,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     alignItems: 'center',
+    fontSize: 14,
+    fontFamily: font.regular,
   },
   tagPressable: {
     flexDirection: 'row',
@@ -181,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: font.semiBold,
     color: colors.temp.black,
   },

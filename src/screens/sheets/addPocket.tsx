@@ -73,22 +73,6 @@ export default function AddPocket() {
             value={pocketGroup}
             setValue={setPocketGroup}
           />
-          {/* <SelectList
-            data={[{ key: '', value: 'No Group' }, ...groupList]}
-            setSelected={setPocketGroup}
-            save="key"
-            placeholder="Choose a Pocket Group"
-            search
-            maxHeight={200}
-            arrowicon={<Icon name="chevron-down" style={styles.iconSm} />}
-            closeicon={<Icon name="x" style={styles.iconSm} />}
-            searchPlaceholder="Search Pocket Groups"
-            fontFamily={font.regular}
-            notFoundText="No matching groups found"
-            boxStyles={styles.select}
-            inputStyles={styles.selectInput}
-            dropdownStyles={styles.dropDown}
-          /> */}
         </View>
       )}
       <View style={styles.inputGroup}>
@@ -104,7 +88,7 @@ export default function AddPocket() {
         />
       </View>
       <View style={styles.gap} />
-      <Button size="large" label="Save" onPress={onSave} disabled={!isValid} />
+      <Button label="Save" onPress={onSave} disabled={!isValid} />
     </View>
   );
 }

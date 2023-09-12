@@ -136,7 +136,7 @@ export default function AddGroup() {
           ))}
         </View>
       )}
-      <Button size="medium" type="secondary" label="Add Pockets" onPress={() => setShowModal(true)} />
+      <Button type="secondary" label="Add Pockets" onPress={() => setShowModal(true)} />
       <Modal visible={showModal}>
         <View style={modalStyles.modal}>
           <ScrollView style={modalStyles.scrollView}>
@@ -159,11 +159,11 @@ export default function AddGroup() {
               ))}
             </View>
           </ScrollView>
-          <Button label="Done" size="medium" onPress={() => setShowModal(false)} />
+          <Button label="Done" onPress={() => setShowModal(false)} />
         </View>
       </Modal>
       <View style={styles.gap} />
-      <Button size="large" label="Save" onPress={onSave} disabled={!isValid} />
+      <Button label="Save" onPress={onSave} disabled={!isValid} />
     </View>
   );
 }

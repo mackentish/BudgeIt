@@ -1,12 +1,48 @@
-import { StackScreenProps } from '@react-navigation/stack';
-import React from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { NavigationProp } from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
+import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { Button, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
+import { TransactionContext } from '../../state/context';
 
-export default function SelectTags({ navigation }: StackScreenProps<TransactionStackParams, 'selectTags'>) {
+type Props = {
+  navigation: NavigationProp<TransactionStackParams, 'selectTags'>;
+};
+
+export default function SelectTags({ navigation }: Props) {
+  const { transactionTags, setTransactionTags } = useContext(TransactionContext);
+  // TODO: get this from the database (where to store it? On the user? Or as it's own collection?)
+  const mockTags = ['Katie', 'Food', 'Groceries', 'Target'];
+  const [availableTags, setAvailableTags] = useState<string[]>(mockTags.filter(tag => !transactionTags.includes(tag)));
+  const [tempTags, setTempTags] = useState<string[]>(transactionTags);
+  const [isCreating, setIsCreating] = useState(false);
+  const [newTagName, setNewTagName] = useState('');
+
+  function createTag() {
+    // check if there is already a tag with this name
+    if ([...availableTags, ...tempTags].find(tag => tag.toLowerCase() === newTagName.toLowerCase())) {
+      Alert.alert('Tag already exists');
+      return;
+    } else {
+      Alert.alert('TODO: create tag in database');
+      setTempTags([...tempTags, newTagName]);
+    }
+    setIsCreating(false);
+    setNewTagName('');
+  }
+
+  function cancelCreate() {
+    setIsCreating(false);
+    setNewTagName('');
+  }
+
+  function saveTags() {
+    setTransactionTags(tempTags);
+    navigation.navigate('addTransaction');
+  }
+
   return (
     <View style={styles.container}>
       <Pressable style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -18,25 +54,66 @@ export default function SelectTags({ navigation }: StackScreenProps<TransactionS
       <View style={styles.tagGroup}>
         <Text style={styles.label}>Selected Tags</Text>
         <View style={styles.tagContainer}>
-          <Text>TODO: selected tags go here</Text>
+          {tempTags.map(tag => (
+            <Pressable
+              key={tag}
+              style={styles.tag}
+              onPress={() => {
+                setTempTags(tempTags.filter(t => t !== tag));
+                setAvailableTags([...availableTags, tag]);
+              }}>
+              <Text style={styles.tagName}>{tag}</Text>
+              <Icon name="x" style={styles.x} />
+            </Pressable>
+          ))}
+          {isCreating ? (
+            <View style={[styles.tag, styles.createTag]}>
+              <TextInput
+                style={styles.createTagText}
+                placeholder="Enter Name"
+                value={newTagName}
+                onChangeText={setNewTagName}
+                autoFocus
+              />
+              {newTagName ? (
+                <Pressable onPress={createTag}>
+                  <Icon name="check" style={styles.check} />
+                </Pressable>
+              ) : (
+                <Pressable onPress={cancelCreate}>
+                  <Icon name="x" style={styles.xBlack} />
+                </Pressable>
+              )}
+            </View>
+          ) : (
+            <Pressable style={[styles.tag, styles.createTag]} onPress={() => setIsCreating(true)}>
+              <Text style={styles.createTagText}>Create</Text>
+              <Icon name="edit" style={styles.edit} />
+            </Pressable>
+          )}
         </View>
       </View>
 
       <View style={styles.tagGroup}>
         <Text style={styles.label}>Available Tags</Text>
         <View style={styles.tagContainer}>
-          <Text>TODO: available tags go here</Text>
+          {availableTags.map(tag => (
+            <Pressable
+              key={tag}
+              style={styles.tag}
+              onPress={() => {
+                setAvailableTags(availableTags.filter(t => t !== tag));
+                setTempTags([...tempTags, tag]);
+              }}>
+              <Text style={styles.tagName}>{tag}</Text>
+              <Icon name="plus" style={styles.plus} />
+            </Pressable>
+          ))}
         </View>
       </View>
 
       <View style={styles.flex} />
-      <Button
-        label="Save Tags"
-        onPress={() => {
-          Alert.alert('TODO: save tags & update transaction');
-          navigation.goBack();
-        }}
-      />
+      <Button label="Save Tags" onPress={saveTags} />
     </View>
   );
 }
@@ -58,6 +135,26 @@ const styles = StyleSheet.create({
   },
   chevron: {
     fontSize: 22,
+    color: colors.temp.black,
+  },
+  plus: {
+    fontSize: 16,
+    color: colors.temp.white,
+  },
+  x: {
+    fontSize: 12,
+    color: colors.temp.white,
+  },
+  xBlack: {
+    fontSize: 14,
+    color: colors.temp.black,
+  },
+  edit: {
+    fontSize: 16,
+    color: colors.temp.black,
+  },
+  check: {
+    fontSize: 14,
     color: colors.temp.black,
   },
   flex: {
@@ -83,5 +180,31 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.small,
+  },
+  tag: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    backgroundColor: colors.temp.black,
+    borderWidth: 1,
+    borderColor: colors.temp.black,
+    borderRadius: numbers.borderRadius.small,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  tagName: {
+    fontSize: 16,
+    fontFamily: font.semiBold,
+    color: colors.temp.white,
+  },
+  createTag: {
+    backgroundColor: 'transparent',
+    borderColor: colors.temp.black,
+    borderStyle: 'dashed',
+  },
+  createTagText: {
+    fontSize: 16,
+    fontFamily: font.semiBold,
+    color: colors.temp.black,
   },
 });
