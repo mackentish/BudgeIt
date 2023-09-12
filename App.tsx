@@ -28,8 +28,8 @@ function App(): JSX.Element {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.gestureWrapper}>
         <OverlayContext.Provider value={{ showOverlay, setShowOverlay }}>
-          <PortalProvider>
-            <SafeAreaProvider>
+          <SafeAreaProvider>
+            <PortalProvider>
               <NavigationContainer>
                 <MenuProvider>
                   {showOverlay && <View style={styles.overlay} />}
@@ -38,8 +38,8 @@ function App(): JSX.Element {
                   </UserProvider>
                 </MenuProvider>
               </NavigationContainer>
-            </SafeAreaProvider>
-          </PortalProvider>
+            </PortalProvider>
+          </SafeAreaProvider>
         </OverlayContext.Provider>
       </GestureHandlerRootView>
     </QueryClientProvider>

@@ -1,8 +1,19 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { NavigationProp } from '@react-navigation/native';
 import React, { useContext, useState } from 'react';
-import { Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
@@ -40,84 +51,99 @@ export default function AddTransaction({ navigation }: Props) {
     })),
   );
 
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <View style={styles.container}>
-      <Pressable
-        onPress={() => {
-          Keyboard.dismiss();
-          close();
-        }}
-        style={styles.closeBtn}>
-        <Icon name="x" style={styles.close} />
-      </Pressable>
-      <TextInput
-        value={transactionTitle}
-        onChangeText={setTransactionTitle}
-        placeholder="Title of Transaction"
-        style={styles.title}
-      />
-      <CurrencyInput value={transactionAmount} setValue={setTransactionAmount} style={styles.amount} />
-      <View style={styles.details}>
-        <Pressable onPress={() => setDatePickerVisibility(true)} style={[styles.input, styles.datePickerRow]}>
-          <Text style={styles.text}>{date.toLocaleDateString()}</Text>
-          <AnimatedChevron chevronUp={isDatePickerVisible} />
-        </Pressable>
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          date={date}
-          mode="date"
-          display="inline"
-          onConfirm={newDate => {
-            setDate(newDate);
-            setDatePickerVisibility(false);
+    <KeyboardAvoidingView behavior="padding" style={styles.flex} keyboardVerticalOffset={bottom + 8}>
+      <View style={styles.container}>
+        <Pressable
+          onPress={() => {
+            Keyboard.dismiss();
+            close();
           }}
-          onCancel={() => setDatePickerVisibility(false)}
-          buttonTextColorIOS={colors.temp.black}
-          accentColor={colors.temp.black}
-        />
-
-        <Dropdown
-          label="Inflow"
-          placeholder="Where's the money coming from?"
-          options={flowOptions}
-          value={inflow}
-          setValue={setInflow}
-          topOption={externalOption}
-        />
-
-        <Dropdown
-          label="Outflow"
-          placeholder="Where's the money going?"
-          options={flowOptions}
-          value={outflow}
-          setValue={setOutflow}
-          topOption={externalOption}
-        />
-
-        <Pressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
-          <View style={styles.tagContainer}>
-            <Text style={styles.text}>Select Tags</Text>
-            {transactionTags.length > 0 && (
-              <Text style={styles.smallText}>
-                {transactionTags.length <= 3
-                  ? transactionTags.join(', ')
-                  : transactionTags.slice(0, 3).join(', ') +
-                    (transactionTags.length > 3 && ` +${transactionTags.length - 3} more`)}
-              </Text>
-            )}
-          </View>
-          <Icon name="chevron-right" style={styles.chevron} />
+          style={styles.closeBtn}>
+          <Icon name="x" style={styles.close} />
         </Pressable>
+        <ScrollView contentContainerStyle={styles.scroll}>
+          <TextInput
+            value={transactionTitle}
+            onChangeText={setTransactionTitle}
+            placeholder="Title of Transaction"
+            style={styles.title}
+            autoCorrect={false}
+            spellCheck={false}
+          />
+          <CurrencyInput value={transactionAmount} setValue={setTransactionAmount} style={styles.amount} />
+          <View style={styles.details}>
+            <Pressable onPress={() => setDatePickerVisibility(true)} style={[styles.input, styles.datePickerRow]}>
+              <Text style={styles.text}>{date.toLocaleDateString()}</Text>
+              <AnimatedChevron chevronUp={isDatePickerVisible} />
+            </Pressable>
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              date={date}
+              mode="date"
+              display="inline"
+              onConfirm={newDate => {
+                setDate(newDate);
+                setDatePickerVisibility(false);
+              }}
+              onCancel={() => setDatePickerVisibility(false)}
+              buttonTextColorIOS={colors.temp.black}
+              accentColor={colors.temp.black}
+            />
 
-        <TextInput value={note} onChangeText={setNote} placeholder="Add a note" style={styles.input} />
+            <Dropdown
+              label="Inflow"
+              placeholder="Where's the money coming from?"
+              options={flowOptions}
+              value={inflow}
+              setValue={setInflow}
+              topOption={externalOption}
+            />
+
+            <Dropdown
+              label="Outflow"
+              placeholder="Where's the money going?"
+              options={flowOptions}
+              value={outflow}
+              setValue={setOutflow}
+              topOption={externalOption}
+            />
+
+            <Pressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
+              <View style={styles.tagContainer}>
+                <Text style={styles.text}>Select Tags</Text>
+                {transactionTags.length > 0 && (
+                  <Text style={styles.smallText}>
+                    {transactionTags.length <= 3
+                      ? transactionTags.join(', ')
+                      : transactionTags.slice(0, 3).join(', ') +
+                        (transactionTags.length > 3 && ` +${transactionTags.length - 3} more`)}
+                  </Text>
+                )}
+              </View>
+              <Icon name="chevron-right" style={styles.chevron} />
+            </Pressable>
+
+            <TextInput
+              value={note}
+              onChangeText={setNote}
+              placeholder="Add a note"
+              style={styles.input}
+              autoCorrect={false}
+              spellCheck={false}
+            />
+          </View>
+          <View style={styles.flex} />
+          <Button
+            label="Add Transaction"
+            onPress={() => Alert.alert('TODO: add transaction & update pocket(s)')}
+            disabled={!isValid}
+          />
+        </ScrollView>
       </View>
-      <View style={styles.flex} />
-      <Button
-        label="Add Transaction"
-        onPress={() => Alert.alert('TODO: add transaction & update pocket(s)')}
-        disabled={!isValid}
-      />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -133,6 +159,9 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  scroll: {
+    flexGrow: 1,
   },
   closeBtn: {
     position: 'absolute',
@@ -163,7 +192,8 @@ const styles = StyleSheet.create({
   },
   details: {
     flexDirection: 'column',
-    gap: 20,
+    gap: 15,
+    paddingTop: 20,
     justifyContent: 'center',
   },
   input: {

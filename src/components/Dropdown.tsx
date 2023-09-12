@@ -1,6 +1,7 @@
 import { Portal } from '@gorhom/portal';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { Dimensions, LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AnimatedChevron, Icon } from '.';
 import { colors, font, numbers } from '../constants/globalStyle';
@@ -25,11 +26,12 @@ export default function Dropdown({
   const [isOpen, setIsOpen] = useState(false);
   // This gives us the position of the input in the window
   const [measure, setMeasure] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  // This tells us if we can render the dropdown below the input or if we need to render it above
-  const [canRenderBelow, setCanRenderBelow] = useState(true);
+  // This tells us if we can render the dropdown above the input (default behavior because of the keyboard)
+  const [canRenderAbove, setCanRenderAbove] = useState(true);
   // This is the filtered list of options based on the search text
   const [filteredOptions, setFilteredOptions] = useState<DropdownOption[]>(options);
   const inputRef = useRef<View>(null);
+  const { top } = useSafeAreaInsets();
 
   function isSelected(option: DropdownOption) {
     return value?.value === option.value;
@@ -55,7 +57,10 @@ export default function Dropdown({
           if (inputRef.current) {
             inputRef.current.measureInWindow((x, y, width, height) => {
               setMeasure({ x, y, width, height });
-              setCanRenderBelow(y + height + 8 + 220 < Dimensions.get('window').height - 144);
+              // Calculate if we have enough space to render the dropdown above the input
+              // if at all possible. If not, we'll render it below.
+              // 220 is the height of the dropdown, 8 is the gap
+              setCanRenderAbove(y > 220 + 8 + top);
             });
           }
           setIsOpen(!isOpen);
@@ -67,7 +72,7 @@ export default function Dropdown({
             autoFocus
             onChangeText={filterOptions}
             onSubmitEditing={() => {
-              setValue(filteredOptions[0]);
+              setValue(filteredOptions.filter(o => !o.isHeader)[0]);
               setIsOpen(false);
             }}
           />
@@ -85,12 +90,12 @@ export default function Dropdown({
                 left: measure.x,
                 width: measure.width,
               },
-              canRenderBelow
+              canRenderAbove
                 ? {
-                    top: measure.y + measure.height + 8,
+                    bottom: Dimensions.get('window').height - measure.y + 8,
                   }
                 : {
-                    bottom: Dimensions.get('window').height - measure.y + 8,
+                    top: measure.y + measure.height + 8,
                   },
             ]}>
             <ScrollView style={styles.scroll}>

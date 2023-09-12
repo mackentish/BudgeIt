@@ -47,6 +47,8 @@ export default function CurrencyInput(
       keyboardType="numeric"
       value={props.value}
       style={[props.style, props.value === '$0.00' && styles.placeholder]}
+      autoCorrect={false}
+      spellCheck={false}
     />
   );
 }
