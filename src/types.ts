@@ -35,6 +35,17 @@ export interface PocketGroup {
   pockets: Pocket[];
 }
 
+export interface Transaction {
+  _id: string;
+  name: string;
+  amount: number;
+  date: Date;
+  inflow: string;
+  outflow: string;
+  tags?: string[];
+  note?: string;
+}
+
 export interface DropdownOption {
   label: string;
   value: string;
