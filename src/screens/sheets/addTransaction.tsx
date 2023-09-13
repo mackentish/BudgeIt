@@ -15,7 +15,7 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnimatedChevron, Button, CurrencyInput, Dropdown, Icon } from '../../components';
+import { AnimatedChevron, AnimatedPressable, Button, CurrencyInput, Dropdown, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
 import { TransactionContext } from '../../state/context';
@@ -111,7 +111,7 @@ export default function AddTransaction({ navigation }: Props) {
               topOption={externalOption}
             />
 
-            <Pressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
+            <AnimatedPressable style={styles.tagPressable} onPress={() => navigation.navigate('selectTags')}>
               <View style={styles.tagContainer}>
                 <Text style={styles.text}>Select Tags</Text>
                 {transactionTags.length > 0 && (
@@ -124,7 +124,7 @@ export default function AddTransaction({ navigation }: Props) {
                 )}
               </View>
               <Icon name="chevron-right" style={styles.chevron} />
-            </Pressable>
+            </AnimatedPressable>
 
             <TextInput
               value={note}

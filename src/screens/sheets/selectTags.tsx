@@ -74,6 +74,8 @@ export default function SelectTags({ navigation }: Props) {
                 value={newTagName}
                 onChangeText={setNewTagName}
                 autoFocus
+                autoCorrect={false}
+                spellCheck={false}
               />
               {newTagName ? (
                 <Pressable onPress={createTag}>
@@ -87,7 +89,7 @@ export default function SelectTags({ navigation }: Props) {
             </View>
           ) : (
             <Pressable style={[styles.tag, styles.createTag]} onPress={() => setIsCreating(true)}>
-              <Text style={styles.createTagText}>Create</Text>
+              <Text style={styles.createTagText}>New Tag</Text>
               <Icon name="edit" style={styles.edit} />
             </Pressable>
           )}
@@ -97,18 +99,22 @@ export default function SelectTags({ navigation }: Props) {
       <View style={styles.tagGroup}>
         <Text style={styles.label}>Available Tags</Text>
         <View style={styles.tagContainer}>
-          {availableTags.map(tag => (
-            <Pressable
-              key={tag}
-              style={styles.tag}
-              onPress={() => {
-                setAvailableTags(availableTags.filter(t => t !== tag));
-                setTempTags([...tempTags, tag]);
-              }}>
-              <Text style={styles.tagName}>{tag}</Text>
-              <Icon name="plus" style={styles.plus} />
-            </Pressable>
-          ))}
+          {availableTags.length ? (
+            availableTags.map(tag => (
+              <Pressable
+                key={tag}
+                style={styles.tag}
+                onPress={() => {
+                  setAvailableTags(availableTags.filter(t => t !== tag));
+                  setTempTags([...tempTags, tag]);
+                }}>
+                <Text style={styles.tagName}>{tag}</Text>
+                <Icon name="plus" style={styles.plus} />
+              </Pressable>
+            ))
+          ) : (
+            <Text style={styles.noTagsText}>No available tags, create one to add it to your transaction.</Text>
+          )}
         </View>
       </View>
 
@@ -206,5 +212,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: font.semiBold,
     color: colors.temp.black,
+  },
+  noTagsText: {
+    fontSize: 14,
+    fontFamily: font.italic,
+    color: colors.temp.darkGray,
   },
 });
