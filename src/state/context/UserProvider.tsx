@@ -1,29 +1,16 @@
-import React, { createContext, useState } from 'react';
+import { Dispatch, SetStateAction, createContext } from 'react';
 
-import { Login } from '../../screens';
 import { User } from '../../types';
 
 type ContextType = {
-  user: User;
-  signOut: () => void;
+  user?: User;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
 };
 
-export const UserContext = createContext<ContextType>({} as ContextType);
+const initialContext: ContextType = {
+  user: undefined,
+  setUser: () => {},
+};
 
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | undefined>(undefined);
-
-  if (!user) {
-    return <Login setUser={setUser} />;
-  }
-
-  return (
-    <UserContext.Provider
-      value={{
-        user: user!,
-        signOut: () => setUser(undefined),
-      }}>
-      {children}
-    </UserContext.Provider>
-  );
-}
+const UserContext = createContext<ContextType>(initialContext);
+export default UserContext;

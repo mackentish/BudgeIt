@@ -1,5 +1,5 @@
 import * as LocalAuthentication from 'expo-local-authentication';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -11,8 +11,9 @@ import {
   havePromptedForBiometricsKey,
   userCredentialsKey,
 } from '../constants/persistentStorage';
+import { UserContext } from '../state/context';
 import { useUser } from '../state/queries';
-import { User, UserLogin } from '../types';
+import { UserLogin } from '../types';
 import { Storage } from '../utils';
 
 /**
@@ -52,16 +53,10 @@ const BiometricsModal = ({
 /**
  * Login screen for existing users
  */
-const LoginScreen = ({
-  setUser,
-  setSignUp,
-}: {
-  setUser: Dispatch<SetStateAction<User | undefined>>;
-  setSignUp: () => void;
-}) => {
+const LoginScreen = ({ setSignUp }: { setSignUp: () => void }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { loginUser } = useUser(setUser);
+  const { loginUser } = useUser();
   const [openBiometrics, setOpenBiometrics] = useState(false);
   const [persistNextLogin, setPersistNextLogin] = useState(false);
 
@@ -183,19 +178,13 @@ const LoginScreen = ({
 /**
  * Sign up screen for new users
  */
-const SignUpScreen = ({
-  setUser,
-  setLogIn,
-}: {
-  setUser: Dispatch<SetStateAction<User | undefined>>;
-  setLogIn: () => void;
-}) => {
+const SignUpScreen = ({ setLogIn }: { setLogIn: () => void }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const { createUser } = useUser(setUser);
+  const { createUser } = useUser();
 
   return (
     <View style={styles.container}>
@@ -248,15 +237,20 @@ const SignUpScreen = ({
 /**
  * Login component that shows children if logged in, otherwise shows login screen
  */
-export default function Login({ setUser }: { setUser: Dispatch<SetStateAction<User | undefined>> }) {
+export default function Login({ children }: { children: React.ReactNode }) {
   const [isLogIn, setIsLogIn] = useState(true);
+  const { user } = useContext(UserContext);
+
+  if (user) {
+    return <>{children}</>;
+  }
 
   return (
     <SafeAreaView style={styles.safeView}>
       {isLogIn ? (
-        <LoginScreen setSignUp={() => setIsLogIn(false)} setUser={setUser} />
+        <LoginScreen setSignUp={() => setIsLogIn(false)} />
       ) : (
-        <SignUpScreen setLogIn={() => setIsLogIn(true)} setUser={setUser} />
+        <SignUpScreen setLogIn={() => setIsLogIn(true)} />
       )}
     </SafeAreaView>
   );

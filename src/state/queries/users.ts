@@ -1,11 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import { Dispatch, SetStateAction } from 'react';
+import { useContext } from 'react';
 import { Alert } from 'react-native';
 
-import { createUser as createFn, loginUser as loginFn } from '../../api/users';
-import { User } from '../../types';
+import { addUser, addUserTag, loginUser as loginFn } from '../../api/users';
+import { UserContext } from '../context';
 
-export default function useUser(setUser: Dispatch<SetStateAction<User | undefined>>) {
+export default function useUser() {
+  const { setUser } = useContext(UserContext);
+
   const loginUser = useMutation(loginFn, {
     onSuccess: data => {
       setUser(data);
@@ -15,7 +17,7 @@ export default function useUser(setUser: Dispatch<SetStateAction<User | undefine
     },
   });
 
-  const createUser = useMutation(createFn, {
+  const createUser = useMutation(addUser, {
     onSuccess: data => {
       setUser(data);
     },
@@ -24,5 +26,13 @@ export default function useUser(setUser: Dispatch<SetStateAction<User | undefine
     },
   });
 
-  return { loginUser, createUser };
+  const createUserTag = useMutation(addUserTag, {
+    onSuccess: data => {
+      setUser(data);
+    },
+    onError: () => {
+      Alert.alert('Error', 'Unable to create user tag');
+    },
+  });
+  return { loginUser, createUser, createUserTag };
 }

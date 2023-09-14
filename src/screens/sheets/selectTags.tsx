@@ -5,7 +5,8 @@ import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import { Button, Icon } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
-import { TransactionContext } from '../../state/context';
+import { TransactionContext, UserContext } from '../../state/context';
+import { useUser } from '../../state/queries';
 
 type Props = {
   navigation: NavigationProp<TransactionStackParams, 'selectTags'>;
@@ -13,9 +14,13 @@ type Props = {
 
 export default function SelectTags({ navigation }: Props) {
   const { transactionTags, setTransactionTags } = useContext(TransactionContext);
-  // TODO: get this from the database (where to store it? On the user? Or as it's own collection?)
-  const mockTags = ['Katie', 'Food', 'Groceries', 'Target'];
-  const [availableTags, setAvailableTags] = useState<string[]>(mockTags.filter(tag => !transactionTags.includes(tag)));
+
+  const { user } = useContext(UserContext);
+  const { createUserTag } = useUser();
+  const [availableTags, setAvailableTags] = useState<string[]>(
+    (user?.tags || []).filter(tag => !transactionTags.includes(tag)),
+  );
+
   const [tempTags, setTempTags] = useState<string[]>(transactionTags);
   const [isCreating, setIsCreating] = useState(false);
   const [newTagName, setNewTagName] = useState('');
@@ -26,8 +31,8 @@ export default function SelectTags({ navigation }: Props) {
       Alert.alert('Tag already exists');
       return;
     } else {
-      Alert.alert('TODO: create tag in database');
-      setTempTags([...tempTags, newTagName]);
+      createUserTag.mutate(newTagName);
+      setTempTags([...tempTags, newTagName]); // TODO: how to add the new tag when it's created?
     }
     setIsCreating(false);
     setNewTagName('');

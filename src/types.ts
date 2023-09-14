@@ -6,6 +6,7 @@ export interface User {
   password: string;
   unallocated: number;
   pockets: Pocket[];
+  tags: string[];
 }
 
 export interface UserLogin {

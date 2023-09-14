@@ -22,7 +22,7 @@ const loginUser = async (loginData: UserLogin) => {
   }
 };
 
-const createUser = async (userData: UserRegister) => {
+const addUser = async (userData: UserRegister) => {
   try {
     const response = await baseInstance.request({
       url: '/users',
@@ -41,4 +41,23 @@ const createUser = async (userData: UserRegister) => {
   }
 };
 
-export { loginUser, createUser };
+const addUserTag = async (tag: string) => {
+  try {
+    const response = await baseInstance.request({
+      url: '/users/tags',
+      method: 'POST',
+      headers: {
+        'X-API-KEY': API_KEY,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      data: { tag },
+    });
+    const data = await response.data;
+    return data as User;
+  } catch (error) {
+    throw new Error('Error creating user tag');
+  }
+};
+
+export { loginUser, addUser, addUserTag };

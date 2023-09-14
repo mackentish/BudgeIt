@@ -9,7 +9,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { colors } from './src/constants/globalStyle';
 import TabNavigator from './src/navigation/TabNavigator';
-import { OverlayContext, UserProvider } from './src/state/context';
+import { Login } from './src/screens';
+import { OverlayContext, UserContext } from './src/state/context';
+import { User } from './src/types';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,22 +25,25 @@ const queryClient = new QueryClient({
 
 function App(): JSX.Element {
   const [showOverlay, setShowOverlay] = useState(false);
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.gestureWrapper}>
         <OverlayContext.Provider value={{ showOverlay, setShowOverlay }}>
           <SafeAreaProvider>
-            <PortalProvider>
-              <NavigationContainer>
-                <MenuProvider>
-                  {showOverlay && <View style={styles.overlay} />}
-                  <UserProvider>
-                    <TabNavigator />
-                  </UserProvider>
-                </MenuProvider>
-              </NavigationContainer>
-            </PortalProvider>
+            <UserContext.Provider value={{ user, setUser }}>
+              <PortalProvider>
+                <Login>
+                  <NavigationContainer>
+                    <MenuProvider>
+                      {showOverlay && <View style={styles.overlay} />}
+                      <TabNavigator />
+                    </MenuProvider>
+                  </NavigationContainer>
+                </Login>
+              </PortalProvider>
+            </UserContext.Provider>
           </SafeAreaProvider>
         </OverlayContext.Provider>
       </GestureHandlerRootView>

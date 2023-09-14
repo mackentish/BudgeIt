@@ -1,5 +1,5 @@
 import OverlayContext from './OverlayProvider';
 import TransactionContext from './TransactionProvider';
-import { UserContext, UserProvider } from './UserProvider';
+import UserContext from './UserProvider';
 
-export { UserContext, UserProvider, OverlayContext, TransactionContext };
+export { UserContext, OverlayContext, TransactionContext };
