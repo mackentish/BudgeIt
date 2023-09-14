@@ -1,8 +1,8 @@
 import { NavigationProp } from '@react-navigation/native';
 import React, { useContext, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Icon } from '../../components';
+import { Button, Icon, Tag } from '../../components';
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
 import { TransactionContext, UserContext } from '../../state/context';
@@ -23,24 +23,22 @@ export default function SelectTags({ navigation }: Props) {
 
   const [tempTags, setTempTags] = useState<string[]>(transactionTags);
   const [isCreating, setIsCreating] = useState(false);
-  const [newTagName, setNewTagName] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
-  function createTag() {
+  function createTag(newTagName: string) {
     // check if there is already a tag with this name
     if ([...availableTags, ...tempTags].find(tag => tag.toLowerCase() === newTagName.toLowerCase())) {
       Alert.alert('Tag already exists');
       return;
     } else {
       createUserTag.mutate(newTagName);
-      setTempTags([...tempTags, newTagName]); // TODO: how to add the new tag when it's created?
+      setTempTags([...tempTags, newTagName]);
     }
     setIsCreating(false);
-    setNewTagName('');
   }
 
   function cancelCreate() {
     setIsCreating(false);
-    setNewTagName('');
   }
 
   function saveTags() {
@@ -60,62 +58,42 @@ export default function SelectTags({ navigation }: Props) {
         <Text style={styles.label}>Selected Tags</Text>
         <View style={styles.tagContainer}>
           {tempTags.map(tag => (
-            <Pressable
+            <Tag.Selected
               key={tag}
-              style={styles.tag}
+              tagName={tag}
               onPress={() => {
                 setTempTags(tempTags.filter(t => t !== tag));
                 setAvailableTags([...availableTags, tag]);
-              }}>
-              <Text style={styles.tagName}>{tag}</Text>
-              <Icon name="x" style={styles.x} />
-            </Pressable>
+              }}
+            />
           ))}
-          {isCreating ? (
-            <View style={[styles.tag, styles.createTag]}>
-              <TextInput
-                style={styles.createTagText}
-                placeholder="Enter Name"
-                value={newTagName}
-                onChangeText={setNewTagName}
-                autoFocus
-                autoCorrect={false}
-                spellCheck={false}
-              />
-              {newTagName ? (
-                <Pressable onPress={createTag}>
-                  <Icon name="check" style={styles.check} />
-                </Pressable>
-              ) : (
-                <Pressable onPress={cancelCreate}>
-                  <Icon name="x" style={styles.xBlack} />
-                </Pressable>
-              )}
-            </View>
-          ) : (
-            <Pressable style={[styles.tag, styles.createTag]} onPress={() => setIsCreating(true)}>
-              <Text style={styles.createTagText}>New Tag</Text>
-              <Icon name="edit" style={styles.edit} />
-            </Pressable>
-          )}
+          <Tag.Add
+            isCreating={isCreating}
+            createFn={createTag}
+            cancelFn={cancelCreate}
+            onPress={() => setIsCreating(true)}
+          />
         </View>
       </View>
 
       <View style={styles.tagGroup}>
-        <Text style={styles.label}>Available Tags</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Available Tags</Text>
+          <Pressable onPress={() => setIsEditing(!isEditing)}>
+            <Text style={styles.text}>{isEditing ? 'Done' : 'Edit'}</Text>
+          </Pressable>
+        </View>
         <View style={styles.tagContainer}>
           {availableTags.length ? (
             availableTags.map(tag => (
-              <Pressable
+              <Tag.Available
                 key={tag}
-                style={styles.tag}
+                tagName={tag}
                 onPress={() => {
                   setAvailableTags(availableTags.filter(t => t !== tag));
                   setTempTags([...tempTags, tag]);
-                }}>
-                <Text style={styles.tagName}>{tag}</Text>
-                <Icon name="plus" style={styles.plus} />
-              </Pressable>
+                }}
+              />
             ))
           ) : (
             <Text style={styles.noTagsText}>No available tags, create one to add it to your transaction.</Text>
@@ -139,6 +117,11 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   backBtn: {
     position: 'absolute',
     top: 0,
@@ -146,26 +129,6 @@ const styles = StyleSheet.create({
   },
   chevron: {
     fontSize: 22,
-    color: colors.temp.black,
-  },
-  plus: {
-    fontSize: 16,
-    color: colors.temp.white,
-  },
-  x: {
-    fontSize: 12,
-    color: colors.temp.white,
-  },
-  xBlack: {
-    fontSize: 14,
-    color: colors.temp.black,
-  },
-  edit: {
-    fontSize: 16,
-    color: colors.temp.black,
-  },
-  check: {
-    fontSize: 14,
     color: colors.temp.black,
   },
   flex: {
@@ -180,6 +143,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 8,
   },
+  text: {
+    fontSize: 16,
+    fontFamily: font.regular,
+    color: colors.temp.black,
+  },
   label: {
     fontSize: 16,
     fontFamily: font.bold,
@@ -191,32 +159,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.temp.white,
     borderRadius: numbers.borderRadius.small,
-  },
-  tag: {
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-    backgroundColor: colors.temp.black,
-    borderWidth: 1,
-    borderColor: colors.temp.black,
-    borderRadius: numbers.borderRadius.small,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  tagName: {
-    fontSize: 16,
-    fontFamily: font.semiBold,
-    color: colors.temp.white,
-  },
-  createTag: {
-    backgroundColor: 'transparent',
-    borderColor: colors.temp.black,
-    borderStyle: 'dashed',
-  },
-  createTagText: {
-    fontSize: 16,
-    fontFamily: font.semiBold,
-    color: colors.temp.black,
   },
   noTagsText: {
     fontSize: 14,
