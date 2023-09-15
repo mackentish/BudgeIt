@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useContext } from 'react';
 import { Alert } from 'react-native';
 
-import { addUser, addUserTag, loginUser as loginFn } from '../../api/users';
+import { addUser, addUserTag, changeUserTag, loginUser as loginFn } from '../../api/users';
 import { UserContext } from '../context';
 
 export default function useUser() {
@@ -34,5 +34,15 @@ export default function useUser() {
       Alert.alert('Error', 'Unable to create user tag');
     },
   });
-  return { loginUser, createUser, createUserTag };
+
+  const updateUserTag = useMutation(changeUserTag, {
+    onSuccess: data => {
+      setUser(data);
+    },
+    onError: () => {
+      Alert.alert('Error', 'Unable to update user tag');
+    },
+  });
+
+  return { loginUser, createUser, createUserTag, updateUserTag };
 }

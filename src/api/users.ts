@@ -60,4 +60,23 @@ const addUserTag = async (tag: string) => {
   }
 };
 
-export { loginUser, addUser, addUserTag };
+const changeUserTag = async ({ oldTag, newTag }: { oldTag: string; newTag: string }) => {
+  try {
+    const response = await baseInstance.request({
+      url: '/users/tags',
+      method: 'PUT',
+      headers: {
+        'X-API-KEY': API_KEY,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      data: { oldTag, newTag },
+    });
+    const data = await response.data;
+    return data as User;
+  } catch (error) {
+    throw new Error('Error updating user tag');
+  }
+};
+
+export { loginUser, addUser, addUserTag, changeUserTag };

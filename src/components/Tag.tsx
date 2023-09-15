@@ -22,18 +22,9 @@ function Available({ tagName, onPress }: { tagName: string; onPress: () => void 
   );
 }
 
-function Add({
-  isCreating,
-  createFn,
-  cancelFn,
-  onPress,
-}: {
-  isCreating: boolean;
-  createFn: (tag: string) => void;
-  cancelFn: () => void;
-  onPress: () => void;
-}) {
+function Add({ createFn }: { createFn: (tag: string) => void }) {
   const [newTagName, setNewTagName] = useState<string>('');
+  const [isCreating, setIsCreating] = useState(false);
 
   if (isCreating) {
     return (
@@ -51,6 +42,7 @@ function Add({
           <Pressable
             onPress={() => {
               createFn(newTagName);
+              setIsCreating(false);
               setNewTagName('');
             }}>
             <Icon name="check" style={styles.check} />
@@ -58,7 +50,7 @@ function Add({
         ) : (
           <Pressable
             onPress={() => {
-              cancelFn();
+              setIsCreating(false);
               setNewTagName('');
             }}>
             <Icon name="x" style={styles.xBlack} />
@@ -66,16 +58,61 @@ function Add({
         )}
       </View>
     );
+  } else {
+    return (
+      <Pressable style={styles.createTag} onPress={() => setIsCreating(true)}>
+        <Text style={styles.createTagText}>New Tag</Text>
+        <Icon name="edit" style={styles.edit} />
+      </Pressable>
+    );
   }
-  return (
-    <Pressable style={styles.createTag} onPress={onPress}>
-      <Text style={styles.createTagText}>New Tag</Text>
-      <Icon name="edit" style={styles.edit} />
-    </Pressable>
-  );
 }
 
-export default { Selected, Available, Add };
+function Edit({ tagName, updateFn }: { tagName: string; updateFn: (oldName: string, newName: string) => void }) {
+  const [newTagName, setNewTagName] = useState<string>(tagName);
+  const [isEditing, setIsEditing] = useState(false);
+
+  if (isEditing) {
+    return (
+      <View style={styles.createTag}>
+        <TextInput
+          style={styles.createTagText}
+          placeholder="Enter Name"
+          value={newTagName}
+          onChangeText={setNewTagName}
+          autoFocus
+          autoCorrect={false}
+          spellCheck={false}
+        />
+        {newTagName && (
+          <Pressable
+            onPress={() => {
+              updateFn(tagName, newTagName);
+              setIsEditing(false);
+            }}>
+            <Icon name="check" style={styles.check} />
+          </Pressable>
+        )}
+        <Pressable
+          onPress={() => {
+            setIsEditing(false);
+            setNewTagName(tagName);
+          }}>
+          <Icon name="x" style={styles.xBlack} />
+        </Pressable>
+      </View>
+    );
+  } else {
+    return (
+      <Pressable style={styles.tag} onPress={() => setIsEditing(true)}>
+        <Text style={styles.tagName}>{tagName}</Text>
+        <Icon name="edit" style={styles.editWhite} />
+      </Pressable>
+    );
+  }
+}
+
+export default { Selected, Available, Add, Edit };
 
 const styles = StyleSheet.create({
   tag: {
@@ -126,6 +163,10 @@ const styles = StyleSheet.create({
   edit: {
     fontSize: 16,
     color: colors.temp.black,
+  },
+  editWhite: {
+    fontSize: 17,
+    color: colors.temp.white,
   },
   check: {
     fontSize: 14,

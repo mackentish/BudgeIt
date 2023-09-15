@@ -16,13 +16,12 @@ export default function SelectTags({ navigation }: Props) {
   const { transactionTags, setTransactionTags } = useContext(TransactionContext);
 
   const { user } = useContext(UserContext);
-  const { createUserTag } = useUser();
+  const { createUserTag, updateUserTag } = useUser();
   const [availableTags, setAvailableTags] = useState<string[]>(
     (user?.tags || []).filter(tag => !transactionTags.includes(tag)),
   );
 
   const [tempTags, setTempTags] = useState<string[]>(transactionTags);
-  const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   function createTag(newTagName: string) {
@@ -34,16 +33,29 @@ export default function SelectTags({ navigation }: Props) {
       createUserTag.mutate(newTagName);
       setTempTags([...tempTags, newTagName]);
     }
-    setIsCreating(false);
-  }
-
-  function cancelCreate() {
-    setIsCreating(false);
   }
 
   function saveTags() {
     setTransactionTags(tempTags);
     navigation.navigate('addTransaction');
+  }
+
+  function updateTag(oldTagName: string, newTagName: string) {
+    // check if there is already a tag with this name
+    if ([...availableTags, ...tempTags].find(tag => tag.toLowerCase() === newTagName.toLowerCase())) {
+      Alert.alert(`Tag '${newTagName}' already exists`);
+      return;
+    } else {
+      updateUserTag.mutate(
+        { oldTag: oldTagName, newTag: newTagName },
+        {
+          onSuccess: () => {
+            setTempTags(tempTags.map(tag => (tag === oldTagName ? newTagName : tag)));
+            setAvailableTags(availableTags.map(tag => (tag === oldTagName ? newTagName : tag)));
+          },
+        },
+      );
+    }
   }
 
   return (
@@ -67,12 +79,7 @@ export default function SelectTags({ navigation }: Props) {
               }}
             />
           ))}
-          <Tag.Add
-            isCreating={isCreating}
-            createFn={createTag}
-            cancelFn={cancelCreate}
-            onPress={() => setIsCreating(true)}
-          />
+          <Tag.Add createFn={createTag} />
         </View>
       </View>
 
@@ -86,14 +93,19 @@ export default function SelectTags({ navigation }: Props) {
         <View style={styles.tagContainer}>
           {availableTags.length ? (
             availableTags.map(tag => (
-              <Tag.Available
-                key={tag}
-                tagName={tag}
-                onPress={() => {
-                  setAvailableTags(availableTags.filter(t => t !== tag));
-                  setTempTags([...tempTags, tag]);
-                }}
-              />
+              <View key={tag}>
+                {isEditing ? (
+                  <Tag.Edit tagName={tag} updateFn={updateTag} />
+                ) : (
+                  <Tag.Available
+                    tagName={tag}
+                    onPress={() => {
+                      setAvailableTags(availableTags.filter(t => t !== tag));
+                      setTempTags([...tempTags, tag]);
+                    }}
+                  />
+                )}
+              </View>
             ))
           ) : (
             <Text style={styles.noTagsText}>No available tags, create one to add it to your transaction.</Text>
