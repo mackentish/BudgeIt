@@ -1,8 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
-import { Button, Modal } from '..';
+import { Button, Modal, Sheet } from '..';
 import { colors, font } from '../../constants/globalStyle';
+import TransactionNavigator from '../../navigation/TransactionNavigator';
 import { useGroups, usePockets } from '../../state/queries';
 import { Pocket } from '../../types';
 import { currencyFormatter } from '../../utils';
@@ -19,6 +21,7 @@ export default function DeletePocketModal({
   const [notZeroOpen, setNotZeroOpen] = useState(false);
   const { deletePocket } = usePockets();
   const { fetchGroups } = useGroups();
+  const addTransactionSheet = useRef<BottomSheet>(null);
 
   function deletePocketLogic() {
     setIsOpen(false);
@@ -50,9 +53,19 @@ export default function DeletePocketModal({
           <Text style={styles.header}>{`${currencyFormatter.format(pocket.amount)} left in pocket.`}</Text>
           <Text style={styles.message}>Pockets must have a balance of $0 to be deleted</Text>
           <Button size="medium" type="secondary" label="Cancel" onPress={() => setNotZeroOpen(false)} />
-          <Button size="medium" label="Add Transaction" onPress={() => console.log('TODO: add transaction')} />
+          <Button
+            size="medium"
+            label="Add Transaction"
+            onPress={() => {
+              setNotZeroOpen(false);
+              addTransactionSheet.current?.expand();
+            }}
+          />
         </View>
       </Modal>
+      <Sheet bottomSheetRef={addTransactionSheet}>
+        <TransactionNavigator />
+      </Sheet>
     </>
   );
 }

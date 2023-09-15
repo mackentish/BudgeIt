@@ -87,7 +87,6 @@ export default function Dashboard() {
           <AddGroup />
         </Sheet>
         <Sheet bottomSheetRef={addTransactionSheet}>
-          {/* <AddTransaction /> */}
           <TransactionNavigator />
         </Sheet>
       </View>
