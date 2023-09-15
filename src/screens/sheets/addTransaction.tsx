@@ -1,17 +1,7 @@
 import { useBottomSheet } from '@gorhom/bottom-sheet';
 import { NavigationProp } from '@react-navigation/native';
 import React, { useContext, useState } from 'react';
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -19,8 +9,9 @@ import { AnimatedChevron, AnimatedPressable, Button, CurrencyInput, Dropdown, Ic
 import { colors, font, numbers } from '../../constants/globalStyle';
 import { TransactionStackParams } from '../../navigation/TransactionNavigator';
 import { TransactionContext } from '../../state/context';
-import { usePockets } from '../../state/queries';
+import { usePockets, useTransactions } from '../../state/queries';
 import { DropdownOption } from '../../types';
+import { currencyFormatter } from '../../utils';
 
 type Props = {
   navigation: NavigationProp<TransactionStackParams, 'addTransaction'>;
@@ -35,23 +26,33 @@ export default function AddTransaction({ navigation }: Props) {
   const [inflow, setInflow] = useState<DropdownOption | undefined>(undefined);
   const externalOption = { label: 'External', value: 'external' };
   const [outflow, setOutflow] = useState<DropdownOption | undefined>(externalOption);
-  const { transactionTags } = useContext(TransactionContext);
+  const { transactionTags, setTransactionTags } = useContext(TransactionContext);
   const [note, setNote] = useState('');
 
   const { close } = useBottomSheet();
+  const { bottom } = useSafeAreaInsets();
   const { fetchPockets } = usePockets();
+  const { createTransaction } = useTransactions();
   const isValid = transactionTitle && transactionAmount && date && inflow && outflow && inflow.value !== outflow.value;
 
   const flowOptions = [{ label: 'Pockets', value: '', isHeader: true }];
   flowOptions.push(
     ...(fetchPockets.data || []).map(pocket => ({
-      label: pocket.name,
+      label: `${pocket.name} (${currencyFormatter.format(pocket.amount)})`,
       value: pocket._id,
       isHeader: false,
     })),
   );
 
-  const { bottom } = useSafeAreaInsets();
+  function resetForm() {
+    setTransactionTitle('');
+    setTransactionAmount('$0.00');
+    setDate(new Date());
+    setInflow(undefined);
+    setOutflow(externalOption);
+    setTransactionTags([]);
+    setNote('');
+  }
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.flex} keyboardVerticalOffset={bottom + 8}>
@@ -138,7 +139,27 @@ export default function AddTransaction({ navigation }: Props) {
           <View style={styles.flex} />
           <Button
             label="Add Transaction"
-            onPress={() => Alert.alert('TODO: add transaction & update pocket(s)')}
+            onPress={() => {
+              createTransaction.mutate(
+                {
+                  name: transactionTitle,
+                  amount: parseFloat(transactionAmount.replace(/[^0-9.-]+/g, '')),
+                  date,
+                  // it's okay to force unwrap here because we know that inflow and outflow are defined
+                  inflow: inflow!.value,
+                  outflow: outflow!.value,
+                  tags: transactionTags,
+                  note,
+                },
+                {
+                  onSuccess: () => {
+                    fetchPockets.refetch();
+                    close();
+                    resetForm();
+                  },
+                },
+              );
+            }}
             disabled={!isValid}
           />
         </ScrollView>
@@ -182,7 +203,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   amount: {
-    fontSize: 60,
+    fontSize: 50,
     fontFamily: font.bold,
     alignSelf: 'center',
     borderWidth: 3,
