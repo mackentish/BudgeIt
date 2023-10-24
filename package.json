@@ -9,7 +9,7 @@
     "prettier": "prettier --write ./src",
     "start": "react-native start --reset-cache",
     "test": "jest",
-    "refresh": "rm -rf node_modules && npm ci && rm -rf ios/Pods && bundle exec pod install --project-directory=ios",
+    "refresh": "bundle install && rm -rf node_modules && npm ci && rm -rf ios/Pods && bundle exec pod install --project-directory=ios",
     "refresh-pods": "bundle exec pod install --project-directory=ios",
     "debug": "react-devtools"
   },
