@@ -4,11 +4,13 @@ import axios from 'axios';
 const tokenStore = {
   accessToken: undefined,
   refreshToken: undefined,
+  email: undefined,
 };
 
 function ClearTokenStore() {
   tokenStore.accessToken = undefined;
   tokenStore.refreshToken = undefined;
+  tokenStore.email = undefined;
 }
 
 const baseInstance = axios.create({
@@ -35,15 +37,16 @@ baseInstance.interceptors.request.use(
 baseInstance.interceptors.response.use(
   function (response) {
     if (response.data.tokens) {
-      tokenStore.accessToken = response.data.tokens.accessToken;
-      tokenStore.refreshToken = response.data.tokens.refreshToken;
+      const { user, tokens } = response.data;
+      tokenStore.accessToken = tokens.accessToken;
+      tokenStore.refreshToken = tokens.refreshToken;
+      tokenStore.email = user.email;
     }
     return response;
   },
   async function (error) {
     const originalRequest = error.config;
 
-    console.log('refresh error?', originalRequest.url === `${API_URL}/users/refresh`, originalRequest.url);
     if (originalRequest.url === `${API_URL}/users/refresh`) {
       ClearTokenStore();
       return Promise.reject(error);
@@ -53,11 +56,9 @@ baseInstance.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const { data: tokens } = await axios.post(`${API_URL}/users/refresh`, {
-          email: 'john.doe@mailinator.com', // TODO: put the actual email here
+          email: tokenStore.email,
           refreshToken: tokenStore.refreshToken,
         });
-
-        console.log('refreshed tokens', tokens);
 
         tokenStore.accessToken = tokens.accessToken;
         tokenStore.refreshToken = tokens.refreshToken;
@@ -65,7 +66,7 @@ baseInstance.interceptors.response.use(
 
         return baseInstance(originalRequest);
       } catch (err) {
-        // handle error regarding token refresh
+        //TODO: handle error regarding token refresh
         console.log(err);
         ClearTokenStore();
       }
