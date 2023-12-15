@@ -39,7 +39,7 @@ export default function AddTransaction({ navigation }: Props) {
   flowOptions.push(
     ...(fetchPockets.data || []).map(pocket => ({
       label: `${pocket.name} (${currencyFormatter.format(pocket.amount)})`,
-      value: pocket._id,
+      value: pocket.id,
       isHeader: false,
     })),
   );

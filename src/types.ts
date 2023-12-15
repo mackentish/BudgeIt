@@ -1,5 +1,5 @@
 export interface User {
-  _id: string;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -22,7 +22,7 @@ export interface UserRegister {
 }
 
 export interface Pocket {
-  _id: string;
+  id: string;
   name: string;
   amount: number;
   note?: string;
@@ -30,14 +30,14 @@ export interface Pocket {
 }
 
 export interface PocketGroup {
-  _id: string;
+  id: string;
   name: string;
   note?: string;
   pockets: Pocket[];
 }
 
 export interface Transaction {
-  _id: string;
+  id: string;
   name: string;
   amount: number;
   date: Date;

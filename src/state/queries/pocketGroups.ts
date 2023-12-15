@@ -10,7 +10,7 @@ export default function useGroups() {
 
   // POST /pocketGroups
   const createGroup = useMutation(
-    (group: Omit<PocketGroup, '_id'>) => {
+    (group: Omit<PocketGroup, 'id'>) => {
       return postGroup(group);
     },
     {

@@ -35,15 +35,15 @@ export default function AddToGroupModal({
               <View style={styles.groupsContainer}>
                 {fetchGroups.data.map(g => (
                   <Pressable
-                    key={g._id}
+                    key={g.id}
                     onPress={() => {
-                      if (selectedGroup === g._id) {
+                      if (selectedGroup === g.id) {
                         setSelectedGroup('');
                       } else {
-                        setSelectedGroup(g._id);
+                        setSelectedGroup(g.id);
                       }
                     }}
-                    style={[styles.group, selectedGroup === g._id && styles.selected]}>
+                    style={[styles.group, selectedGroup === g.id && styles.selected]}>
                     <Icon name="group" style={styles.groupIcon} />
                     <Text style={styles.groupName}>{g.name}</Text>
                   </Pressable>

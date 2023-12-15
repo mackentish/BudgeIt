@@ -28,7 +28,7 @@ export default function DeletePocketModal({
     if (pocket.amount !== 0) {
       setNotZeroOpen(true);
     } else {
-      deletePocket.mutate(pocket._id, {
+      deletePocket.mutate(pocket.id, {
         onSuccess: () => {
           fetchGroups.refetch();
           setIsOpen(false);

@@ -20,7 +20,7 @@ export default function AddPocket() {
     return <LoadingSpinner />;
   }
 
-  const groupList = (fetchGroups.data || []).map(({ _id, name }) => ({ value: _id, label: name }));
+  const groupList = (fetchGroups.data || []).map(({ id, name }) => ({ value: id, label: name }));
 
   // Only name and amount are required. Amount can be 0
   const isValid = pocketName.length > 0 && !isNaN(Number(startingAmount.replace(/[^0-9.]/g, '')));

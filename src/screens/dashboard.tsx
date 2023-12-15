@@ -73,10 +73,10 @@ export default function Dashboard() {
               <PopupMenu options={pocketMenuOptions} />
             </View>
             {groups.map(g => (
-              <PocketGroup key={g._id} group={g} />
+              <PocketGroup key={g.id} group={g} />
             ))}
             {pockets.map(p => (
-              <Pocket key={p._id} pocket={p} />
+              <Pocket key={p.id} pocket={p} />
             ))}
           </View>
         </ScrollView>

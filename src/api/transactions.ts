@@ -16,7 +16,7 @@ const getTransactions = async () => {
   return data as Transaction[];
 };
 
-const addTransaction = async (transaction: Omit<Transaction, '_id'>) => {
+const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
   const response = await baseInstance.request({
     url: '/transactions',
     method: 'POST',

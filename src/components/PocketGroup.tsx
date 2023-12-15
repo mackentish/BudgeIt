@@ -35,7 +35,7 @@ export default function PocketGroup({ group }: { group: PocketGroupType }) {
       {isOpen && (
         <View style={styles.pockets}>
           {group.pockets.map(pocket => (
-            <Pocket key={pocket._id} pocket={pocket} />
+            <Pocket key={pocket.id} pocket={pocket} />
           ))}
           <Pressable style={styles.deleteBtn} onPress={() => setIsConfirmOpen(true)}>
             <Text style={styles.btnText}>Delete Group</Text>
@@ -46,7 +46,7 @@ export default function PocketGroup({ group }: { group: PocketGroupType }) {
         isOpen={isConfirmOpen}
         close={() => setIsConfirmOpen(false)}
         deleteFn={() => {
-          deleteGroup.mutate(group._id, {
+          deleteGroup.mutate(group.id, {
             onSuccess: () => fetchPockets.refetch(),
           });
           setIsConfirmOpen(false);

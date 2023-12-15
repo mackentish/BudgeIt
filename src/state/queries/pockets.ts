@@ -22,7 +22,7 @@ export default function usePockets() {
 
   // POST /pockets
   const createPocket = useMutation(
-    (pocket: Omit<Pocket, '_id'>) => {
+    (pocket: Omit<Pocket, 'id'>) => {
       return createFn(pocket);
     },
     {

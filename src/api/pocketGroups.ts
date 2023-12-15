@@ -16,7 +16,7 @@ const getGroups = async () => {
   return data as PocketGroup[];
 };
 
-const postGroup = async (group: Omit<PocketGroup, '_id'>) => {
+const postGroup = async (group: Omit<PocketGroup, 'id'>) => {
   const response = await baseInstance.request({
     url: '/pocketGroups',
     method: 'POST',

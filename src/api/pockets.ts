@@ -18,7 +18,7 @@ const fetchPockets = async () => {
 
 const updatePocket = async (pocket: Pocket) => {
   const response = await baseInstance.request({
-    url: `/pockets/${pocket._id}`,
+    url: `/pockets/${pocket.id}`,
     method: 'PUT',
     headers: {
       Accept: 'application/json',
@@ -33,7 +33,7 @@ const updatePocket = async (pocket: Pocket) => {
   return data as Pocket;
 };
 
-const createPocket = async (pocket: Omit<Pocket, '_id'>) => {
+const createPocket = async (pocket: Omit<Pocket, 'id'>) => {
   const response = await baseInstance.request({
     url: '/pockets',
     method: 'POST',

@@ -91,7 +91,7 @@ export default function AddGroup() {
   };
 
   const removePocket = (id: string) => {
-    setGroupPockets(groupPockets.filter(p => p._id !== id));
+    setGroupPockets(groupPockets.filter(p => p.id !== id));
   };
 
   if (fetchPockets.isLoading) {
@@ -132,7 +132,7 @@ export default function AddGroup() {
             </Text>
           </View>
           {groupPockets.map(p => (
-            <GroupPocket key={p._id} name={p.name} amount={p.amount} onPress={() => removePocket(p._id)} />
+            <GroupPocket key={p.id} name={p.name} amount={p.amount} onPress={() => removePocket(p.id)} />
           ))}
         </View>
       )}
@@ -143,14 +143,14 @@ export default function AddGroup() {
             <View style={modalStyles.pocketContainer}>
               {pockets.map(p => (
                 <PocketOption
-                  key={p._id}
+                  key={p.id}
                   name={p.name}
                   amount={p.amount}
-                  disabled={groupPockets.some(gp => gp._id === p._id)}
+                  disabled={groupPockets.some(gp => gp.id === p.id)}
                   onPress={() => {
-                    if (groupPockets.some(gp => gp._id === p._id)) {
+                    if (groupPockets.some(gp => gp.id === p.id)) {
                       // if pocket is already in group, remove it
-                      setGroupPockets(groupPockets.filter(gp => gp._id !== p._id));
+                      setGroupPockets(groupPockets.filter(gp => gp.id !== p.id));
                     } else {
                       setGroupPockets([...groupPockets, p]);
                     }

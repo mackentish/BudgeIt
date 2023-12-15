@@ -10,7 +10,7 @@ export default function useTransactions() {
 
   // POST /transactions
   const createTransaction = useMutation(
-    (transaction: Omit<Transaction, '_id'>) => {
+    (transaction: Omit<Transaction, 'id'>) => {
       return addTransaction(transaction);
     },
     {
