@@ -5,7 +5,7 @@ import baseInstance from './base';
 
 const getGroups = async () => {
   const response = await baseInstance.request({
-    url: '/groups',
+    url: '/pocketGroups',
     method: 'GET',
     headers: {
       'X-API-KEY': API_KEY,
@@ -18,7 +18,7 @@ const getGroups = async () => {
 
 const postGroup = async (group: Omit<PocketGroup, '_id'>) => {
   const response = await baseInstance.request({
-    url: '/groups',
+    url: '/pocketGroups',
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -32,7 +32,7 @@ const postGroup = async (group: Omit<PocketGroup, '_id'>) => {
 
 const deleteGroup = async (id: string) => {
   const response = await baseInstance.request({
-    url: `/groups/${id}`,
+    url: `/pocketGroups/${id}`,
     method: 'DELETE',
     headers: {
       'X-API-KEY': API_KEY,

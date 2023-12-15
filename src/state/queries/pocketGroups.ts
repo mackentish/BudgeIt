@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Alert } from 'react-native';
 
-import { deleteGroup as deleteFn, getGroups, postGroup } from '../../api/groups';
+import { deleteGroup as deleteFn, getGroups, postGroup } from '../../api/pocketGroups';
 import { PocketGroup } from '../../types';
 
 export default function useGroups() {
-  // GET /groups
+  // GET /pocketGroups
   const fetchGroups = useQuery(['userPocketGroups'], () => getGroups());
 
-  // POST /groups
+  // POST /pocketGroups
   const createGroup = useMutation(
     (group: Omit<PocketGroup, '_id'>) => {
       return postGroup(group);
@@ -23,7 +23,7 @@ export default function useGroups() {
     },
   );
 
-  // DELETE /groups/:id
+  // DELETE /pocketGroups/:id
   const deleteGroup = useMutation(
     (id: string) => {
       return deleteFn(id);

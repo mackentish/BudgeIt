@@ -1,4 +1,4 @@
-import useGroups from './groups';
+import useGroups from './pocketGroups';
 import usePockets from './pockets';
 import useTransactions from './transactions';
 import useUser from './users';
