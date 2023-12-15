@@ -22,7 +22,7 @@ export default function Dashboard() {
   if (fetchPockets.isError || fetchGroups.isError) {
     return (
       <SafeAreaView style={styles.safeView}>
-        <Text>Error loading pockets or groups</Text>
+        <Text>{`Error loading ${fetchPockets.isError ? 'pockets' : 'groups'}`}</Text>
       </SafeAreaView>
     );
   }
