@@ -80,9 +80,11 @@ export default function Dashboard() {
             {groups.map(g => (
               <PocketGroup key={g.id} group={g} />
             ))}
-            {pockets.map(p => (
-              <Pocket key={p.id} pocket={p} />
-            ))}
+            {pockets
+              .filter(p => !p.groupId)
+              .map(p => (
+                <Pocket key={p.id} pocket={p} />
+              ))}
           </View>
         </ScrollView>
         <Sheet bottomSheetRef={addPocketSheet}>
