@@ -1,6 +1,6 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import React, { useRef } from 'react';
-import { Alert, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button, Icon, LoadingSpinner, Pocket, PocketGroup, PopupMenu, Sheet } from '../components';
 import { colors, font } from '../constants/globalStyle';
@@ -35,6 +35,11 @@ export default function Dashboard() {
     );
   }
 
+  const onRefresh = () => {
+    fetchGroups.refetch();
+    fetchPockets.refetch();
+  };
+
   const pocketMenuOptions = [
     {
       label: 'New Pocket',
@@ -66,7 +71,7 @@ export default function Dashboard() {
             </Button>
           </View>
         </View>
-        <ScrollView>
+        <ScrollView refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={isLoading} />}>
           <View style={styles.pocketContainer}>
             <View style={styles.pocketTitleRow}>
               <Text style={styles.pocketTitle}>Pockets</Text>
