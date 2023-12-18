@@ -24,7 +24,7 @@ const postGroup = async (group: Omit<PocketGroup, 'id'>) => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    data: group,
+    data: { ...group, pockets: group.pockets.map(pocket => pocket.id) },
   });
   const data = await response.data;
   return data as PocketGroup;
