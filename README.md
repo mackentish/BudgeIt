@@ -1,3 +1,5 @@
+# THIS PROJECT HAS BEEN ARCHIVED IN FAVOR OF AN EXPO VERSION: budge-it
+
 # Running Locally
 
 ## First Time Setup (in progress)
